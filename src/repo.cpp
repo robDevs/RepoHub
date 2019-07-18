@@ -52,12 +52,8 @@ int Repo::getForks() {
     return 1;
 }
 
-void Repo::drawListView(int x, int y) {
-    vita2d_draw_rectangle(x - 20, y, 20, 100, RGBA8(255,0,0,255));
-    vita2d_draw_rectangle(x, y, 960, 100, RGBA8(255,255,255,255));
-    vita2d_font_draw_textf(font40, x, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str()) / 2), RGBA8(0,0,0,255), 40.0f, "%s", name.c_str());
-    vita2d_draw_line(x, y, x + 960, y, RGBA8(150,150,150,150));
-    vita2d_draw_line(x, y + 100, x + 960, y + 100, RGBA8(150,150,150,150));
+void Repo::drawListView(int y, bool selected) {
+    draw_list_item(name, y, selected);
 }
 
 void Repo::drawDetailsView() {

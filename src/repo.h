@@ -32,7 +32,7 @@ public:
     bool getFork();
     void setForks(int forks);
     int getForks();
-    void drawListView(int x, int y);
+    void drawListView(int y, bool selected);
     void drawDetailsView();
 };
 

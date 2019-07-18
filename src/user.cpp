@@ -3,8 +3,6 @@
 User::User(std::string name) {
     setName(name);
     complete = false;
-
-    setRepos();
 }
 
 void User::setName(std::string name) {
@@ -40,12 +38,8 @@ void User::setRepos() {
     complete = true;
 }
 
-void User::drawListView(int x, int y) {
-    vita2d_draw_rectangle(x - 20, y, 20, 100, RGBA8(255,0,0,255));
-    vita2d_draw_rectangle(x, y, 960, 100, RGBA8(255,255,255,255));
-    vita2d_font_draw_textf(font40, x, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str()) / 2), RGBA8(0,0,0,255), 40.0f, "%s", name.c_str());
-    vita2d_draw_line(x, y, x + 960, y, RGBA8(150,150,150,150));
-    vita2d_draw_line(x, y + 100, x + 960, y + 100, RGBA8(150,150,150,150));
+void User::drawListView(int y, bool selected) {
+    draw_list_item(name, y, selected);
 }
 
 void User::drawDetailsView() {
@@ -58,7 +52,7 @@ void User::drawDetailsView() {
     int cursor_pos = 0;
     int y_offset = 44;
 
-    float menuBarH = pow(522,2)/(numRepos*100);
+    float menuBarH = pow(500,2)/(numRepos*100);
 
     std::string header_string = name;
     header_string += "'s Repositories";
@@ -97,13 +91,10 @@ void User::drawDetailsView() {
         vita2d_clear_screen();
 
         for(int i = 0; i < numRepos; i++) {
-            int x;
-            if(cursor_pos == i) x = 20;
-            else x = 0;
-            repos[i].drawListView(x,y_offset + i*100);
+            repos[i].drawListView(y_offset + i*100, cursor_pos == i);
         }
-
-        vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/522), 5, menuBarH, RGBA8(36,41,46,255));
+        
+        vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/500), 5, menuBarH, RGBA8(36,41,46,255));
 
         draw_header(header_string);
 
@@ -120,7 +111,7 @@ void draw_user_list(std::vector<User> user_list, int *status) {
     int cursor_pos = 0;
     int y_offset = 44;
 
-    float menuBarH = pow(544,2)/(list_size*100);
+    float menuBarH = pow(500,2)/(list_size*100);
 
     //Rectangle posRect = {screenWidth - 10, 0 - listPos*(menuBarH/screenHeight), 5, menuBarH};
 
@@ -135,7 +126,7 @@ void draw_user_list(std::vector<User> user_list, int *status) {
         }
 
         if (select_released) {
-            
+
         }
 
         if (down_released) {
@@ -164,12 +155,9 @@ void draw_user_list(std::vector<User> user_list, int *status) {
         vita2d_clear_screen();
 
         for(int i = 0; i < list_size; i++) {
-            int x;
-            if(cursor_pos == i) x = 20;
-            else x = 0;
-            user_list[i].drawListView(x,y_offset + i*100);
+            user_list[i].drawListView(y_offset + i*100, cursor_pos == i);
         }
-        vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/544), 5, menuBarH, RGBA8(36,41,46,255));
+        vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/500), 5, menuBarH, RGBA8(36,41,46,255));
 
         draw_header("Saved Users");
 

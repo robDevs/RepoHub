@@ -22,7 +22,7 @@ public:
     void setNumRepos(int numRepos);
     int getNumRepos();
     void setRepos();
-    void drawListView(int x, int y);
+    void drawListView(int y, bool selected);
     void drawDetailsView();
 };
 

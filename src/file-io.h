@@ -2,7 +2,6 @@
 #define _FILE_IO_
 
 #include "includes.h"
-#include "key.h"
 
 extern std::string token;
 extern bool have_token;
