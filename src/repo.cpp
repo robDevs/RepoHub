@@ -1,0 +1,115 @@
+#include "repo.h"
+
+Repo::Repo(std::string name, std::string description, std::string license, std::string owner, std::string created_at, std::string updated_at, std::string homePage, std::string language, bool fork, bool priv, int forks, int stargazers_count, int open_issues_count) {
+    this->name = name;
+    this->description = description;
+    this->license = license;
+    this->owner = owner;
+    this->created_at = created_at;
+    this->updated_at = updated_at;
+    this->homePage = homePage;
+    this->language = language;
+    this->fork = fork;
+    this->priv = priv;
+    this->forks = forks;
+    this->stargazers_count = stargazers_count;
+    this->open_issues_count = open_issues_count;
+}
+
+void Repo::setName(std::string name) {
+
+}
+
+std::string Repo::getName() {
+    return "";
+}
+
+void Repo::setOwner(std::string owner) {
+    this->owner = owner;
+}
+
+void Repo::setLicense(std::string license) {
+
+}
+
+std::string Repo::getLicense() {
+    return "";
+}
+
+void Repo::setFork(bool fork) {
+
+}
+
+bool Repo::getFork() {
+    return false;
+}
+
+void Repo::setForks(int forks) {
+
+}
+
+int Repo::getForks() {
+    return 1;
+}
+
+void Repo::drawListView(int x, int y) {
+    vita2d_draw_rectangle(x - 20, y, 20, 100, RGBA8(255,0,0,255));
+    vita2d_draw_rectangle(x, y, 960, 100, RGBA8(255,255,255,255));
+    vita2d_font_draw_textf(font40, x, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str()) / 2), RGBA8(0,0,0,255), 40.0f, "%s", name.c_str());
+    vita2d_draw_line(x, y, x + 960, y, RGBA8(150,150,150,150));
+    vita2d_draw_line(x, y + 100, x + 960, y + 100, RGBA8(150,150,150,150));
+}
+
+void Repo::drawDetailsView() {
+    init_keys();
+
+    int cursor_pos = 0;
+
+    while(1) {
+        update_keys();
+
+        if(up_released)   cursor_pos -= 1;
+        if(down_released) cursor_pos += 1;
+
+        if(cursor_pos < 0) cursor_pos = 1;
+        if(cursor_pos > 1) cursor_pos = 0;
+
+        if (circle_released){
+            reset_keys();
+            break;
+        }
+
+        if(cross_released) {
+            if(cursor_pos == 1)
+                break;
+        }
+
+        vita2d_start_drawing();
+        vita2d_clear_screen();
+
+        draw_header("Repository");
+
+        vita2d_font_draw_textf(font40, 40, 95, RGBA8(0,0,0,255), 40.0f, "%s/%s", owner.c_str(), name.c_str());
+        vita2d_font_draw_textf(font20, 960 - vita2d_font_text_width(font20, 20.0f, license.c_str()) - 5, 124, RGBA8(0,0,0,255), 20.0f, "%s", license.c_str());
+        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,150));
+
+        vita2d_font_draw_textf(font20, 40, 120, RGBA8(0,0,0,255), 20.0f, "Description:\n%s", word_wrap(description, 50).c_str());
+        //vita2d_font_draw_textf(font20, 10, 100, RGBA8(0,0,0,255), 20.0f, "Created at: %s", created_at.c_str());
+        //vita2d_font_draw_textf(font20, 10, 120, RGBA8(0,0,0,255), 20.0f, "Updated at: %s", updated_at.c_str());
+        //vita2d_font_draw_textf(font20, 10, 140, RGBA8(0,0,0,255), 20.0f, "Homepage: %s", homePage.c_str());
+        //vita2d_font_draw_textf(font20, 10, 160, RGBA8(0,0,0,255), 20.0f, "Language: %s", language.c_str());
+        //if(fork)
+            //vita2d_font_draw_textf(font20, 10, 180, RGBA8(0,0,0,255), 20.0f, "Fork: yes");
+        //else
+        //    vita2d_font_draw_textf(font20, 10, 180, RGBA8(0,0,0,255), 20.0f, "Fork: no");
+        //vita2d_font_draw_textf(font20, 10, 200, RGBA8(0,0,0,255), 20.0f, "Forks: %d", forks);
+        //vita2d_font_draw_textf(font20, 10, 220, RGBA8(0,0,0,255), 20.0f, "Stars: %d", stargazers_count);
+        //vita2d_font_draw_textf(font20, 10, 240, RGBA8(0,0,0,255), 20.0f, "Open Issues: %d", open_issues_count);
+        draw_button("View Releases", 960 - 250, 200, cursor_pos == 0);
+        draw_button("Back", 960 - 250, 260, cursor_pos == 1);
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+    }
+}
