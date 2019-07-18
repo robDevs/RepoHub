@@ -23,8 +23,6 @@ int main()
 
     loadTextures();
 
-    get_token();
-
     std::vector<std::string> userNames;
 
     if(file_exists("ux0:/data/repo-browser/users.txt")) {

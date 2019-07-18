@@ -7,6 +7,7 @@
 #include "json-tools.h"
 #include "draw.h"
 #include "controls.h"
+#include "vita-keyboard.h"
 
 class User {
 private:

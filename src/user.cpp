@@ -3,6 +3,8 @@
 User::User(std::string name) {
     setName(name);
     complete = false;
+
+    setRepos();
 }
 
 void User::setName(std::string name) {
@@ -130,6 +132,10 @@ void draw_user_list(std::vector<User> user_list, int *status) {
         if (start_released){
             *status = QUIT_APP;
             break;
+        }
+
+        if (select_released) {
+            
         }
 
         if (down_released) {
