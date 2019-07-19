@@ -93,7 +93,7 @@ void User::drawDetailsView() {
         for(int i = 0; i < numRepos; i++) {
             repos[i].drawListView(y_offset + i*100, cursor_pos == i);
         }
-        
+
         vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/500), 5, menuBarH, RGBA8(36,41,46,255));
 
         draw_header(header_string);
@@ -126,7 +126,7 @@ void draw_user_list(std::vector<User> user_list, int *status) {
         }
 
         if (select_released) {
-
+            get_token();
         }
 
         if (down_released) {

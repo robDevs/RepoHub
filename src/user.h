@@ -8,6 +8,8 @@
 #include "draw.h"
 #include "controls.h"
 #include "vita-keyboard.h"
+#include <psp2/appmgr.h>
+
 
 class User {
 private:
@@ -24,6 +26,7 @@ public:
     void setRepos();
     void drawListView(int y, bool selected);
     void drawDetailsView();
+    void drawReleases();
 };
 
 extern void draw_user_list(std::vector<User> user_list, int *status);
