@@ -1,5 +1,0 @@
-/home/rob/Projects/Repo-Explorer/build/CMakeFiles/rebuild_cache.dir
-/home/rob/Projects/Repo-Explorer/build/CMakeFiles/edit_cache.dir
-/home/rob/Projects/Repo-Explorer/build/CMakeFiles/repo-browser.elf.dir
-/home/rob/Projects/Repo-Explorer/build/CMakeFiles/repo-browser.vpk_.dir
-/home/rob/Projects/Repo-Explorer/build/CMakeFiles/repo-browser.self_.dir
