@@ -8,22 +8,23 @@ int jansson_get_repo_count(std::string json_user_string) {
 
     if(!root)
     {
-        return 1;
+        return 0;
     }
 
     if(!json_is_object(root))
     {
         json_decref(root);
-        return 1;
+        return 0;
     }
 
     json_t *data;
 
     data = json_object_get(root, "public_repos"); // we only care about public repos.
+
     if(!json_is_integer(data))
     {
         json_decref(root);
-        return 1;
+        return 0;
     }
 
     int returnVal = json_integer_value(data);
@@ -149,4 +150,114 @@ std::string jansson_get_avatar_url(std::string json_user_string) {
     std::string returnVal = json_string_value(data);
     json_decref(root);
     return returnVal;
+}
+
+int jansson_parse_release_list(std::string json_release_list_string, std::vector<Release> *releaseList) {
+    json_t *root;
+    json_error_t error;
+
+    root = json_loads(json_release_list_string.c_str(), 0, &error);
+
+    if(!root)
+    {
+        return 0;
+    }
+
+    if(!json_is_array(root))
+    {
+        json_decref(root);
+        return 0;
+    }
+
+    int count = 0;
+
+    for(size_t i = 0; i < json_array_size(root); i++) {
+        json_t *data, *tag_name, *name, *created_at, *body, *asset_array, *draft, *prerelease;
+        std::vector<Asset> assets;
+
+        data = json_array_get(root, i);
+        if(!json_is_object(data))
+        {
+            json_decref(root);
+            return count;
+        }
+
+        tag_name = json_object_get(data, "tag_name"); // we only care about public repos.
+        name = json_object_get(data, "name");
+        created_at = json_object_get(data, "created_at");
+        body = json_object_get(data, "body");
+        draft = json_object_get(data, "draft");
+        prerelease = json_object_get(data, "prerelease");
+
+        asset_array = json_object_get(data, "assets");
+        if(json_is_array(asset_array)) {
+            for(size_t c = 0; c < json_array_size(asset_array); c++) {
+                json_t *asset_data, *asset_name, *asset_url, *asset_size;
+
+                asset_data = json_array_get(asset_array, c);
+                if(!json_is_object(asset_data))
+                    break;
+                asset_name = json_object_get(asset_data, "name");
+                asset_url = json_object_get(asset_data, "browser_download_url");
+                asset_size = json_object_get(asset_data, "size");
+
+                Asset new_asset;
+                if(json_is_string(asset_name))
+                    new_asset.name = json_string_value(asset_name);
+                if(json_is_string(asset_url))
+                    new_asset.url = json_string_value(asset_url);
+                if(json_is_integer(asset_size))
+                    new_asset.size = json_integer_value(asset_size);
+                assets.push_back(new_asset);
+            }
+        }
+
+        Release new_release;
+        if(json_is_string(tag_name))
+            new_release.tag_name = json_string_value(tag_name);
+        if(json_is_string(name))
+            new_release.name = json_string_value(name);
+        if(json_is_string(created_at))
+            new_release.created_at = json_string_value(created_at);
+        if(json_is_string(body)){
+            new_release.body = json_string_value(body);
+            //stripUnicode(new_release.body);
+        }
+        if(json_is_boolean(prerelease))
+            new_release.prerelease = json_boolean_value(prerelease);
+        for(size_t x = 0; x < assets.size(); x++)
+            new_release.assets.push_back(assets[x]);
+
+        if(json_is_boolean(draft)) {
+            if(json_boolean_value(draft) == false) {
+                count += 1;
+                releaseList->push_back(new_release);
+            }
+        }
+    }
+
+    json_decref(root);
+    return count;
+}
+void jansson_parse_asset_list(json_t *json_array, std::vector<Asset> *assetList) {
+    if(!json_is_array(json_array)) {
+        return;
+    }
+
+    for(size_t i = 0; i < json_array_size(json_array); i++) {
+        json_t *data, *name, *url;
+
+        data = json_array_get(json_array, i);
+        if(!json_is_object(data))
+            return;
+        name = json_object_get(data, "name");
+        url = json_object_get(data, "browser_download_url");
+
+        Asset new_asset;
+        if(json_is_string(name))
+            new_asset.name = json_string_value(name);
+        if(json_is_string(url))
+            new_asset.url = json_string_value(url);
+        assetList->push_back(new_asset);
+    }
 }
