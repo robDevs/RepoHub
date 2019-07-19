@@ -5,6 +5,8 @@
 #include "images.h"
 #include "controls.h"
 #include "draw.h"
+#include "release.h"
+#include "curl-tools.h"
 
 class Repo {
 private:
@@ -16,6 +18,7 @@ private:
     std::string updated_at;
     std::string homePage;
     std::string language;
+    std::vector<Release> releases;
     bool fork;
     bool priv;
     int forks;
@@ -34,6 +37,7 @@ public:
     int getForks();
     void drawListView(int y, bool selected);
     void drawDetailsView();
+    void drawReleases();
 };
 
 #endif

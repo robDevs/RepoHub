@@ -1,4 +1,5 @@
 #include "repo.h"
+#include "json-tools.h"
 
 Repo::Repo(std::string name, std::string description, std::string license, std::string owner, std::string created_at, std::string updated_at, std::string homePage, std::string language, bool fork, bool priv, int forks, int stargazers_count, int open_issues_count) {
     this->name = name;
@@ -76,6 +77,19 @@ void Repo::drawDetailsView() {
         }
 
         if(cross_released) {
+            if(cursor_pos == 0) {
+                std::string url = "https://api.github.com/repos/";
+                url += owner;
+                url += "/";
+                url += name;
+                url += "/releases";
+                std::string release_list_string = curl_get_string(url);
+                jansson_parse_release_list(release_list_string, &releases);
+
+                if(static_cast<int>(releases.size()) > 0) {
+                    drawReleases();
+                }
+            }
             if(cursor_pos == 1)
                 break;
         }
@@ -103,6 +117,64 @@ void Repo::drawDetailsView() {
         //vita2d_font_draw_textf(font20, 10, 240, RGBA8(0,0,0,255), 20.0f, "Open Issues: %d", open_issues_count);
         draw_button("View Releases", 960 - 250, 200, cursor_pos == 0);
         draw_button("Back", 960 - 250, 260, cursor_pos == 1);
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+    }
+}
+
+void Repo::drawReleases() {
+    int cursor_pos = 0;
+    int y_offset = 103;
+    int list_size = static_cast<int> (releases.size());
+
+    float menuBarH = pow(544-103,2)/(list_size*100);
+
+    init_keys();
+
+    while(1) {
+        update_keys();
+        if (down_released) {
+            if(cursor_pos < list_size - 1) cursor_pos += 1;
+            else cursor_pos = 0;
+        }
+
+        if (up_released) {
+            if(cursor_pos > 0) cursor_pos -= 1;
+            else cursor_pos = list_size - 1;
+        }
+
+        if (circle_released){
+            break;
+        }
+
+        if(y_offset + (cursor_pos*100) > 544 - 100) {
+            y_offset -= 100;
+        }
+
+        if(y_offset + (cursor_pos*100) < 103) {
+            y_offset += 100;
+        }
+
+        if(cross_released) {
+            draw_release_details(releases[cursor_pos]);
+        }
+
+        vita2d_start_drawing();
+        vita2d_clear_screen();
+
+        for(int i = 0; i < list_size; i++) {
+            draw_list_item(releases[i].name, y_offset + i*100, cursor_pos == i);
+        }
+
+        vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
+        vita2d_font_draw_textf(font40, 40, 95, RGBA8(0,0,0,255), 40.0f, "%s/%s", owner.c_str(), name.c_str());
+        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,150));
+
+        vita2d_draw_rectangle(960 - 10, 103 - y_offset*(menuBarH/(544-103)), 5, menuBarH, RGBA8(36,41,46,255));
+
+        draw_header("Repository->Releases");
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
