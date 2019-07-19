@@ -1,4 +1,7 @@
 #!/bin/sh
+mkdir build
+cd build
+cmake ../
 make
 mkdir temp
 cp repo-browser.vpk temp/
