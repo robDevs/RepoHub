@@ -1,4 +1,10 @@
 #include "file-io.h"
+#include <iostream>
+#include <fstream>
+#include <psp2/io/devctl.h>
+#include <psp2/appmgr.h>
+
+
 
 std::string token = "";
 bool have_token = false;
@@ -33,4 +39,22 @@ void get_token() {
         have_token = true;
     }
     file.close();
+}
+
+void write_to_file(std::string message, std::string path) {
+    std::ofstream file;
+    file.open (path.c_str());
+    file << message.c_str();
+    file.close();
+}
+
+//not working correctly. It reads the size of something?
+uint64_t get_space_avail() {
+    uint64_t max, free;
+    max = 0;
+    free = 0;
+
+    sceAppMgrGetDevInfo("ux0:", &max, &free);
+
+    return free;
 }
