@@ -1,19 +1,25 @@
 #include "images.h"
+#include <algorithm>
 
 vita2d_texture *userBg = NULL;
 
+vita2d_font *font10;
+vita2d_font *font15;
 vita2d_font *font20;
 vita2d_font *font40;
 
 void loadTextures() {
     userBg = vita2d_load_PNG_file("app0:/images/user-background-list.png");
+    font10 = vita2d_load_font_file("app0:/font.ttf");
+    font15 = vita2d_load_font_file("app0:/font.ttf");
     font20 = vita2d_load_font_file("app0:/font.ttf");
     font40 = vita2d_load_font_file("app0:/font.ttf");
 }
 
 void deleteTextures() {
     vita2d_free_texture(userBg);
-
+    vita2d_free_font(font10);
+    vita2d_free_font(font15);
     vita2d_free_font(font20);
     vita2d_free_font(font40);
 }
@@ -46,4 +52,13 @@ std::string word_wrap(std::string text, unsigned per_line) {
     line_begin = line_end;
   }
   return text;
+}
+
+bool invalidChar (char c)
+{
+    return !(c>=0 && c<128);
+}
+void strip_carriage_return(std::string &str)
+{
+    str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
 }
