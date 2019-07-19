@@ -1,5 +1,9 @@
 #include "curl-tools.h"
+#include "controls.h"
 
+std::string progress_string;
+
+//progress func for file download.
 int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded) {
     // ensure that the file to be downloaded is not empty
     // because that would cause a division by zero error later on
@@ -7,26 +11,44 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
         return 0;
     }
 
+    update_keys();
+
+    if(circle_released) {
+        return 1;
+    }
+
+    std::string label = "Downloading file...";
+    std::string label1 = std::to_string((int)(round(NowDownloaded)));
+    label1 += "/";
+    label1 += std::to_string((int)(round(TotalToDownload)));
+
 		// how wide you want the progress meter to be
-    int total=105;
+    int total=320;
     double fractiondownloaded = NowDownloaded / TotalToDownload;
     // part of the progressmeter that's already "full"
     int progress = round(fractiondownloaded * total);
 
 		vita2d_start_drawing();
 
-		for(int i = 0; i < 1000; i++){//why?
-			vita2d_draw_rectangle(960 / 2 - 55, 544 / 2 - 25, 110, 35, RGBA8(0,0,0,255));
-			vita2d_draw_rectangle(960 / 2 - 50, 544 / 2 - 20, progress, 25, RGBA8(0,255,0,255));
-		}
+		vita2d_draw_rectangle(960 / 2 - 200, 544 / 2 - 100, 400, 200, RGBA8(36,41,46,255));
+		vita2d_draw_rectangle(960 / 2 - 160, 544 / 2 - 2, progress, 4, RGBA8(0,255,0,255));
+
+        vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, label.c_str()) / 2), 544 / 2 - 40, RGBA8(255,255,255,255), 20.0f, label.c_str());
+        vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, label1.c_str()) / 2), 544 / 2 - 20, RGBA8(255,255,255,255), 20.0f, label1.c_str());
+        std::string free_space = "Free Space: ";
+        free_space += std::to_string((get_space_avail()));
+        vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, free_space.c_str()) / 2), 544 / 2 + 20, RGBA8(255,255,255,255), 20.0f, free_space.c_str());
 
 		vita2d_end_drawing();
+        vita2d_common_dialog_update();
 		vita2d_swap_buffers();
 
     // if you don't return 0, the transfer will be aborted - see the documentation
     return 0;
 }
 
+//progress func for curl_get_string
+//currently just draws a header as getting a string is fast.
 int progress_func_string(void* ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded) {
     // ensure that the file to be downloaded is not empty
     // because that would cause a division by zero error later on
@@ -38,7 +60,6 @@ int progress_func_string(void* ptr, double TotalToDownload, double NowDownloaded
         // part of the progressmeter that's already "full"
 
 		vita2d_start_drawing();
-        vita2d_clear_screen();
 
         draw_header("Fetching Data...");
 
@@ -59,10 +80,12 @@ void init_string(struct stringcurl *s) {
   s->ptr[0] = '\0';
 }
 
-size_t writefunc(void *ptr, size_t size, size_t nmemb, struct stringcurl *s) {
+
+size_t writefunc(void *ptr, size_t size, size_t nmemb, struct stringcurl *s){
   size_t new_len = s->len + size*nmemb;
   s->ptr = (char*)realloc(s->ptr, new_len+1);
   if (s->ptr == NULL) {
+    fprintf(stderr, "realloc() failed\n");
     return 0;
     //exit(EXIT_FAILURE);
   }
@@ -155,6 +178,7 @@ std::string curl_get_string(std::string url){
 //straight from the samples. Downloads a file from  url to file--->see parameters.
 //modified to use std::string
 void curl_download_file(std::string url , std::string file){
+    init_keys();
 	int imageFD = sceIoOpen( file.c_str(), SCE_O_WRONLY | SCE_O_CREAT, 0777);
 	if(!imageFD) { return; }
 
