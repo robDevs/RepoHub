@@ -75,7 +75,8 @@ void User::drawDetailsView() {
         }
 
         if(cross_released) {
-            repos[cursor_pos].drawDetailsView();
+            if(numRepos > 0)
+                repos[cursor_pos].drawDetailsView();
         }
 
         if (circle_released){
