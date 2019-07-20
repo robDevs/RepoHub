@@ -24,7 +24,7 @@ int User::getNumRepos() {
 void User::setRepos() {
     std::string url = "https://api.github.com/users/";
     url += name;
-    url += "/repos";
+    url += "/repos?per_page=100";
 
     std::string json_repo_list_string = curl_get_string(url);
     jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
