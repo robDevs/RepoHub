@@ -62,3 +62,7 @@ void strip_carriage_return(std::string &str)
 {
     str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
 }
+void strip_new_line(std::string &str)
+{
+    str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+}

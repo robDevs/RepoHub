@@ -16,5 +16,6 @@ extern void deleteTextures();
 extern std::string word_wrap(std::string text, unsigned per_line);
 extern bool invalidChar (char c);
 extern void strip_carriage_return(std::string &str);
+extern void strip_new_line(std::string &str);
 
 #endif
