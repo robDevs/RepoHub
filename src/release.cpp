@@ -17,16 +17,25 @@ void draw_release_details(Release release) {
 
     int status = 0;
 
+    int list_size = static_cast<int> (release.assets.size());
+
     while(1) {
         update_keys();
-        if(cross_released && release.assets[0].size < get_space_avail()) {
-            std::string message_string = "Download ";
-            message_string += release.assets[0].name;
-            message_string += "\nto 'ux0:data/Repo-Explorer?'";
-            if(draw_yes_no_message(message_string)) {
-                std::string filePath = "ux0:data/repo-browser/Downloads/";
-                filePath += release.assets[0].name;
-                curl_download_file(release.assets[0].url, filePath);
+        if(cross_released && list_size > 0) {
+
+            if(release.assets[0].size < get_space_avail()) {
+                std::string message_string = "Download ";
+                message_string += release.assets[0].name;
+                message_string += "\nto 'ux0:data/Repo-Explorer?'";
+                if(draw_yes_no_message(message_string)) {
+                    std::string filePath = "ux0:data/repo-browser/Downloads/";
+                    filePath += release.assets[0].name;
+                    curl_download_file(release.assets[0].url, filePath);
+                }
+            }
+            else {
+                std::string message_string = "Not enough Space!";
+                draw_alert_message(message_string);
             }
         }
 
