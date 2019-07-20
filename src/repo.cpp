@@ -115,8 +115,8 @@ void Repo::drawDetailsView() {
         //vita2d_font_draw_textf(font20, 10, 200, RGBA8(0,0,0,255), 20.0f, "Forks: %d", forks);
         //vita2d_font_draw_textf(font20, 10, 220, RGBA8(0,0,0,255), 20.0f, "Stars: %d", stargazers_count);
         //vita2d_font_draw_textf(font20, 10, 240, RGBA8(0,0,0,255), 20.0f, "Open Issues: %d", open_issues_count);
-        draw_button("View Releases", 960 - 250, 200, cursor_pos == 0);
-        draw_button("Back", 960 - 250, 260, cursor_pos == 1);
+        draw_button("View Releases", 960 - 250, 200, 200, 50, cursor_pos == 0);
+        draw_button("Back", 960 - 250, 260, 200, 50, cursor_pos == 1);
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
