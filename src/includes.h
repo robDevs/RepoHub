@@ -39,4 +39,9 @@
 #define RELEASE_VIEW    5//view a selected release from a repo
 #define QUIT_APP        6//quit the app
 
+extern int core_max;
+extern int core_remain;
+extern int search_max;
+extern int search_remain;
+
 #endif

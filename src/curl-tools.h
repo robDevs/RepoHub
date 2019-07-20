@@ -36,5 +36,7 @@ extern void httpInit();
 
 extern void httpTerm();
 
+extern void void check_core_rate_limit();
+
 
 #endif

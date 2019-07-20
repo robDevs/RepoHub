@@ -84,6 +84,10 @@ void Repo::drawDetailsView() {
                 url += name;
                 url += "/releases";
                 std::string release_list_string = curl_get_string(url);
+                jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
+
+                check_core_rate_limit();
+
                 jansson_parse_release_list(release_list_string, &releases);
 
                 if(static_cast<int>(releases.size()) > 0) {

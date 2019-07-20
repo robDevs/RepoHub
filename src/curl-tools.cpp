@@ -289,3 +289,21 @@ void httpTerm() {
 
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
 }
+
+void check_core_rate_limit() {
+    std::string rate_limit_string = "Api Requests remaining: ";
+    rate_limit_string += std::to_string(core_remain);
+    if(core_remain == 10)
+        draw_alert_message(rate_limit_string);
+    if(core_remain < 5)
+        draw_alert_message(rate_limit_string);
+}
+
+void check_core_rate_limit() {
+    std::string rate_limit_string = "Search Requests remaining: ";
+    rate_limit_string += std::to_string(core_remain);
+    if(search_remain == 10)
+        draw_alert_message(rate_limit_string);
+    if(search_remain < 5)
+        draw_alert_message(rate_limit_string);
+}

@@ -12,4 +12,6 @@ extern std::string jansson_get_avatar_url(std::string json_user_string);
 extern int jansson_parse_release_list(std::string json_release_list_string, std::vector<Release> *releaseList);
 extern void jansson_parse_asset_list(json_t *json_array, std::vector<Asset> *assetList);
 
+extern void jannson_get_rate_limits(std::string limit_string, int *core_max, int *core_min, int *search_max, int *search_min);
+
 #endif

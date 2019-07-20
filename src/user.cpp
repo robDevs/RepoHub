@@ -27,6 +27,9 @@ void User::setRepos() {
     url += "/repos";
 
     std::string json_repo_list_string = curl_get_string(url);
+    jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
+
+    check_core_rate_limit();
 
     int count = jansson_parse_repo_list(json_repo_list_string, &repos);
     setNumRepos(count);

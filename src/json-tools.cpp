@@ -261,3 +261,62 @@ void jansson_parse_asset_list(json_t *json_array, std::vector<Asset> *assetList)
         assetList->push_back(new_asset);
     }
 }
+
+void jannson_get_rate_limits(std::string limit_string, int *core_max, int *core_min, int *search_max, int *search_min) {
+    json_t *root, *json_core, *json_search, *data, *json_core_max, *json_core_min, *json_search_max, *json_search_min;
+    json_error_t error;
+
+    root = json_loads(limit_string.c_str(), 0, &error);
+
+    if(!root)
+    {
+        core_max = 0;
+        core_min = 0;
+        search_max = 0;
+        search_min = 0;
+        return;
+    }
+
+    if(!json_is_object(root))
+    {
+        core_max = 0;
+        core_min = 0;
+        search_max = 0;
+        search_min = 0;
+        json_decref(root);
+        return;
+    }
+
+    data = json_object_get(root, "resources");
+
+    if(!json_is_object(data)) {
+        core_max = 0;
+        core_min = 0;
+        search_max = 0;
+        search_min = 0;
+        json_decref(root);
+        return;
+    }
+
+
+    json_core = json_object_get(data, "core");
+    json_core_max = json_object_get(json_core, "limit");
+    json_core_min = json_object_get(json_core, "remaining");
+
+    json_search = json_object_get(data, "search");
+    json_search_max = json_object_get(json_search, "limit");
+    json_search_min = json_object_get(json_search, "remaining");
+
+    if(json_is_integer(json_core_max))
+        *core_max = json_integer_value(json_core_max);
+    if(json_is_integer(json_core_min))
+        *core_min = json_integer_value(json_core_min);
+    if(json_is_integer(json_search_max))
+        *search_max = json_integer_value(json_search_min);
+    if(json_is_integer(json_search_min))
+        *search_min = json_integer_value(json_search_min);
+
+    json_decref(root);
+    return;
+
+}
