@@ -35,6 +35,7 @@ find_package(OpenSSL REQUIRED)
 
 add_executable(${SHORT_NAME}.elf
     src/main.cpp
+    src/includes.cpp
     src/images.cpp
     src/vita-keyboard.cpp
     src/controls.cpp
