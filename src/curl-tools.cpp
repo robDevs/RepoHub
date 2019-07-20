@@ -299,7 +299,7 @@ void check_core_rate_limit() {
         draw_alert_message(rate_limit_string);
 }
 
-void check_core_rate_limit() {
+void check_search_rate_limit() {
     std::string rate_limit_string = "Search Requests remaining: ";
     rate_limit_string += std::to_string(core_remain);
     if(search_remain == 10)
