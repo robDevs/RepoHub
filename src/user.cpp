@@ -57,8 +57,8 @@ void User::drawDetailsView() {
 
     float menuBarH = pow(500,2)/(numRepos*100);
 
-    std::string header_string = name;
-    header_string += "'s Repositories";
+    std::string header_string = "Saved users->";
+    header_string += name;
 
     init_keys();
 
@@ -163,7 +163,7 @@ void draw_user_list(std::vector<User> user_list, int *status) {
         }
         vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/500), 5, menuBarH, RGBA8(36,41,46,255));
 
-        draw_header("Saved Users");
+        draw_header("Saved users");
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
