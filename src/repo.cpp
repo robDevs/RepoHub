@@ -22,7 +22,7 @@ void Repo::setName(std::string name) {
 }
 
 std::string Repo::getName() {
-    return "";
+    return name;
 }
 
 void Repo::setOwner(std::string owner) {
@@ -30,7 +30,7 @@ void Repo::setOwner(std::string owner) {
 }
 
 void Repo::setLicense(std::string license) {
-
+    this->license = license;
 }
 
 std::string Repo::getLicense() {
@@ -38,7 +38,7 @@ std::string Repo::getLicense() {
 }
 
 void Repo::setFork(bool fork) {
-
+    this->fork = fork;
 }
 
 bool Repo::getFork() {
@@ -46,7 +46,7 @@ bool Repo::getFork() {
 }
 
 void Repo::setForks(int forks) {
-
+    this->forks = forks;
 }
 
 int Repo::getForks() {
