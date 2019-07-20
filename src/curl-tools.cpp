@@ -237,15 +237,17 @@ void curl_download_file(std::string url , std::string file){
 
 		if(res != CURLE_OK){
 			//fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-
-		}else{
-
+            draw_alert_message(word_wrap(curl_easy_strerror(res), 30));
 		}
-
-
-	}else{
-
+        else {
+            std::string result_string = "File saved to:";
+            result_string += "\nux0:data/Repo-Explorer/Downloads/";
+            draw_alert_message(result_string);
+        }
 	}
+    else {
+        draw_alert_message("Failed to init Curl");
+    }
 
 	// close filedescriptor
 	sceIoClose(imageFD);
