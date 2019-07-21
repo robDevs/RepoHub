@@ -19,7 +19,7 @@ struct Release {
     bool prerelease;
 };
 
-extern void draw_release_details(Release release);
+extern void draw_release_details(Release release, std::string header_start);
 
 
 #endif

@@ -7,8 +7,12 @@ void draw_header(std::string header) {
     sceRtcGetCurrentClockLocalTime(&time);
 
     std::string time_string = "";
-    time_string += std::to_string(sceRtcGetHour(&time));
+    int time_hour = sceRtcGetHour(&time);
+    if(time_hour > 12) time_hour -= 12;
+    int time_minute = sceRtcGetMinute(&time);
+    time_string += std::to_string(time_hour);
     time_string += ":";
+    if(time_minute < 10) time_string += "0";
     time_string += std::to_string(sceRtcGetMinute(&time));
     vita2d_draw_rectangle(0, 0, 960, 44, RGBA8(36,41,46,255));
     vita2d_font_draw_textf(font20, 20, 22+(vita2d_font_text_height(font20, 20.0f, header.c_str()) / 4), RGBA8(255,255,255,255), 20.0f, "%s", header.c_str());
@@ -29,9 +33,11 @@ void draw_button(std::string name, int x, int y, int w, int h, bool selected) {
     }
 }
 
-void draw_list_item(std::string name, int y, bool selected) {
+void draw_list_item(std::string name, std::string body, std::string language, int y, bool selected) {
     vita2d_draw_rectangle(0, y, 960, 100, RGBA8(255,255,255,255));
-    vita2d_font_draw_textf(font40, 40, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str()) / 4), RGBA8(0,0,0,255), 40.0f, "%s", name.c_str());
+    vita2d_font_draw_textf(font40, 40, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 40.0f, "%s", name.c_str());
+    vita2d_font_draw_textf(font15, 50, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str())), RGBA8(88, 96, 105,255), 15.0f, "%s", body.c_str());
+
     if(selected) {
         vita2d_draw_line(0, y, 960, y, RGBA8(36,41,46,255));
         vita2d_draw_line(0, y+1, 960, y+1, RGBA8(36,41,46,255));
@@ -42,6 +48,21 @@ void draw_list_item(std::string name, int y, bool selected) {
         vita2d_draw_line(0, y, 960, y, RGBA8(150,150,150,150));
         vita2d_draw_line(0, y + 100, 960, y + 100, RGBA8(150,150,150,150));
     }
+}
+
+void draw_repo_list_item(std::string name, std::string body, std::string language, int y, bool selected) {
+    if(selected) {
+        vita2d_draw_rectangle(40-2, y-2, 424, 144, RGBA8(255,255,255,255));
+        vita2d_draw_rectangle(40-2, y+40-2, 424, 104, RGBA8(36,41,46,255));
+        vita2d_draw_rectangle(40, y+40, 420, 100, RGBA8(255,255,255,255));
+    }
+    else {
+        vita2d_draw_rectangle(40, y + 3, 424, 144, RGBA8(255,255,255,255));
+        vita2d_draw_rectangle(40-2, y+40-2, 424, 104, RGBA8(150,150,150,150));
+        vita2d_draw_rectangle(40, y+40, 420, 100, RGBA8(255,255,255,255));
+    }
+    vita2d_font_draw_textf(font20, 60, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 20.0f, "%s", name.c_str());
+    vita2d_font_draw_textf(font15, 60, y+40+25+(vita2d_font_text_height(font20, 40.0f, name.c_str())), RGBA8(88, 96, 105,255), 15.0f, "%s", word_wrap(body, 40).c_str());
 }
 
 void draw_list_item_small(std::string name, int y, bool selected) {

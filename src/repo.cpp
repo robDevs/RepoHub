@@ -54,13 +54,17 @@ int Repo::getForks() {
 }
 
 void Repo::drawListView(int y, bool selected) {
-    draw_list_item(name, y, selected);
+    draw_repo_list_item(name, description, language, y, selected);
 }
 
-void Repo::drawDetailsView() {
+void Repo::drawDetailsView(std::string header_start) {
     init_keys();
 
     int cursor_pos = 0;
+
+    std::string header_string = header_start;
+    header_string += "->";
+    header_string += name;
 
     while(1) {
         update_keys();
@@ -91,7 +95,7 @@ void Repo::drawDetailsView() {
                 jansson_parse_release_list(release_list_string, &releases);
 
                 if(static_cast<int>(releases.size()) > 0) {
-                    drawReleases();
+                    drawReleases(header_string);
                 }
             }
             if(cursor_pos == 1)
@@ -101,7 +105,7 @@ void Repo::drawDetailsView() {
         vita2d_start_drawing();
         vita2d_clear_screen();
 
-        draw_header("Repository");
+        draw_header(header_string);
 
         vita2d_font_draw_textf(font40, 40, 95, RGBA8(0,0,0,255), 40.0f, "%s/%s", owner.c_str(), name.c_str());
         vita2d_font_draw_textf(font20, 960 - vita2d_font_text_width(font20, 20.0f, license.c_str()) - 5, 124, RGBA8(0,0,0,255), 20.0f, "%s", license.c_str());
@@ -128,12 +132,15 @@ void Repo::drawDetailsView() {
     }
 }
 
-void Repo::drawReleases() {
+void Repo::drawReleases(std::string header_start) {
     int cursor_pos = 0;
     int y_offset = 103;
     int list_size = static_cast<int> (releases.size());
 
     float menuBarH = pow(544-103,2)/(list_size*100);
+
+    std::string header_string = header_start;
+    header_string += "->releases";
 
     init_keys();
 
@@ -162,14 +169,14 @@ void Repo::drawReleases() {
         }
 
         if(cross_released) {
-            draw_release_details(releases[cursor_pos]);
+            draw_release_details(releases[cursor_pos], header_string);
         }
 
         vita2d_start_drawing();
         vita2d_clear_screen();
 
         for(int i = 0; i < list_size; i++) {
-            draw_list_item(releases[i].name, y_offset + i*100, cursor_pos == i);
+            draw_list_item(releases[i].name,"", "", y_offset + i*100, cursor_pos == i);
         }
 
         vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
@@ -178,7 +185,7 @@ void Repo::drawReleases() {
 
         vita2d_draw_rectangle(960 - 10, 103 - y_offset*(menuBarH/(544-103)), 5, menuBarH, RGBA8(36,41,46,255));
 
-        draw_header("Repository->Releases");
+        draw_header(header_string);
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();

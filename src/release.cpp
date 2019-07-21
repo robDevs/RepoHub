@@ -3,7 +3,7 @@
 
 #include "curl-tools.h"
 
-void draw_release_details(Release release) {
+void draw_release_details(Release release, std::string header_start) {
     init_keys();
 
     write_to_file(release.body, "ux0:/data/repo-browser/log.txt");
@@ -12,7 +12,8 @@ void draw_release_details(Release release) {
 
     strip_carriage_return(final_body_string);
 
-    std::string header_string = "Repository->Releases->";
+    std::string header_string = header_start;
+    header_string += "->";
     header_string += release.name;
 
     int status = 0;

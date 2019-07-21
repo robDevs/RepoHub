@@ -42,7 +42,7 @@ void User::setRepos() {
 }
 
 void User::drawListView(int y, bool selected) {
-    draw_list_item(name, y, selected);
+    draw_list_item(name, "", "", y, selected);
 }
 
 void User::drawDetailsView() {
@@ -55,7 +55,7 @@ void User::drawDetailsView() {
     int cursor_pos = 0;
     int y_offset = 44;
 
-    float menuBarH = pow(500,2)/(numRepos*100);
+    float menuBarH = pow(500,2)/(numRepos*140);
 
     std::string header_string = "Saved users->";
     header_string += name;
@@ -76,26 +76,26 @@ void User::drawDetailsView() {
 
         if(cross_released) {
             if(numRepos > 0)
-                repos[cursor_pos].drawDetailsView();
+                repos[cursor_pos].drawDetailsView(header_string);
         }
 
         if (circle_released){
             break;
         }
 
-        if(y_offset + (cursor_pos*100) > 544 - 100) {
-            y_offset -= 100;
+        if(y_offset + (cursor_pos*140) > 544 - 140) {
+            y_offset -= 140;
         }
 
-        if(y_offset + (cursor_pos*100) < 44) {
-            y_offset += 100;
+        if(y_offset + (cursor_pos*140) < 44) {
+            y_offset += 140;
         }
 
         vita2d_start_drawing();
         vita2d_clear_screen();
 
         for(int i = 0; i < numRepos; i++) {
-            repos[i].drawListView(y_offset + i*100, cursor_pos == i);
+            repos[i].drawListView(y_offset + i*140, cursor_pos == i);
         }
 
         vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/500), 5, menuBarH, RGBA8(36,41,46,255));

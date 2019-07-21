@@ -36,8 +36,8 @@ public:
     void setForks(int forks);
     int getForks();
     void drawListView(int y, bool selected);
-    void drawDetailsView();
-    void drawReleases();
+    void drawDetailsView(std::string header_start);
+    void drawReleases(std::string header_start);
 };
 
 #endif
