@@ -25,12 +25,14 @@ int main()
 
     std::vector<std::string> userNames;
 
-    if(file_exists("ux0:/data/repo-browser/users.txt")) {
+    /*if(file_exists("ux0:/data/repo-browser/users.txt")) {
         read_file_lines("ux0:/data/repo-browser/users.txt", &userNames);
     }
     else {
         read_file_lines("ux0:/data/repo-browser/users.txt", &userNames);
-    }
+    }*/
+
+    jansson_parse_followers_list(curl_get_string("https://api.github.com/users/robDevs/following"), &userNames);
 
     std::vector<User> users;
 

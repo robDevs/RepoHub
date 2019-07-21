@@ -31,11 +31,14 @@ void User::setRepos() {
 
     check_core_rate_limit();
 
-    int count = jansson_parse_repo_list(json_repo_list_string, &repos);
+    int count = jansson_parse_repo_list(json_repo_list_string, &repos_row0, &repos_row1);
     setNumRepos(count);
 
-    for(size_t i = 0; i < repos.size(); i++) {
-        repos[i].setOwner(name);
+    for(size_t i = 0; i < repos_row0.size(); i++) {
+        repos_row0[i].setOwner(name);
+    }
+    for(size_t i = 0; i < repos_row1.size(); i++) {
+        repos_row1[i].setOwner(name);
     }
 
     complete = true;
@@ -53,9 +56,13 @@ void User::drawDetailsView() {
     }
 
     int cursor_pos = 0;
+    int cursor_row = 0;
     int y_offset = 44;
 
-    float menuBarH = pow(500,2)/(numRepos*140);
+    int list_size0 = static_cast<int>(repos_row0.size());
+    int list_size1 = static_cast<int>(repos_row1.size());
+
+    float menuBarH = pow(500,2)/(list_size0*140);
 
     std::string header_string = "Saved users->";
     header_string += name;
@@ -65,18 +72,37 @@ void User::drawDetailsView() {
     while(1) {
         update_keys();
         if (down_released) {
-            if(cursor_pos < numRepos - 1) cursor_pos += 1;
+            if(cursor_pos < list_size0 - 1) cursor_pos += 1;
             else cursor_pos = 0;
         }
 
         if (up_released) {
             if(cursor_pos > 0) cursor_pos -= 1;
-            else cursor_pos = numRepos - 1;
+            else cursor_pos = list_size0 - 1;
         }
 
         if(cross_released) {
-            if(numRepos > 0)
-                repos[cursor_pos].drawDetailsView(header_string);
+            if(numRepos > 0) {
+                if(cursor_row == 0)
+                    repos_row0[cursor_pos].drawDetailsView(header_string);
+                else if(cursor_row == 1)
+                    repos_row1[cursor_pos].drawDetailsView(header_string);
+            }
+        }
+
+        if(left_released) {
+            cursor_row -= 1;
+        }
+
+        if(right_released) {
+            cursor_row += 1;
+        }
+
+        if(cursor_row < 0) {
+            cursor_row = 1;
+        }
+        if(cursor_row > 1 || list_size1 < 1 || cursor_pos > list_size1 - 1) {
+            cursor_row = 0;
         }
 
         if (circle_released){
@@ -94,8 +120,12 @@ void User::drawDetailsView() {
         vita2d_start_drawing();
         vita2d_clear_screen();
 
-        for(int i = 0; i < numRepos; i++) {
-            repos[i].drawListView(y_offset + i*140, cursor_pos == i);
+        for(int i = 0; i < list_size0; i++) {
+            repos_row0[i].drawListView(40, y_offset + i*140, cursor_pos == i && cursor_row == 0);
+        }
+
+        for(int i = 0; i < list_size1; i++) {
+            repos_row1[i].drawListView(500, y_offset + i*140, cursor_pos == i && cursor_row == 1);
         }
 
         vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/500), 5, menuBarH, RGBA8(36,41,46,255));

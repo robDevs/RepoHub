@@ -32,7 +32,7 @@ int jansson_get_repo_count(std::string json_user_string) {
     return returnVal;
 }
 
-int jansson_parse_repo_list(std::string json_repo_list_string, std::vector<Repo> *repoList) {
+int jansson_parse_repo_list(std::string json_repo_list_string, std::vector<Repo> *repoList0, std::vector<Repo> *repoList1) {
     json_t *root;
     json_error_t error;
 
@@ -45,6 +45,8 @@ int jansson_parse_repo_list(std::string json_repo_list_string, std::vector<Repo>
         json_decref(root);
         return 0;
     }
+
+    int alt = 0;
 
     for(size_t i = 0; i < json_array_size(root); i++) {
         json_t *data, *name, *priv, *description, *fork, *created_at, *updated_at, *homePage, *stargazers_count, *language, *license, *forks, *open_issues_count;
@@ -111,7 +113,14 @@ int jansson_parse_repo_list(std::string json_repo_list_string, std::vector<Repo>
                      stargazers_countInt,
                      open_issues_countInt
                  );
-        repoList->push_back(newRepo);
+        if(alt == 0)
+            repoList0->push_back(newRepo);
+        else if(alt == 1)
+            repoList1->push_back(newRepo);
+
+        alt += 1;
+        if(alt > 1)
+            alt = 0;
 
         count += 1;
     }
@@ -319,4 +328,39 @@ void jannson_get_rate_limits(std::string limit_string, int *core_max, int *core_
     json_decref(root);
     return;
 
+}
+
+void jansson_parse_followers_list(std::string followers_list, std::vector<std::string> *list) {
+    json_t *root;
+    json_error_t error;
+
+    root = json_loads(followers_list.c_str(), 0, &error);
+
+    if(!root)
+    {
+        return;
+    }
+
+    if(!json_is_array(root))
+    {
+        json_decref(root);
+        return;
+    }
+
+    for(size_t i = 0; i < json_array_size(root); i++) {
+        json_t *data, *user_name;
+
+        data = json_array_get(root, i);
+        if(!json_is_object(data))
+        {
+            json_decref(root);
+            return;
+        }
+
+        user_name = json_object_get(data, "login");
+
+        if(json_is_string(user_name))
+            list->push_back(json_string_value(user_name));
+    }
+    json_decref(root);
 }

@@ -64,6 +64,7 @@ int progress_func_string(void* ptr, double TotalToDownload, double NowDownloaded
         draw_header("Fetching Data...");
 
 		vita2d_end_drawing();
+        vita2d_common_dialog_update();
 		vita2d_swap_buffers();
 
     // if you don't return 0, the transfer will be aborted - see the documentation

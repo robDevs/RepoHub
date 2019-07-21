@@ -14,8 +14,8 @@
 class User {
 private:
     std::string name;
-    int numRepos;
-    std::vector<Repo> repos;
+    int numRepos, repo_list0_size, repo_list1_size;
+    std::vector<Repo> repos_row0, repos_row1;
     bool complete;
 public:
     User(std::string name);

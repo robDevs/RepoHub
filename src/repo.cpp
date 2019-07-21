@@ -53,8 +53,8 @@ int Repo::getForks() {
     return 1;
 }
 
-void Repo::drawListView(int y, bool selected) {
-    draw_repo_list_item(name, description, language, y, selected);
+void Repo::drawListView(int x, int y, bool selected) {
+    draw_repo_list_item(name, description, language, stargazers_count, forks, updated_at, x, y, selected);
 }
 
 void Repo::drawDetailsView(std::string header_start) {

@@ -4,6 +4,7 @@
 #include "includes.h"
 
 extern vita2d_texture *userBg;
+extern vita2d_texture *star;
 
 extern vita2d_font *font10;
 extern vita2d_font *font15;
