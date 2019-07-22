@@ -68,9 +68,10 @@ void draw_repo_list_item(std::string name, std::string body, std::string languag
     if(updated_at.size() > 10)
         updated_at.resize(10);
 
+    int lang_circle_x = x+20+8;
     std::string stars_final = std::to_string(stars);
     std::string forks_final = std::to_string(forks);
-    int language_x = x+20;
+    int language_x = lang_circle_x + 10;
     int star_icon_x = language_x + vita2d_font_text_width(font15, 15.0f, language.c_str()) + 5;
     int stars_x = star_icon_x + vita2d_texture_get_width(star) + 5;
     int forks_x = stars_x + vita2d_font_text_width(font15, 15.0f, stars_final.c_str()) + 10;
@@ -86,6 +87,8 @@ void draw_repo_list_item(std::string name, std::string body, std::string languag
     }
     vita2d_font_draw_textf(font20, x+20, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 20.0f, "%s", name.c_str());
     vita2d_font_draw_textf(font15, x+20, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str())) + 5, RGBA8(88, 96, 105,255), 15.0f, "%s", word_wrap(body, 40).c_str());
+
+    vita2d_draw_fill_circle(lang_circle_x, y+40+100-15, 7, get_lang_color(language));
     vita2d_font_draw_textf(font15, language_x, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, "%s", word_wrap(language, 40).c_str());
     vita2d_font_draw_textf(font15, stars_x, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, "%d", stars);
     vita2d_font_draw_textf(font15, forks_x, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, "forks:%d", forks);

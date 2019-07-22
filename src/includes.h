@@ -44,4 +44,6 @@ extern int core_remain;
 extern int search_max;
 extern int search_remain;
 
+extern unsigned int get_lang_color(std::string language);
+
 #endif
