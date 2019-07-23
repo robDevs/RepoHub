@@ -221,11 +221,6 @@ void curl_download_file(std::string url , std::string file){
 		struct curl_slist *headerchunk = NULL;
 		headerchunk = curl_slist_append(headerchunk, "Accept: */*");
 		headerchunk = curl_slist_append(headerchunk, "Content-Type: application/json");
-        if(have_token) {
-            std::string final_token_header = "Authorization: token ";
-            final_token_header += token;
-            headerchunk = curl_slist_append(headerchunk, final_token_header.c_str());
-        }
 		headerchunk = curl_slist_append(headerchunk, "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
 		headerchunk = curl_slist_append(headerchunk, "Content-Length: 0");
 		res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerchunk);
