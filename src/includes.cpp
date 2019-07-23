@@ -72,3 +72,13 @@ unsigned int get_lang_color(std::string language) {
         return RGBA8(227, 241, 113,255);
     return RGBA8(36, 41, 46,255);
 }
+
+float byte_to_kb(int bytes) {
+    return (float)bytes/1024;
+}
+float byte_to_mb(int bytes) {
+    return (float)bytes/1024/1024;
+}
+float byte_to_gb(int bytes) {
+    return (float)bytes/1024/1024/1024;
+}

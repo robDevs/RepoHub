@@ -46,4 +46,8 @@ extern int search_remain;
 
 extern unsigned int get_lang_color(std::string language);
 
+extern float byte_to_kb(int bytes);
+extern float byte_to_mb(int bytes);
+extern float byte_to_gb(int bytes);
+
 #endif

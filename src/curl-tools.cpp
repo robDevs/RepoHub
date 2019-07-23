@@ -17,10 +17,27 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
         return 1;
     }
 
+    std::string NowDownloaded_string = std::to_string(byte_to_mb((int)round(NowDownloaded)));
+    NowDownloaded_string.resize(NowDownloaded_string.find(".") + 3);
+
+    std::string TotalToDownload_string = std::to_string(byte_to_mb((int)round(TotalToDownload)));
+    TotalToDownload_string.resize(TotalToDownload_string.find(".") + 3);
+
+    int space_avail = get_space_avail();
+
+    std::string free_space = "Free Space: ";
+    if(space_avail > 1024*1024*1024) free_space += std::to_string(byte_to_gb(space_avail));
+    else free_space += std::to_string(byte_to_mb(space_avail));
+    free_space.resize(free_space.find(".") + 3);
+    if(space_avail > 1024*1024*1024) free_space += " GB";
+    else free_space += " MB";
+
+
     std::string label = "Downloading file...";
-    std::string label1 = std::to_string((int)(round(NowDownloaded)));
-    label1 += "/";
-    label1 += std::to_string((int)(round(TotalToDownload)));
+    std::string label1 = NowDownloaded_string;
+    label1 += " MB / ";
+    label1 += TotalToDownload_string;
+    label1 += " MB";
 
 		// how wide you want the progress meter to be
     int total=320;
@@ -35,8 +52,7 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
 
         vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, label.c_str()) / 2), 544 / 2 - 40, RGBA8(255,255,255,255), 20.0f, label.c_str());
         vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, label1.c_str()) / 2), 544 / 2 - 20, RGBA8(255,255,255,255), 20.0f, label1.c_str());
-        std::string free_space = "Free Space: ";
-        free_space += std::to_string((get_space_avail()));
+
         vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, free_space.c_str()) / 2), 544 / 2 + 20, RGBA8(255,255,255,255), 20.0f, free_space.c_str());
 
 		vita2d_end_drawing();
