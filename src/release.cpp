@@ -6,8 +6,6 @@
 void draw_release_details(Release release, std::string header_start) {
     init_keys();
 
-    write_to_file(release.body, "ux0:/data/repo-browser/log.txt");
-
     std::string final_body_string = release.body;
 
     strip_carriage_return(final_body_string);

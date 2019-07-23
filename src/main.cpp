@@ -33,6 +33,7 @@ int main()
     }*/
 
     jansson_parse_followers_list(curl_get_string("https://api.github.com/users/robDevs/following"), &userNames);
+    set_token();
 
     std::vector<User> users;
 
