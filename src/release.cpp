@@ -6,6 +6,9 @@
 void draw_release_details(Release release, std::string header_start) {
     init_keys();
 
+    int list_size = static_cast<int> (release.assets.size());
+    int cursor_pos = 0;
+
     std::string final_body_string = release.body;
 
     strip_carriage_return(final_body_string);
@@ -16,20 +19,18 @@ void draw_release_details(Release release, std::string header_start) {
 
     int status = 0;
 
-    int list_size = static_cast<int> (release.assets.size());
-
     while(1) {
         update_keys();
         if(cross_released && list_size > 0) {
 
-            if(release.assets[0].size < get_space_avail()) {
+            if(release.assets[cursor_pos].size < get_space_avail()) {
                 std::string message_string = "Download ";
-                message_string += release.assets[0].name;
+                message_string += release.assets[cursor_pos].name;
                 message_string += "\nto 'ux0:data/Repo-Explorer?'";
                 if(draw_yes_no_message(message_string)) {
                     std::string filePath = "ux0:data/repo-browser/Downloads/";
-                    filePath += release.assets[0].name;
-                    curl_download_file(release.assets[0].url, filePath);
+                    filePath += release.assets[cursor_pos].name;
+                    curl_download_file(release.assets[cursor_pos].url, filePath);
                 }
             }
             else {
@@ -40,22 +41,26 @@ void draw_release_details(Release release, std::string header_start) {
 
         if(circle_released)
             break;
-        vita2d_start_drawing();
-        vita2d_clear_screen();
 
         if(left_released) status -= 1;
         if(right_released) status += 1;
         if(status < 0) status = 1;
         if(status > 1) status = 0;
 
-        draw_header(header_string);
-        int list_size = static_cast<int>(release.assets.size());
+        if(up_released) cursor_pos -= 1;
+        if(down_released) cursor_pos += 1;
+        if(cursor_pos < 0) cursor_pos = list_size -1;
+        if(cursor_pos > list_size -1) cursor_pos = 0;
 
+        vita2d_start_drawing();
+        vita2d_clear_screen();
+
+        draw_header(header_string);
 
         if(status == 0) {
             //file list
             for(int i = 0; i < list_size; i++) {
-                draw_list_item_small(release.assets[i].name, 44+81+i*100, true);
+                draw_list_item_small(release.assets[i].name, 44+81+i*100, cursor_pos == i);
             }
 
             //sub-header bg.
