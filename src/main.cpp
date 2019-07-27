@@ -34,6 +34,7 @@ int main()
 
     jansson_parse_followers_list(curl_get_string("https://api.github.com/users/robDevs/following"), &userNames);
     set_token();
+    jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
 
     std::vector<User> users;
 
