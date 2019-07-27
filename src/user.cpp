@@ -24,6 +24,10 @@ int User::getNumRepos() {
 void User::setRepos() {
     std::string url = "https://api.github.com/users/";
     url += name;
+
+    int count = jansson_get_repo_count(curl_get_string(url));
+    setNumRepos(count);
+
     url += "/repos?per_page=100";
 
     std::string json_repo_list_string = curl_get_string(url);
@@ -31,8 +35,7 @@ void User::setRepos() {
 
     check_core_rate_limit();
 
-    int count = jansson_parse_repo_list(json_repo_list_string, &repos_row0, &repos_row1);
-    setNumRepos(count);
+    jansson_parse_repo_list(json_repo_list_string, &repos_row0, &repos_row1);
 
     for(size_t i = 0; i < repos_row0.size(); i++) {
         repos_row0[i].setOwner(name);
@@ -69,24 +72,56 @@ void User::drawDetailsView() {
 
     init_keys();
 
+    int page = 1;
+
     while(1) {
         update_keys();
         if (down_released) {
             if(cursor_pos < list_size0 - 1) cursor_pos += 1;
+            else if(list_size0 + list_size1 < numRepos && cursor_pos < list_size0) cursor_pos += 1;
             else cursor_pos = 0;
         }
 
         if (up_released) {
             if(cursor_pos > 0) cursor_pos -= 1;
+            else if(list_size0 + list_size1 < numRepos) cursor_pos = list_size0;
             else cursor_pos = list_size0 - 1;
         }
 
         if(cross_released) {
             if(numRepos > 0) {
-                if(cursor_row == 0)
-                    repos_row0[cursor_pos].drawDetailsView(header_string);
-                else if(cursor_row == 1)
-                    repos_row1[cursor_pos].drawDetailsView(header_string);
+                if(cursor_pos == list_size0) {
+                    page += 1;
+                    //https://api.github.com/users/rinnegatamante/repos?page=2&per_page=100
+                    std::string url = "https://api.github.com/users/";
+                    url += name;
+                    url += "/repos?page=";
+                    url += std::to_string(page);
+                    url += "&per_page=100";
+
+                    jansson_parse_repo_list(curl_get_string(url), &repos_row0, &repos_row1);
+
+                    jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
+
+                    check_core_rate_limit();
+
+                    for(size_t i = 0; i < repos_row0.size(); i++) {
+                        repos_row0[i].setOwner(name);
+                    }
+                    for(size_t i = 0; i < repos_row1.size(); i++) {
+                        repos_row1[i].setOwner(name);
+                    }
+
+                }
+                else {
+                    if(cursor_row == 0)
+                        repos_row0[cursor_pos].drawDetailsView(header_string);
+                    else if(cursor_row == 1)
+                        repos_row1[cursor_pos].drawDetailsView(header_string);
+                }
+                list_size0 = static_cast<int>(repos_row0.size());
+                list_size1 = static_cast<int>(repos_row1.size());
+                menuBarH = pow(500,2)/(list_size0*140);
             }
         }
 
@@ -109,11 +144,11 @@ void User::drawDetailsView() {
             break;
         }
 
-        if(y_offset + (cursor_pos*140) > 544 - 140) {
+        while(y_offset + (cursor_pos*140) > 544 - 140) {
             y_offset -= 140;
         }
 
-        if(y_offset + (cursor_pos*140) < 44) {
+        while(y_offset + (cursor_pos*140) < 44) {
             y_offset += 140;
         }
 
@@ -126,6 +161,11 @@ void User::drawDetailsView() {
 
         for(int i = 0; i < list_size1; i++) {
             repos_row1[i].drawListView(500, y_offset + i*140, cursor_pos == i && cursor_row == 1);
+            //draw_button(std::to_string(list_size1) + std::to_string(i), 500, y_offset + i*140, 420, 140, true);
+        }
+
+        if(numRepos > list_size0 + list_size1) {
+            draw_button("Load more", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
         }
 
         vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/500), 5, menuBarH, RGBA8(36,41,46,255));

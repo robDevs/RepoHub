@@ -23,6 +23,9 @@ void draw_header(std::string header) {
     if(time_minute < 10) time_string += "0";
     time_string += std::to_string(time_minute);
     time_string += am_pm;
+    time_string = std::to_string(core_remain);
+    time_string += "/";
+    time_string += std::to_string(core_max);
     vita2d_draw_rectangle(0, 0, 960, 44, RGBA8(36,41,46,255));
     vita2d_font_draw_textf(font20, 20, 22+(vita2d_font_text_height(font20, 20.0f, header.c_str()) / 4), RGBA8(255,255,255,255), 20.0f, "%s", header.c_str());
 
@@ -86,19 +89,22 @@ void draw_repo_list_item(std::string name, std::string body, std::string languag
         vita2d_draw_rectangle(x-2, y+40-2, 424, 104, RGBA8(150,150,150,150));
         vita2d_draw_rectangle(x, y+40, 420, 100, RGBA8(255,255,255,255));
     }
-    vita2d_font_draw_textf(font20, x+20, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 20.0f, "%s", name.c_str());
-    vita2d_font_draw_textf(font15, x+20, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str())) + 5, RGBA8(88, 96, 105,255), 15.0f, "%s", word_wrap(body, 40).c_str());
+    if(y + 106 > 0 && y < 544) {
+        vita2d_font_draw_text(font20, x+20, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 20.0f, name.c_str());
+        vita2d_font_draw_textf(font15, x+20, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str())) + 5, RGBA8(88, 96, 105,255), 15.0f, "%s", word_wrap(body, 40).c_str());
 
-    vita2d_draw_fill_circle(lang_circle_x, y+40+100-15, 7, get_lang_color(language));
-    vita2d_font_draw_textf(font15, language_x, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, language.c_str());
-    vita2d_font_draw_textf(font15, stars_x, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, stars_final.c_str());
-    vita2d_font_draw_textf(font15, forks_x, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, forks_final.c_str());
-    vita2d_draw_texture_scale(star, star_icon_x, y+40+100-23, 0.2188, 0.2188);
-    vita2d_draw_texture_scale(fork_tex, forks_icon, y+40+100-23, 0.2188, 0.2188);
+        vita2d_draw_fill_circle(lang_circle_x, y+40+100-15, 7, get_lang_color(language));
+        vita2d_font_draw_textf(font15, language_x, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, language.c_str());
+        vita2d_font_draw_textf(font15, stars_x, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, stars_final.c_str());
+        vita2d_font_draw_textf(font15, forks_x, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, forks_final.c_str());
+        vita2d_draw_texture_scale(star, star_icon_x, y+40+100-23, 0.2188, 0.2188);
+        vita2d_draw_texture_scale(fork_tex, forks_icon, y+40+100-23, 0.2188, 0.2188);
 
-    std::string updated_at_final = "Updated at: ";
-    updated_at_final += updated_at;
-    vita2d_font_draw_text(font15, x + 420 - vita2d_font_text_width(font15, 15.0f, updated_at_final.c_str()) - 20, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, updated_at_final.c_str());
+        std::string updated_at_final = "Updated at: ";
+        updated_at_final += updated_at;
+        vita2d_font_draw_text(font15, x + 420 - vita2d_font_text_width(font15, 15.0f, updated_at_final.c_str()) - 20, y+40+100-10, RGBA8(88, 96, 105,255), 15.0f, updated_at_final.c_str());
+
+    }
 }
 
 void draw_list_item_small(std::string name, int y, bool selected) {

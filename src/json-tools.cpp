@@ -58,7 +58,7 @@ int jansson_parse_repo_list(std::string json_repo_list_string, std::vector<Repo>
         if(!json_is_object(data))
         {
             json_decref(root);
-            return 0;
+            return count;
         }
         name = json_object_get(data, "name");
         if(json_is_string(name)) nameString = json_string_value(name);
