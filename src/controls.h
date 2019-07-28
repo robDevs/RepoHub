@@ -48,4 +48,11 @@ extern void update_keys();
 extern void update_single_key(SceCtrlButtons button, bool *pressed, bool *held, bool *released);
 extern void reset_keys();
 
+extern int lx;
+extern int ly;
+extern int rx;
+extern int ry;
+
+extern void read_joy_sticks();
+
 #endif

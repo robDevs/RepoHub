@@ -41,8 +41,14 @@ bool rt_held = false;
 bool start_held = false;
 bool select_held = false;
 
+int lx;
+int ly;
+int rx;
+int ry;
+
 void init_keys() {
     memset(&pad, 0, sizeof(pad));
+    sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
 }
 void update_keys() {
     sceCtrlPeekBufferPositive(0, &pad, 1);
@@ -123,4 +129,15 @@ void reset_keys() {
     rt_held = false;
     start_held = false;
     select_held = false;
+}
+
+extern void read_joy_sticks() {
+    SceCtrlData pad;
+
+    sceCtrlPeekBufferPositive(0, &pad, 1);
+
+    lx = pad.lx;
+    ly = pad.ly;
+    rx = pad.rx;
+    ry = pad.ry;
 }
