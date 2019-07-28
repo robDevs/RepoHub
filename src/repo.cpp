@@ -176,7 +176,10 @@ void Repo::drawReleases(std::string header_start) {
         vita2d_clear_screen();
 
         for(int i = 0; i < list_size; i++) {
-            draw_list_item(releases[i].name,"", "", y_offset + i*100, cursor_pos == i);
+            if(!releases[i].name.empty())
+                draw_list_item(releases[i].name,"", "", y_offset + i*100, cursor_pos == i);
+            else
+                draw_list_item(releases[i].tag_name,"", "", y_offset + i*100, cursor_pos == i);
         }
 
         vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
