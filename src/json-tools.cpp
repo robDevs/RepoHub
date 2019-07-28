@@ -49,9 +49,9 @@ int jansson_parse_repo_list(std::string json_repo_list_string, std::vector<Repo>
     int alt = 0;
 
     for(size_t i = 0; i < json_array_size(root); i++) {
-        json_t *data, *name, *priv, *description, *fork, *created_at, *updated_at, *homePage, *stargazers_count, *language, *license, *forks, *open_issues_count;
+        json_t *data, *name, *priv, *description, *fork, *created_at, *updated_at, *homePage, *stargazers_count, *language, *license, *forks, *open_issues_count, *owner;
 
-        std::string nameString, descriptionString, created_atString, updated_atString, homePageString, languageString, licenseString;
+        std::string nameString, descriptionString, created_atString, updated_atString, homePageString, languageString, licenseString, owner_string;
         bool privBool, forkBool;
         int stargazers_countInt, forksInt, open_issues_countInt;
         data = json_array_get(root, i);
@@ -99,10 +99,18 @@ int jansson_parse_repo_list(std::string json_repo_list_string, std::vector<Repo>
         open_issues_count = json_object_get(data, "open_issues_count");
         if(json_is_integer(open_issues_count)) open_issues_countInt = json_integer_value(open_issues_count);
 
+        owner = json_object_get(data, "owner");
+        if(json_is_object(owner)) {
+            json_t *owner_name = json_object_get(owner, "login");
+            if(json_is_string(owner_name))
+                owner_string = json_string_value(owner_name);
+            else owner_string = "";
+        }
+
         Repo newRepo(nameString,
                      descriptionString,
                      licenseString,
-                     "",
+                     owner_string,
                      created_atString,
                      updated_atString,
                      homePageString,
@@ -363,4 +371,30 @@ void jansson_parse_followers_list(std::string followers_list, std::vector<std::s
             list->push_back(json_string_value(user_name));
     }
     json_decref(root);
+}
+
+std::string jansson_get_readme(std::string readme_string) {
+    json_t *root;
+    json_error_t error;
+
+    root = json_loads(readme_string.c_str(), 0, &error);
+
+    if(!root)
+    {
+        return "";
+    }
+
+    if(!json_is_object(root))
+    {
+        json_decref(root);
+        return "";
+    }
+
+    json_t *data = json_object_get(root, "download_url");
+
+    if(json_is_string(data)) {
+        json_decref(root);
+        return curl_get_string(json_string_value(data));
+    }
+    else return "";
 }

@@ -16,4 +16,6 @@ extern void jannson_get_rate_limits(std::string limit_string, int *core_max, int
 
 extern void jansson_parse_followers_list(std::string followers_list, std::vector<std::string> *list);
 
+extern std::string jansson_get_readme(std::string readme_string);
+
 #endif
