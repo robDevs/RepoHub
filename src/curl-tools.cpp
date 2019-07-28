@@ -23,7 +23,7 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
     std::string TotalToDownload_string = std::to_string(byte_to_mb((int)round(TotalToDownload)));
     TotalToDownload_string.resize(TotalToDownload_string.find(".") + 3);
 
-    int space_avail = get_space_avail();
+    uint64_t space_avail = get_space_avail();
 
     std::string free_space = "Free Space: ";
     if(space_avail > 1024*1024*1024) free_space += std::to_string(byte_to_gb(space_avail));
