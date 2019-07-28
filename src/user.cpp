@@ -214,7 +214,8 @@ void draw_user_list(std::vector<User> user_list, int *status) {
         }
 
         if(cross_released) {
-            user_list[cursor_pos].drawDetailsView();
+            if(list_size > 0)
+                user_list[cursor_pos].drawDetailsView();
         }
 
         if(y_offset + (cursor_pos*100) > 544 - 100) {
