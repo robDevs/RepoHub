@@ -27,6 +27,7 @@ extern std::string curl_get_string(std::string url);
 
 //straight from the samples. Downloads a file from  url to file--->see parameters.
 extern void curl_download_file(std::string url , std::string file);
+extern void curl_download_file_no_alert(std::string url , std::string file);
 
 extern void netInit();
 

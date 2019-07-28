@@ -269,6 +269,75 @@ void curl_download_file(std::string url , std::string file){
 
 }
 
+void curl_download_file_no_alert(std::string url , std::string file) {
+    init_keys();
+	int imageFD = sceIoOpen( file.c_str(), SCE_O_WRONLY | SCE_O_CREAT, 0777);
+	if(!imageFD) { return; }
+
+	CURL *curl;
+	CURLcode res;
+	curl = curl_easy_init();
+	if(curl) {
+		struct stringcurl body;
+		init_string(&body);
+		struct stringcurl header;
+		init_string(&header);
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		// Set useragant string
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+		// not sure how to use this when enabled
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+		// not sure how to use this when enabled
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+		// Set SSL VERSION to TLS 1.2
+		curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+		// Set timeout for the connection to build
+		curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
+		// Follow redirects (?)
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+		// The function that will be used to write the data
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data_to_disk);
+		// The data filedescriptor which will be written to
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &imageFD);
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
+		// Install the callback function
+		//curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_func);
+		// write function of response headers
+		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, writefunc);
+		// the response header data where to write to
+		curl_easy_setopt(curl, CURLOPT_HEADERDATA, &header);
+		// Request Header :
+		struct curl_slist *headerchunk = NULL;
+		headerchunk = curl_slist_append(headerchunk, "Accept: */*");
+		headerchunk = curl_slist_append(headerchunk, "Content-Type: application/json");
+		headerchunk = curl_slist_append(headerchunk, "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+		headerchunk = curl_slist_append(headerchunk, "Content-Length: 0");
+		res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerchunk);
+
+
+		// Perform the request
+		res = curl_easy_perform(curl);
+		int httpresponsecode = 0;
+		curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &httpresponsecode);
+
+		if(res != CURLE_OK){
+			//fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            draw_alert_message(word_wrap(curl_easy_strerror(res), 30));
+		}
+	}
+    else {
+        draw_alert_message("Failed to init Curl");
+    }
+
+	// close filedescriptor
+	sceIoClose(imageFD);
+
+	// cleanup
+	curl_easy_cleanup(curl);
+}
+
 void netInit() {
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
 
