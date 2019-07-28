@@ -82,3 +82,17 @@ float byte_to_mb(uint64_t bytes) {
 float byte_to_gb(uint64_t bytes) {
     return (float)bytes/1024/1024/1024;
 }
+
+std::string strip_html_tags(std::string msg) {
+    while (msg.find("<") != std::string::npos)
+    {
+        auto startpos = msg.find("<");
+        auto endpos = msg.find(">") + 1;
+
+        if (endpos != std::string::npos)
+        {
+            msg.erase(startpos, endpos - startpos);
+        }
+    }
+    return msg;
+}

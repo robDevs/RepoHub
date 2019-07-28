@@ -50,4 +50,6 @@ extern float byte_to_kb(uint64_t bytes);
 extern float byte_to_mb(uint64_t bytes);
 extern float byte_to_gb(uint64_t bytes);
 
+extern std::string strip_html_tags(std::string msg);
+
 #endif
