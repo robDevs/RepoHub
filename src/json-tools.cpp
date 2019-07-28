@@ -393,8 +393,11 @@ std::string jansson_get_readme(std::string readme_string) {
     json_t *data = json_object_get(root, "download_url");
 
     if(json_is_string(data)) {
+        curl_download_file_no_alert(json_string_value(data), "ux0:data/repo-browser/Downloads/temp.txt");
         json_decref(root);
-        return curl_get_string(json_string_value(data));
+        std::string ret_string = read_file("ux0:data/repo-browser/Downloads/temp.txt");
+        sceIoRemove("ux0:data/repo-browser/Downloads/temp.txt");
+        return ret_string;
     }
     else return "";
 }

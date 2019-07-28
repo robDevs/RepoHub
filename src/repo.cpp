@@ -67,8 +67,8 @@ void Repo::drawDetailsView(std::string header_start) {
     header_string += "/";
     header_string += name;
 
-    //if(readme.empty())
-        //setReadme();
+    if(readme.empty())
+        setReadme();
 
     while(1) {
         update_keys();
