@@ -18,22 +18,32 @@ int main()
 	std::string inputText;
     std::string finalText;
 
-	vita2d_init();
+	//vita2d_init();
+    vita2d_init_advanced_with_msaa( (1 * 1024 * 1024), SCE_GXM_MULTISAMPLE_4X );
 	vita2d_set_clear_color(RGBA8(255, 255, 255, 255));
 
     loadTextures();
 
     std::vector<std::string> userNames;
+    std::string user_name = "";
 
-    /*if(file_exists("ux0:/data/repo-browser/users.txt")) {
-        read_file_lines("ux0:/data/repo-browser/users.txt", &userNames);
+    if(!file_exists("ux0:data/repo-browser/user.txt")) {
+        sceIoMkdir("ux0:data/repo-browser", 0777);
+        sceIoMkdir("ux0:data/repo-browser/Downloads", 0777);
+        user_name = vita_keyboard_get((char*)"Enter username:", (const char*)"", 600, 0);
+        write_to_file(user_name, "ux0:data/repo-browser/user.txt");
+        set_token();
     }
     else {
-        read_file_lines("ux0:/data/repo-browser/users.txt", &userNames);
-    }*/
+        get_token();
+        user_name = read_file("ux0:data/repo-browser/user.txt");
+    }
 
-    jansson_parse_followers_list(curl_get_string("https://api.github.com/users/robDevs/following"), &userNames);
-    set_token();
+    std::string url = "https://api.github.com/users/";
+    url += user_name;
+    url += "/following";
+
+    jansson_parse_followers_list(curl_get_string(url), &userNames);
     jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
 
     std::vector<User> users;
