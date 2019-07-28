@@ -64,7 +64,7 @@ void Repo::drawDetailsView(std::string header_start) {
     int cursor_pos = 0;
 
     std::string header_string = header_start;
-    header_string += "->";
+    header_string += "/";
     header_string += name;
 
     //if(readme.empty())
@@ -102,6 +102,9 @@ void Repo::drawDetailsView(std::string header_start) {
 
                 if(static_cast<int>(releases.size()) > 0) {
                     drawReleases(header_string);
+                }
+                else {
+                    draw_alert_message("No releases available!");
                 }
             }
             if(cursor_pos == 1)
@@ -141,13 +144,13 @@ void Repo::drawDetailsView(std::string header_start) {
 
 void Repo::drawReleases(std::string header_start) {
     int cursor_pos = 0;
-    int y_offset = 103;
+    int y_offset = 124;
     int list_size = static_cast<int> (releases.size());
 
-    float menuBarH = pow(544-103,2)/(list_size*100);
+    float menuBarH = pow(420,2)/(list_size*100);
 
     std::string header_string = header_start;
-    header_string += "->releases";
+    header_string += "/releases";
 
     init_keys();
 
@@ -167,11 +170,11 @@ void Repo::drawReleases(std::string header_start) {
             break;
         }
 
-        if(y_offset + (cursor_pos*100) > 544 - 100) {
+        while(y_offset + (cursor_pos*100) > 544 - 100) {
             y_offset -= 100;
         }
 
-        if(y_offset + (cursor_pos*100) < 103) {
+        while(y_offset + (cursor_pos*100) < 44+80) {
             y_offset += 100;
         }
 
@@ -189,11 +192,11 @@ void Repo::drawReleases(std::string header_start) {
                 draw_list_item(releases[i].tag_name,"", "", y_offset + i*100, cursor_pos == i);
         }
 
-        vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
+        vita2d_draw_rectangle(0, 44, 960, 80, RGBA8(255,255,255,255));
         vita2d_font_draw_textf(font40, 40, 95, RGBA8(0,0,0,255), 40.0f, "%s/%s", owner.c_str(), name.c_str());
-        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,150));
+        vita2d_draw_line(0, 44+80, 960, 44+80, RGBA8(150,150,150,150));
 
-        vita2d_draw_rectangle(960 - 10, 103 - y_offset*(menuBarH/(544-103)), 5, menuBarH, RGBA8(36,41,46,255));
+        vita2d_draw_rectangle(960 - 15, 160 - y_offset*(menuBarH/(420)), 15, menuBarH, RGBA8(167,167,167,255));
 
         draw_header(header_string);
 

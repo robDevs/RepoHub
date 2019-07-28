@@ -67,7 +67,7 @@ void User::drawDetailsView() {
 
     float menuBarH = pow(500,2)/(list_size0*140);
 
-    std::string header_string = "Saved users->";
+    std::string header_string = "Followed users/";
     header_string += name;
 
     init_keys();
@@ -168,7 +168,7 @@ void User::drawDetailsView() {
             draw_button("Load more", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
         }
 
-        vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/500), 5, menuBarH, RGBA8(36,41,46,255));
+        vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
 
         draw_header(header_string);
 
@@ -184,8 +184,7 @@ void draw_user_list(std::vector<User> user_list, int *status) {
     int list_size = static_cast<int>(user_list.size());
     int cursor_pos = 0;
     int y_offset = 44;
-
-    float menuBarH = pow(500,2)/(list_size*100);
+    float menuBarH = pow(500,2)/(list_size*95);
 
     //Rectangle posRect = {screenWidth - 10, 0 - listPos*(menuBarH/screenHeight), 5, menuBarH};
 
@@ -232,9 +231,9 @@ void draw_user_list(std::vector<User> user_list, int *status) {
         for(int i = 0; i < list_size; i++) {
             user_list[i].drawListView(y_offset + i*100, cursor_pos == i);
         }
-        vita2d_draw_rectangle(960 - 10, 44 - y_offset*(menuBarH/500), 5, menuBarH, RGBA8(36,41,46,255));
+        vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
 
-        draw_header("Saved users");
+        draw_header("Followed users");
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();

@@ -18,7 +18,7 @@ void draw_release_details(Release release, std::string header_start) {
     int body_string_y = 145;
 
     std::string header_string = header_start;
-    header_string += "->";
+    header_string += "/";
     header_string += release.name;
 
     int status = 0;
