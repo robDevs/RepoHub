@@ -5,6 +5,7 @@
 #include <psp2/appmgr.h>
 #include "key.h"
 #include "vita-keyboard.h"
+#include "draw.h"
 
 
 
@@ -34,15 +35,18 @@ void read_file_lines(std::string filePath, std::vector<std::string> *list) {
 
 void get_token() {
     token = decrypt(read_file("ux0:data/repo-browser/token.txt"), SUPER_SECRET_KEY);
-    have_token = true;
+    if(!token.empty()) {
+        have_token = true;
+    }
 }
 
 void set_token() {
-    //std::string temp_token = vita_keyboard_get((char*)"Enter token", (const char*)"", 600, 0);
+    std::string temp_token = vita_keyboard_get((char*)"Enter token", (const char*)"", 600, 0);
 
-    //write_to_file(encrypt(temp_token, SUPER_SECRET_KEY), "ux0:data/repo-browser/token.txt");
-
-    get_token();
+    if(!temp_token.empty()) {
+        write_to_file(encrypt(temp_token, SUPER_SECRET_KEY), "ux0:data/repo-browser/token.txt");
+        get_token();
+    }
 }
 
 void write_to_file(std::string message, std::string path) {
