@@ -15,6 +15,7 @@ Repo::Repo(std::string name, std::string description, std::string license, std::
     this->forks = forks;
     this->stargazers_count = stargazers_count;
     this->open_issues_count = open_issues_count;
+    this->readme = "";
 }
 
 void Repo::setName(std::string name) {
@@ -66,6 +67,9 @@ void Repo::drawDetailsView(std::string header_start) {
     header_string += "->";
     header_string += name;
 
+    //if(readme.empty())
+        //setReadme();
+
     while(1) {
         update_keys();
 
@@ -82,17 +86,19 @@ void Repo::drawDetailsView(std::string header_start) {
 
         if(cross_released) {
             if(cursor_pos == 0) {
-                std::string url = "https://api.github.com/repos/";
-                url += owner;
-                url += "/";
-                url += name;
-                url += "/releases";
-                std::string release_list_string = curl_get_string(url);
-                jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
+                if(releases.size() < 1) {
+                    std::string url = "https://api.github.com/repos/";
+                    url += owner;
+                    url += "/";
+                    url += name;
+                    url += "/releases";
+                    std::string release_list_string = curl_get_string(url);
+                    jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
 
-                check_core_rate_limit();
+                    check_core_rate_limit();
 
-                jansson_parse_release_list(release_list_string, &releases);
+                    jansson_parse_release_list(release_list_string, &releases);
+                }
 
                 if(static_cast<int>(releases.size()) > 0) {
                     drawReleases(header_string);
@@ -112,6 +118,7 @@ void Repo::drawDetailsView(std::string header_start) {
         vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,150));
 
         vita2d_font_draw_textf(font20, 40, 120, RGBA8(0,0,0,255), 20.0f, "Description:\n%s", word_wrap(description, 50).c_str());
+        vita2d_font_draw_textf(font20, 40, 300, RGBA8(0,0,0,255), 20.0f, "Readme:\n%s", word_wrap(readme, 50).c_str());
         //vita2d_font_draw_textf(font20, 10, 100, RGBA8(0,0,0,255), 20.0f, "Created at: %s", created_at.c_str());
         //vita2d_font_draw_textf(font20, 10, 120, RGBA8(0,0,0,255), 20.0f, "Updated at: %s", updated_at.c_str());
         //vita2d_font_draw_textf(font20, 10, 140, RGBA8(0,0,0,255), 20.0f, "Homepage: %s", homePage.c_str());
@@ -194,4 +201,15 @@ void Repo::drawReleases(std::string header_start) {
         vita2d_common_dialog_update();
         vita2d_swap_buffers();
     }
+}
+
+void Repo::setReadme() {
+    std::string readme_url = "https://api.github.com/repos/";
+    readme_url += owner;
+    readme_url += "/";
+    readme_url += name;
+    readme_url += "/readme";
+    readme = jansson_get_readme(curl_get_string(readme_url));
+    readme = strip_html_tags(readme);
+    strip_carriage_return(readme);
 }

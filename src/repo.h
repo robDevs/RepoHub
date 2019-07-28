@@ -18,6 +18,7 @@ private:
     std::string updated_at;
     std::string homePage;
     std::string language;
+    std::string readme;
     std::vector<Release> releases;
     bool fork;
     bool priv;
@@ -38,6 +39,7 @@ public:
     void drawListView(int x, int y, bool selected);
     void drawDetailsView(std::string header_start);
     void drawReleases(std::string header_start);
+    void setReadme();
 };
 
 #endif
