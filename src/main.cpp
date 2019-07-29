@@ -25,6 +25,7 @@ int main()
     loadTextures();
 
     std::vector<std::string> userNames;
+    std::vector<std::string> avatar_urls;
     std::string user_name = "";
 
     if(!file_exists("ux0:data/repo-browser/user.txt")) {
@@ -43,13 +44,13 @@ int main()
     url += user_name;
     url += "/following";
 
-    jansson_parse_followers_list(curl_get_string(url), &userNames);
+    jansson_parse_followers_list(curl_get_string(url), &userNames, &avatar_urls);
     jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
 
     std::vector<User> users;
 
     for(size_t i = 0; i < userNames.size(); i++) {
-        User newUser(userNames[i]);
+        User newUser(userNames[i], avatar_urls[i]);
         users.push_back(newUser);
     }
 
@@ -75,6 +76,9 @@ int main()
 
 	vita2d_fini();
     deleteTextures();
+    for(size_t i = 0; i < users.size(); i++){
+        users[i].cleanUp();
+    }
 
 	sceKernelExitProcess(0);
 	return 0;

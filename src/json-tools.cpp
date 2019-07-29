@@ -338,7 +338,7 @@ void jannson_get_rate_limits(std::string limit_string, int *core_max, int *core_
 
 }
 
-void jansson_parse_followers_list(std::string followers_list, std::vector<std::string> *list) {
+void jansson_parse_followers_list(std::string followers_list, std::vector<std::string> *list, std::vector<std::string> *list0) {
     json_t *root;
     json_error_t error;
 
@@ -356,7 +356,7 @@ void jansson_parse_followers_list(std::string followers_list, std::vector<std::s
     }
 
     for(size_t i = 0; i < json_array_size(root); i++) {
-        json_t *data, *user_name;
+        json_t *data, *user_name, *avatar_url;
 
         data = json_array_get(root, i);
         if(!json_is_object(data))
@@ -366,9 +366,13 @@ void jansson_parse_followers_list(std::string followers_list, std::vector<std::s
         }
 
         user_name = json_object_get(data, "login");
+        avatar_url = json_object_get(data, "avatar_url");
 
-        if(json_is_string(user_name))
+
+        if(json_is_string(user_name) && json_is_string(avatar_url)) {
             list->push_back(json_string_value(user_name));
+            list0->push_back(json_string_value(avatar_url));
+        }
     }
     json_decref(root);
 }

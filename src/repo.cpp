@@ -61,14 +61,27 @@ void Repo::drawListView(int x, int y, bool selected) {
 void Repo::drawDetailsView(std::string header_start) {
     init_keys();
 
+    if(readme.empty())
+        setReadme();
+
+    //strip_new_line(readme);
+
     int cursor_pos = 0;
+
+    std::string final_desc = "Description:\n";
+    final_desc += word_wrap(description, 50);
+
+    std::string final_readme = "Readme:\n";
+    final_readme += readme;
+
+    int desc_y = 120;
+    int readme_y = desc_y + vita2d_font_text_height(font20, 20.0f, final_desc.c_str()) + 20;
+
+    int desc_readme_height = vita2d_font_text_height(font20, 20.0f, final_desc.c_str()) + vita2d_font_text_height(font20, 20.0f, final_readme.c_str()) + 40;
 
     std::string header_string = header_start;
     header_string += "/";
     header_string += name;
-
-    if(readme.empty())
-        setReadme();
 
     while(1) {
         update_keys();
@@ -111,17 +124,19 @@ void Repo::drawDetailsView(std::string header_start) {
                 break;
         }
 
+        read_joy_sticks();
+
+        if(desc_y < 120 && ly > 147) desc_y += 5;
+        if(desc_y + desc_readme_height > 504 && ly < 107) desc_y -= 5;
+
+        readme_y = desc_y + vita2d_font_text_height(font20, 20.0f, final_desc.c_str()) + 20;
+
+
         vita2d_start_drawing();
         vita2d_clear_screen();
 
-        draw_header(header_string);
-
-        vita2d_font_draw_textf(font40, 40, 95, RGBA8(0,0,0,255), 40.0f, "%s/%s", owner.c_str(), name.c_str());
-        vita2d_font_draw_textf(font20, 960 - vita2d_font_text_width(font20, 20.0f, license.c_str()) - 5, 124, RGBA8(0,0,0,255), 20.0f, "%s", license.c_str());
-        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,150));
-
-        vita2d_font_draw_textf(font20, 40, 120, RGBA8(0,0,0,255), 20.0f, "Description:\n%s", word_wrap(description, 50).c_str());
-        vita2d_font_draw_textf(font20, 40, 300, RGBA8(0,0,0,255), 20.0f, "Readme:\n%s", word_wrap(readme, 50).c_str());
+        vita2d_font_draw_text(font20, 40, desc_y, RGBA8(0,0,0,255), 20.0f, final_desc.c_str());
+        vita2d_font_draw_text(font20, 40, readme_y, RGBA8(0,0,0,255), 20.0f, final_readme.c_str());
         //vita2d_font_draw_textf(font20, 10, 100, RGBA8(0,0,0,255), 20.0f, "Created at: %s", created_at.c_str());
         //vita2d_font_draw_textf(font20, 10, 120, RGBA8(0,0,0,255), 20.0f, "Updated at: %s", updated_at.c_str());
         //vita2d_font_draw_textf(font20, 10, 140, RGBA8(0,0,0,255), 20.0f, "Homepage: %s", homePage.c_str());
@@ -133,8 +148,19 @@ void Repo::drawDetailsView(std::string header_start) {
         //vita2d_font_draw_textf(font20, 10, 200, RGBA8(0,0,0,255), 20.0f, "Forks: %d", forks);
         //vita2d_font_draw_textf(font20, 10, 220, RGBA8(0,0,0,255), 20.0f, "Stars: %d", stargazers_count);
         //vita2d_font_draw_textf(font20, 10, 240, RGBA8(0,0,0,255), 20.0f, "Open Issues: %d", open_issues_count);
-        draw_button("View Releases", 960 - 250, 200, 200, 50, cursor_pos == 0);
-        draw_button("Back", 960 - 250, 260, 200, 50, cursor_pos == 1);
+
+        vita2d_draw_rectangle(960 - 260, 103, 260, 544 - 103, RGBA8(255,255,255,255));
+        vita2d_draw_line(960-260, 104, 960-260, 544, RGBA8(150,150,150,150));
+        draw_button("View Releases", 960 - 230, 200, 200, 50, cursor_pos == 0);
+        draw_button("Back", 960 - 230, 260, 200, 50, cursor_pos == 1);
+
+        vita2d_font_draw_textf(font15, 960 - vita2d_font_text_width(font15, 15.0f, license.c_str()) - 5, 120, RGBA8(0,0,0,255), 15.0f, "%s", license.c_str());
+
+        vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
+        vita2d_font_draw_textf(font40, 40, 95, RGBA8(0,0,0,255), 40.0f, "%s/%s", owner.c_str(), name.c_str());
+        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,150));
+
+        draw_header(header_string);
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
@@ -187,9 +213,9 @@ void Repo::drawReleases(std::string header_start) {
 
         for(int i = 0; i < list_size; i++) {
             if(!releases[i].name.empty())
-                draw_list_item(releases[i].name,"", "", y_offset + i*100, cursor_pos == i);
+                draw_list_item(releases[i].name,"", "", 40, y_offset + i*100, cursor_pos == i);
             else
-                draw_list_item(releases[i].tag_name,"", "", y_offset + i*100, cursor_pos == i);
+                draw_list_item(releases[i].tag_name,"", "", 40, y_offset + i*100, cursor_pos == i);
         }
 
         vita2d_draw_rectangle(0, 44, 960, 80, RGBA8(255,255,255,255));

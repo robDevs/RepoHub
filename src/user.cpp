@@ -1,8 +1,11 @@
 #include "user.h"
 
-User::User(std::string name) {
+User::User(std::string name, std::string avatar_url) {
     setName(name);
     complete = false;
+    this->avatar_url = avatar_url;
+    this->avatar_url += "&s=100";
+    getPfp();
 }
 
 void User::setName(std::string name) {
@@ -37,18 +40,19 @@ void User::setRepos() {
 
     jansson_parse_repo_list(json_repo_list_string, &repos_row0, &repos_row1);
 
-    for(size_t i = 0; i < repos_row0.size(); i++) {
-        repos_row0[i].setOwner(name);
-    }
-    for(size_t i = 0; i < repos_row1.size(); i++) {
-        repos_row1[i].setOwner(name);
-    }
-
     complete = true;
 }
 
 void User::drawListView(int y, bool selected) {
-    draw_list_item(name, "", "", y, selected);
+    int name_x = 40;
+    if(pfp != NULL) {
+        int width = vita2d_texture_get_width(pfp);
+        float scale = 64.00/(float)width;
+        name_x += width*scale + 10;
+        draw_list_item(name, "", "", name_x, y, selected);
+        vita2d_draw_texture_scale(pfp, 10, y + 50 - 32, scale, scale);
+    }
+    else draw_list_item(name, "", "", name_x, y, selected);
 }
 
 void User::drawDetailsView() {
@@ -104,14 +108,6 @@ void User::drawDetailsView() {
                     jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
 
                     check_core_rate_limit();
-
-                    for(size_t i = 0; i < repos_row0.size(); i++) {
-                        repos_row0[i].setOwner(name);
-                    }
-                    for(size_t i = 0; i < repos_row1.size(); i++) {
-                        repos_row1[i].setOwner(name);
-                    }
-
                 }
                 else {
                     if(cursor_row == 0)
@@ -178,6 +174,20 @@ void User::drawDetailsView() {
     }
 }
 
+void User::getPfp() {
+    curl_download_file_no_alert(avatar_url, "ux0:data/repo-browser/Downloads/pfp");
+    pfp = vita2d_load_JPEG_file("ux0:data/repo-browser/Downloads/pfp");
+    if(pfp == NULL)
+        pfp = vita2d_load_PNG_file("ux0:data/repo-browser/Downloads/pfp");
+    if(pfp == NULL)
+        pfp = vita2d_load_BMP_file("ux0:data/repo-browser/Downloads/pfp");
+    sceIoRemove("ux0:data/repo-browser/Downloads/pfp");
+}
+
+void User::cleanUp() {
+    vita2d_free_texture(pfp);
+}
+
 //end class functions
 
 void draw_user_list(std::vector<User> user_list, int *status) {
@@ -217,11 +227,11 @@ void draw_user_list(std::vector<User> user_list, int *status) {
                 user_list[cursor_pos].drawDetailsView();
         }
 
-        if(y_offset + (cursor_pos*100) > 544 - 100) {
+        while(y_offset + (cursor_pos*100) > 544 - 100) {
             y_offset -= 100;
         }
 
-        if(y_offset + (cursor_pos*100) < 44) {
+        while(y_offset + (cursor_pos*100) < 44) {
             y_offset += 100;
         }
 

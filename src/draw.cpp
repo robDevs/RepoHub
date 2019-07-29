@@ -45,10 +45,10 @@ void draw_button(std::string name, int x, int y, int w, int h, bool selected) {
     }
 }
 
-void draw_list_item(std::string name, std::string body, std::string language, int y, bool selected) {
+void draw_list_item(std::string name, std::string body, std::string language, int x, int y, bool selected) {
     vita2d_draw_rectangle(0, y, 960, 100, RGBA8(255,255,255,255));
-    vita2d_font_draw_textf(font40, 40, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 40.0f, "%s", name.c_str());
-    vita2d_font_draw_textf(font15, 50, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str())), RGBA8(88, 96, 105,255), 15.0f, "%s", body.c_str());
+    vita2d_font_draw_textf(font40, x, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 40.0f, "%s", name.c_str());
+    vita2d_font_draw_textf(font15, x + 10, y+50+(vita2d_font_text_height(font40, 40.0f, name.c_str())), RGBA8(88, 96, 105,255), 15.0f, "%s", body.c_str());
 
     if(selected) {
         vita2d_draw_line(0, y, 960, y, RGBA8(36,41,46,255));

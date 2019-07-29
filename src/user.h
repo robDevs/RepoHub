@@ -17,8 +17,10 @@ private:
     int numRepos, repo_list0_size, repo_list1_size;
     std::vector<Repo> repos_row0, repos_row1;
     bool complete;
+    std::string avatar_url;
+    vita2d_texture *pfp;
 public:
-    User(std::string name);
+    User(std::string name, std::string avatar_url);
     void setName(std::string name);
     std::string getName();
     void setNumRepos(int numRepos);
@@ -27,6 +29,8 @@ public:
     void drawListView(int y, bool selected);
     void drawDetailsView();
     void drawReleases();
+    void getPfp();
+    void cleanUp();
 };
 
 extern void draw_user_list(std::vector<User> user_list, int *status);
