@@ -138,6 +138,11 @@ bool draw_yes_no_message(std::string message) {
             done = true;
         }
 
+        if(circle_released) {
+            return_val = false;
+            done = true;
+        }
+
         if(left_released) cursor_pos -= 1;
         if(right_released) cursor_pos += 1;
 
@@ -157,6 +162,7 @@ bool draw_yes_no_message(std::string message) {
         vita2d_common_dialog_update();
 		vita2d_swap_buffers();
     }
+    reset_keys();
     return return_val;
 }
 void draw_alert_message(std::string message) {
@@ -167,6 +173,8 @@ void draw_alert_message(std::string message) {
     while(!done) {
         update_keys();
         if(cross_released)
+            done = true;
+        if(circle_released)
             done = true;
 
 
@@ -182,4 +190,5 @@ void draw_alert_message(std::string message) {
         vita2d_common_dialog_update();
 		vita2d_swap_buffers();
     }
+    reset_keys();
 }
