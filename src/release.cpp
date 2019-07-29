@@ -19,7 +19,8 @@ void draw_release_details(Release release, std::string header_start) {
 
     std::string header_string = header_start;
     header_string += "/";
-    header_string += release.name;
+    if(!release.name.empty()) header_string += release.name;
+    else header_string += release.tag_name;
 
     int status = 0;
 
