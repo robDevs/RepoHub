@@ -3,8 +3,15 @@
 User::User(std::string name, std::string avatar_url) {
     setName(name);
     complete = false;
-    this->avatar_url = avatar_url;
-    this->avatar_url += "&s=100";
+    if(!avatar_url.empty()) {
+        this->avatar_url = avatar_url;
+        this->avatar_url += "&s=100";
+    }
+    else {
+        this->avatar_url = "https://github.com/";
+        this->avatar_url += name;
+        this->avatar_url += ".png";
+    }
     getPfp();
 }
 
