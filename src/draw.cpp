@@ -62,7 +62,7 @@ void draw_list_item(std::string name, std::string body, std::string language, in
     }
 }
 
-void draw_repo_list_item(std::string name, std::string body, std::string language, int stars, int forks, std::string updated_at, int x, int y, bool selected) {
+void draw_repo_list_item(std::string name, std::string body, std::string language, int stars, int forks, std::string updated_at, bool fork, int x, int y, bool selected) {
     if(body.size() > 60) {
         body.resize(60);
         body += "...";
@@ -90,7 +90,14 @@ void draw_repo_list_item(std::string name, std::string body, std::string languag
         vita2d_draw_rectangle(x, y+40, 420, 100, RGBA8(255,255,255,255));
     }
     if(y + 106 > 0 && y < 544) {
-        vita2d_font_draw_text(font20, x+20, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 20.0f, name.c_str());
+        if(fork) {
+            vita2d_draw_texture_scale(fork_tex, x+20, y+40+15, 0.2188, 0.2188);
+            vita2d_font_draw_text(font20, x+35, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 20.0f, name.c_str());
+        }
+        else {
+            vita2d_font_draw_text(font20, x+20, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 20.0f, name.c_str());
+        }
+
         vita2d_font_draw_textf(font15, x+20, y+40+25+(vita2d_font_text_height(font20, 20.0f, name.c_str())) + 5, RGBA8(88, 96, 105,255), 15.0f, "%s", word_wrap(body, 40).c_str());
 
         vita2d_draw_fill_circle(lang_circle_x, y+40+100-15, 7, get_lang_color(language));
