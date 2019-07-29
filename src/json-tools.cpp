@@ -189,7 +189,7 @@ int jansson_parse_release_list(std::string json_release_list_string, std::vector
     int count = 0;
 
     for(size_t i = 0; i < json_array_size(root); i++) {
-        json_t *data, *tag_name, *name, *created_at, *body, *asset_array, *draft, *prerelease;
+        json_t *data, *tag_name, *name, *published_at, *body, *asset_array, *draft, *prerelease, *author, *author_name;
         std::vector<Asset> assets;
 
         data = json_array_get(root, i);
@@ -201,10 +201,15 @@ int jansson_parse_release_list(std::string json_release_list_string, std::vector
 
         tag_name = json_object_get(data, "tag_name"); // we only care about public repos.
         name = json_object_get(data, "name");
-        created_at = json_object_get(data, "created_at");
+        published_at = json_object_get(data, "published_at");
         body = json_object_get(data, "body");
         draft = json_object_get(data, "draft");
         prerelease = json_object_get(data, "prerelease");
+
+        author = json_object_get(data, "author");
+        if(json_is_object(author)) {
+            author_name = json_object_get(author, "login");
+        }
 
         asset_array = json_object_get(data, "assets");
         if(json_is_array(asset_array)) {
@@ -234,10 +239,12 @@ int jansson_parse_release_list(std::string json_release_list_string, std::vector
             new_release.tag_name = json_string_value(tag_name);
         if(json_is_string(name))
             new_release.name = json_string_value(name);
-        if(json_is_string(created_at))
-            new_release.created_at = json_string_value(created_at);
+        if(json_is_string(published_at))
+            new_release.published_at = json_string_value(published_at);
         if(json_is_string(body)){
             new_release.body = json_string_value(body);
+        if(json_is_string(author_name))
+            new_release.author = json_string_value(author_name);
             //stripUnicode(new_release.body);
         }
         if(json_is_boolean(prerelease))

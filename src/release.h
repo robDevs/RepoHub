@@ -13,7 +13,8 @@ struct Release {
     std::string name;
     std::string tag_name;
     std::string body;
-    std::string created_at;
+    std::string published_at;
+    std::string author;
     std::vector<Asset> assets;
     bool draft;
     bool prerelease;

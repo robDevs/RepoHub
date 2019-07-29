@@ -122,6 +122,27 @@ void draw_list_item_small(std::string name, int y, bool selected) {
     }
 }
 
+void draw_release_list_item(std::string name, std::string tag_name, std::string author, std::string published_at, int x, int y, bool selected) {
+    author += " published this at: ";
+    published_at.resize(10);
+    author += published_at;
+    vita2d_draw_rectangle(0, y, 960, 100, RGBA8(255,255,255,255));
+    vita2d_font_draw_textf(font20, x, y+20+(vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4), RGBA8(3,102,214,255), 20.0f, "%s", name.c_str());
+    vita2d_font_draw_textf(font15, x + 10, y+50+7, RGBA8(88, 96, 105,255), 15.0f, "%s", tag_name.c_str());
+    vita2d_font_draw_textf(font15, x + 10, y+85, RGBA8(88, 96, 105,255), 15.0f, "%s", author.c_str());
+
+    if(selected) {
+        vita2d_draw_line(0, y, 960, y, RGBA8(36,41,46,255));
+        vita2d_draw_line(0, y+1, 960, y+1, RGBA8(36,41,46,255));
+        vita2d_draw_line(0, y + 100, 960, y + 100, RGBA8(36,41,46,255));
+        vita2d_draw_line(0, y + 100 - 1, 960, y + 100 - 1, RGBA8(36,41,46,255));
+    }
+    else {
+        vita2d_draw_line(0, y, 960, y, RGBA8(150,150,150,150));
+        vita2d_draw_line(0, y + 100, 960, y + 100, RGBA8(150,150,150,150));
+    }
+}
+
 bool draw_yes_no_message(std::string message) {
     init_keys();
 
