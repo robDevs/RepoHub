@@ -54,6 +54,10 @@ int main()
         users.push_back(newUser);
     }
 
+    User newUser(user_name, "");
+
+    users.push_back(newUser);
+
 	while (status != QUIT_APP) {
 
         //inputText = vita_keyboard_get((char*)"Enter New Text:", (const char*)"", 600, 0);
