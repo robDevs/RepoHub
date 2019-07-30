@@ -12,7 +12,8 @@ User::User(std::string name, std::string avatar_url) {
         this->avatar_url += name;
         this->avatar_url += ".png";
     }
-    getPfp();
+    pfp = NULL;
+    //getPfp();
 }
 
 void User::setName(std::string name) {
