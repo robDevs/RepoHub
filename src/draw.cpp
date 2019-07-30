@@ -179,7 +179,7 @@ bool draw_yes_no_message(std::string message) {
 
         vita2d_start_drawing();
 
-        vita2d_draw_rectangle(960 / 2 - 200, 544 / 2 - 100, 400, 200, RGBA8(36,41,46,255));
+        vita2d_draw_rectangle(960 / 2 - vita2d_font_text_width(font20, 20.0f, message.c_str()) / 2 - 40, 544 / 2 - 100, vita2d_font_text_width(font20, 20.0f, message.c_str()) + 80, 200, RGBA8(36,41,46,255));
 
         vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, message.c_str()) / 2), 544 / 2 - 40, RGBA8(255,255,255,255), 20.0f, message.c_str());
 
