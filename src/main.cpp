@@ -24,10 +24,10 @@ int main()
     if(!file_exists("ux0:data/repo-browser/user.txt")) {
         sceIoMkdir("ux0:data/repo-browser", 0777);
         sceIoMkdir("ux0:data/repo-browser/Downloads", 0777);
-        if(draw_yes_no_message("A user name is required to get list of\nusers you have followed.\nEnter user name now?")) {
+        if(draw_yes_no_message("A user name is required to get the list of\nusers you have followed.\nEnter user name now?")) {
             set_user_name();
         }
-        if(draw_yes_no_message("A user access token can be used for more api requests.\nYou can create one at \"https://github.com/settings/tokens\"\nEnter token now?")) {
+        if(draw_yes_no_message("A personal access token can be used for more api requests.\nYou can create one at \"https://github.com/settings/tokens\"\nEnter token now?")) {
             set_token();
         }
     }
@@ -38,8 +38,17 @@ int main()
     if(file_exists("ux0:data/repo-browser/token.txt")) {
         get_token();
     }
-    else if(draw_yes_no_message("A user access token can be used for more api requests.\nYou can create one at \"https://github.com/settings/tokens\"\nEnter token now?")) {
+    else if(draw_yes_no_message("A personal access token can be used for more api requests.\nYou can create one at \"https://github.com/settings/tokens\"\nEnter token now?")) {
         set_token();
+    }
+
+    //clear the screen a few times?
+    for(int i = 0; i < 4; i++) {
+        vita2d_start_drawing();
+        vita2d_clear_screen();
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
     }
 
     std::vector<User> users;
