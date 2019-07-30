@@ -33,6 +33,8 @@ public:
     void cleanUp();
 };
 
-extern void draw_user_list(std::vector<User> user_list, int *status);
+extern void set_user_list(std::vector<User> *user_list);
+extern void draw_user_list(std::vector<User> *user_list, int *status);
+
 
 #endif

@@ -15,48 +15,37 @@ int main()
 
     int status = MAIN_VIEW;
 
-	std::string inputText;
-    std::string finalText;
-
 	//vita2d_init();
     vita2d_init_advanced_with_msaa( (1 * 1024 * 1024), SCE_GXM_MULTISAMPLE_4X );
 	vita2d_set_clear_color(RGBA8(255, 255, 255, 255));
 
     loadTextures();
 
-    std::vector<std::string> userNames;
-    std::vector<std::string> avatar_urls;
-    std::string user_name = "";
-
     if(!file_exists("ux0:data/repo-browser/user.txt")) {
         sceIoMkdir("ux0:data/repo-browser", 0777);
         sceIoMkdir("ux0:data/repo-browser/Downloads", 0777);
-        user_name = vita_keyboard_get((char*)"Enter username:", (const char*)"", 600, 0);
-        write_to_file(user_name, "ux0:data/repo-browser/user.txt");
-        set_token();
+        if(draw_yes_no_message("A user name is required to get list of\nusers you have followed.\nEnter user name now?")) {
+            set_user_name();
+        }
+        if(draw_yes_no_message("A user access token can be used for more api requests.\nYou can create one at \"https://github.com/settings/tokens\"\nEnter token now?")) {
+            set_token();
+        }
     }
     else {
-        get_token();
-        user_name = read_file("ux0:data/repo-browser/user.txt");
+        get_user_name();
     }
 
-    std::string url = "https://api.github.com/users/";
-    url += user_name;
-    url += "/following";
-
-    jansson_parse_followers_list(curl_get_string(url), &userNames, &avatar_urls);
-    jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
+    if(file_exists("ux0:data/repo-browser/token.txt")) {
+        get_token();
+    }
+    else if(draw_yes_no_message("A user access token can be used for more api requests.\nYou can create one at \"https://github.com/settings/tokens\"\nEnter token now?")) {
+        set_token();
+    }
 
     std::vector<User> users;
 
-    for(size_t i = 0; i < userNames.size(); i++) {
-        User newUser(userNames[i], avatar_urls[i]);
-        users.push_back(newUser);
-    }
+    set_user_list(&users);
 
-    User newUser(user_name, "");
-
-    users.push_back(newUser);
 
 	while (status != QUIT_APP) {
 
@@ -64,7 +53,7 @@ int main()
 
         switch (status) {
             case MAIN_VIEW:
-                draw_user_list(users, &status);
+                draw_user_list(&users, &status);
                 break;
         }
 

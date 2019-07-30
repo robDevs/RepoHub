@@ -197,8 +197,34 @@ void User::cleanUp() {
 
 //end class functions
 
-void draw_user_list(std::vector<User> user_list, int *status) {
-    int list_size = static_cast<int>(user_list.size());
+void set_user_list(std::vector<User> *user_list) {
+    while(!user_list->empty()) {
+        user_list->pop_back();
+    }
+
+    std::vector<std::string> userNames;
+    std::vector<std::string> avatar_urls;
+
+    std::string url = "https://api.github.com/users/";
+    url += user_name;
+    url += "/following";
+
+    jansson_parse_followers_list(curl_get_string(url), &userNames, &avatar_urls);
+    jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
+
+    for(size_t i = 0; i < userNames.size(); i++) {
+        User newUser(userNames[i], avatar_urls[i]);
+        user_list->push_back(newUser);
+    }
+
+    User newUser(user_name, "");
+
+    user_list->push_back(newUser);
+}
+
+
+void draw_user_list(std::vector<User> *user_list, int *status) {
+    int list_size = static_cast<int>(user_list->size());
     int cursor_pos = 0;
     int y_offset = 44;
     float menuBarH = pow(500,2)/(list_size*95);
@@ -231,7 +257,7 @@ void draw_user_list(std::vector<User> user_list, int *status) {
 
         if(cross_released) {
             if(list_size > 0)
-                user_list[cursor_pos].drawDetailsView();
+                user_list->at(cursor_pos).drawDetailsView();
         }
 
         while(y_offset + (cursor_pos*100) > 544 - 100) {
@@ -246,7 +272,7 @@ void draw_user_list(std::vector<User> user_list, int *status) {
         vita2d_clear_screen();
 
         for(int i = 0; i < list_size; i++) {
-            user_list[i].drawListView(y_offset + i*100, cursor_pos == i);
+            user_list->at(i).drawListView(y_offset + i*100, cursor_pos == i);
         }
         vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
 

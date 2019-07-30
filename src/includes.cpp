@@ -96,3 +96,5 @@ std::string strip_html_tags(std::string msg) {
     }
     return msg;
 }
+
+std::string user_name = "";

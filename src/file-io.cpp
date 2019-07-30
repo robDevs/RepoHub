@@ -49,6 +49,16 @@ void set_token() {
     }
 }
 
+void set_user_name() {
+    user_name = vita_keyboard_get((char*)"Enter username:", (const char*)"", 600, 0);
+    write_to_file(user_name, "ux0:data/repo-browser/user.txt");
+    //user_name = read_file("ux0:data/repo-browser/user.txt");
+}
+
+void get_user_name() {
+    user_name = read_file("ux0:data/repo-browser/user.txt");
+}
+
 void write_to_file(std::string message, std::string path) {
     std::ofstream file;
     file.open (path.c_str());
