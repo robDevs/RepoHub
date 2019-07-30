@@ -21,25 +21,19 @@ int main()
 
     loadTextures();
 
+    std::vector<User> users;
+
     if(!file_exists("ux0:data/repo-browser/user.txt")) {
         sceIoMkdir("ux0:data/repo-browser", 0777);
         sceIoMkdir("ux0:data/repo-browser/Downloads", 0777);
-        if(draw_yes_no_message("A user name is required to get the list of\nusers you have followed.\nEnter user name now?")) {
-            set_user_name();
-        }
-        if(draw_yes_no_message("A personal access token can be used for more api requests.\nYou can create one at \"https://github.com/settings/tokens\"\nEnter token now?")) {
-            set_token();
-        }
     }
     else {
         get_user_name();
+        set_user_list(&users);
     }
 
     if(file_exists("ux0:data/repo-browser/token.txt")) {
         get_token();
-    }
-    else if(draw_yes_no_message("A personal access token can be used for more api requests.\nYou can create one at \"https://github.com/settings/tokens\"\nEnter token now?")) {
-        set_token();
     }
 
     //clear the screen a few times?
@@ -50,10 +44,6 @@ int main()
         vita2d_common_dialog_update();
         vita2d_swap_buffers();
     }
-
-    std::vector<User> users;
-
-    set_user_list(&users);
 
 
 	while (status != QUIT_APP) {

@@ -220,3 +220,61 @@ void draw_alert_message(std::string message) {
     }
     reset_keys();
 }
+
+int draw_star_menu() {
+    bool done = false;
+    int return_val = MAIN_VIEW;
+    int cursor_pos = 0;
+    init_keys();
+
+    while(!done) {
+        update_keys();
+
+        if(cross_released) {
+            switch (cursor_pos) {
+                case 0:
+                    return_val = UPDATE_USERNAME;
+                    done = true;
+                    break;
+                case 1:
+                    return_val = UPDATE_TOKEN;
+                    done = true;
+                    break;
+                case 2:
+                    return_val = MAIN_VIEW;
+                    done = true;
+                    break;
+                case 3:
+                    return_val = QUIT_APP;
+                    done = true;
+                    break;
+            }
+        }
+
+        if(circle_released) {
+            return_val = MAIN_VIEW;
+            done = true;
+        }
+
+        if(up_released) cursor_pos -= 1;
+        if(down_released) cursor_pos += 1;
+        if(cursor_pos < 0) cursor_pos = 3;
+        if(cursor_pos > 3) cursor_pos = 0;
+
+        vita2d_start_drawing();
+
+        vita2d_draw_rectangle(960 / 2 - 100, 544 / 2 - 105, 200, 210, RGBA8(36,41,46,255));
+
+        draw_button("Enter UserName", 960 / 2 - 90, 544 / 2 - 95, 180, 40, cursor_pos == 0);
+        draw_button("Enter Token", 960 / 2 - 90, 544 / 2 - 45, 180, 40, cursor_pos == 1);
+        draw_button("Return", 960 / 2 - 90, 544 / 2 + 5, 180, 40, cursor_pos == 2);
+        draw_button("Quit", 960 / 2 - 90, 544 / 2 + 55, 180, 40, cursor_pos == 3);
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+		vita2d_swap_buffers();
+    }
+
+    reset_keys();
+    return return_val;
+}

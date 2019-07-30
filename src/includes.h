@@ -31,13 +31,13 @@
 
 #include <jansson.h>
 
-#define MAIN_VIEW       0//view the main list of users
-#define SEARCH_VIEW     1//search the api
-#define RESULT_VIEW     2//results of the search
-#define USER_VIEW       3//view a selected user
-#define REPO_VIEW       4//view a selected repo
-#define RELEASE_VIEW    5//view a selected release from a repo
-#define QUIT_APP        6//quit the app
+#define MAIN_VIEW           0//view the main list of users
+#define UPDATE_USERNAME     1//update the username
+#define UPDATE_TOKEN        2//update the token
+#define RETURN_STATE        3//return state
+#define REPO_VIEW           4//view a selected repo
+#define RELEASE_VIEW        5//view a selected release from a repo
+#define QUIT_APP            6//quit the app
 
 extern int core_max;
 extern int core_remain;

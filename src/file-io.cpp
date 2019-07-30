@@ -41,18 +41,23 @@ void get_token() {
 }
 
 void set_token() {
-    std::string temp_token = vita_keyboard_get((char*)"Enter token", (const char*)"", 600, 0);
+    if(draw_yes_no_message("A personal access token can be used for more api requests.\nYou can create one at \"https://github.com/settings/tokens\"\nEnter token now?"))
+    {
+        std::string temp_token = vita_keyboard_get((char*)"Enter token", (const char*)"", 600, 0);
 
-    if(!temp_token.empty()) {
-        write_to_file(encrypt(temp_token, SUPER_SECRET_KEY), "ux0:data/repo-browser/token.txt");
-        get_token();
+        if(!temp_token.empty()) {
+            write_to_file(encrypt(temp_token, SUPER_SECRET_KEY), "ux0:data/repo-browser/token.txt");
+            get_token();
+        }
     }
 }
 
 void set_user_name() {
-    user_name = vita_keyboard_get((char*)"Enter username:", (const char*)"", 600, 0);
-    write_to_file(user_name, "ux0:data/repo-browser/user.txt");
-    //user_name = read_file("ux0:data/repo-browser/user.txt");
+    if(draw_yes_no_message("A user name is required to get the list of\nusers you have followed.\nEnter user name now?"))
+    {
+        user_name = vita_keyboard_get((char*)"Enter username:", (const char*)"", 600, 0);
+        write_to_file(user_name, "ux0:data/repo-browser/user.txt");
+    }
 }
 
 void get_user_name() {

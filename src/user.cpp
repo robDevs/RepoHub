@@ -228,17 +228,56 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
     int cursor_pos = 0;
     int y_offset = 44;
     float menuBarH = pow(500,2)/(list_size*95);
+    bool done = false;
 
     //Rectangle posRect = {screenWidth - 10, 0 - listPos*(menuBarH/screenHeight), 5, menuBarH};
 
     init_keys();
 
-    while(1) {
+    while(!done) {
         update_keys();
 
         if (start_released){
-            *status = QUIT_APP;
-            break;
+            //*status = QUIT_APP;
+            //break;
+            int state = -1;
+            while(state != MAIN_VIEW) {
+                state = draw_star_menu();
+
+                if(state == UPDATE_USERNAME) {
+                    set_user_name();
+                    set_user_list(user_list);
+                    list_size = static_cast<int>(user_list->size());
+                }
+                if(state == UPDATE_TOKEN)
+                    set_token();
+                if(state == QUIT_APP) {
+                    *status = QUIT_APP;
+                    done = true;
+                    state = MAIN_VIEW;
+                }
+
+                for(int i = 0; i < 3; i++) {
+                    vita2d_start_drawing();
+                    vita2d_clear_screen();
+
+                    for(int i = 0; i < list_size; i++) {
+                        user_list->at(i).drawListView(y_offset + i*100, cursor_pos == i);
+                    }
+                    vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
+
+                    draw_header("Followed users");
+
+                    vita2d_end_drawing();
+                    vita2d_common_dialog_update();
+                    vita2d_swap_buffers();
+                }
+            }
+        }
+
+        if (select_released) {
+            set_user_name();
+            set_token();
         }
 
         if (select_released) {

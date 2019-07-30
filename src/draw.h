@@ -17,4 +17,6 @@ extern void draw_release_list_item(std::string name, std::string tag_name, std::
 extern bool draw_yes_no_message(std::string message);
 extern void draw_alert_message(std::string message);
 
+extern int draw_star_menu();
+
 #endif
