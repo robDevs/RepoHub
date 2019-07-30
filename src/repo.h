@@ -19,6 +19,7 @@ private:
     std::string homePage;
     std::string language;
     std::string readme;
+    std::vector<std::string> readme_vec;
     std::vector<Release> releases;
     bool fork;
     bool priv;
@@ -40,6 +41,8 @@ public:
     void drawDetailsView(std::string header_start);
     void drawReleases(std::string header_start);
     void setReadme();
+    void draw_readme_vec(int y);
+    int get_readme_vec_height();
 };
 
 #endif

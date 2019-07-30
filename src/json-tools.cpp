@@ -384,7 +384,7 @@ void jansson_parse_followers_list(std::string followers_list, std::vector<std::s
     json_decref(root);
 }
 
-std::string jansson_get_readme(std::string readme_string) {
+void jansson_get_readme(std::string readme_string, std::vector<std::string> *readme_vec) {
     json_t *root;
     json_error_t error;
 
@@ -392,13 +392,13 @@ std::string jansson_get_readme(std::string readme_string) {
 
     if(!root)
     {
-        return "";
+        return;
     }
 
     if(!json_is_object(root))
     {
         json_decref(root);
-        return "";
+        return;
     }
 
     json_t *data = json_object_get(root, "download_url");
@@ -406,9 +406,7 @@ std::string jansson_get_readme(std::string readme_string) {
     if(json_is_string(data)) {
         curl_download_file_no_alert(json_string_value(data), "ux0:data/repo-browser/Downloads/temp.txt");
         json_decref(root);
-        std::string ret_string = read_file("ux0:data/repo-browser/Downloads/temp.txt");
+        read_file_lines("ux0:data/repo-browser/Downloads/temp.txt", readme_vec);
         sceIoRemove("ux0:data/repo-browser/Downloads/temp.txt");
-        return ret_string;
     }
-    else return "";
 }

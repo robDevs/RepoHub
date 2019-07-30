@@ -77,7 +77,7 @@ void Repo::drawDetailsView(std::string header_start) {
     int desc_y = 120;
     int readme_y = desc_y + vita2d_font_text_height(font20, 20.0f, final_desc.c_str()) + 20;
 
-    int desc_readme_height = vita2d_font_text_height(font20, 20.0f, final_desc.c_str()) + vita2d_font_text_height(font20, 20.0f, final_readme.c_str()) + 40;
+    int desc_readme_height = vita2d_font_text_height(font20, 20.0f, final_desc.c_str()) + get_readme_vec_height() + 40;
 
     std::string header_string = header_start;
     header_string += "/";
@@ -136,7 +136,8 @@ void Repo::drawDetailsView(std::string header_start) {
         vita2d_clear_screen();
 
         vita2d_font_draw_text(font20, 40, desc_y, RGBA8(0,0,0,255), 20.0f, final_desc.c_str());
-        vita2d_font_draw_text(font20, 40, readme_y, RGBA8(0,0,0,255), 20.0f, final_readme.c_str());
+        //vita2d_font_draw_text(font20, 40, readme_y, RGBA8(0,0,0,255), 20.0f, final_readme.c_str());
+        draw_readme_vec(readme_y);
         //vita2d_font_draw_textf(font20, 10, 100, RGBA8(0,0,0,255), 20.0f, "Created at: %s", created_at.c_str());
         //vita2d_font_draw_textf(font20, 10, 120, RGBA8(0,0,0,255), 20.0f, "Updated at: %s", updated_at.c_str());
         //vita2d_font_draw_textf(font20, 10, 140, RGBA8(0,0,0,255), 20.0f, "Homepage: %s", homePage.c_str());
@@ -235,7 +236,37 @@ void Repo::setReadme() {
     readme_url += "/";
     readme_url += name;
     readme_url += "/readme";
-    readme = jansson_get_readme(curl_get_string(readme_url));
-    readme = strip_html_tags(readme);
-    strip_carriage_return(readme);
+    jansson_get_readme(curl_get_string(readme_url), &readme_vec);
+    //readme = strip_html_tags(readme);
+    //strip_carriage_return(readme);
+
+    for(size_t i = 0; i < readme_vec.size(); i++) {
+        readme_vec[i] = strip_html_tags(readme_vec[i]);
+        strip_carriage_return(readme_vec[i]);
+        //strip_new_line(readme_vec[i]);
+    }
+}
+
+void Repo::draw_readme_vec(int y) {
+    int offset = 0;
+
+    vita2d_font_draw_text(font20, 40, y + offset, RGBA8(0,0,0,255), 20.0f, "Readme:\n");
+    offset += vita2d_font_text_height(font20, 20.0f, "Readme:\n") + 3;
+
+    for(size_t i = 0; i < readme_vec.size(); i++) {
+        vita2d_font_draw_text(font20, 40, y + offset, RGBA8(0,0,0,255), 20.0f, word_wrap(readme_vec[i], 50).c_str());
+
+        offset += vita2d_font_text_height(font20, 20.0f, word_wrap(readme_vec[i], 50).c_str()) + 3;
+    }
+}
+
+int Repo::get_readme_vec_height() {
+    int h = 0;
+    h += vita2d_font_text_height(font20, 20.0f, "Readme:\n") + 3;
+
+    for(size_t i = 0; i < readme_vec.size(); i++) {
+        h += vita2d_font_text_height(font20, 20.0f, word_wrap(readme_vec[i], 50).c_str()) + 3;
+    }
+
+    return h;
 }
