@@ -19,11 +19,11 @@ IF(DEFINE_DEBUG)
 ENDIF(DEFINE_DEBUG)
 
 
-set(SHORT_NAME repo-browser)
+set(SHORT_NAME RepoHub)
 project(${SHORT_NAME})
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
-set(VITA_APP_NAME "repo-browser")
+set(VITA_APP_NAME "RepoHub")
 set(VITA_TITLEID  "rbdv00002")
 set(VITA_VERSION  "02.50")
 

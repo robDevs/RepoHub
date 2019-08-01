@@ -253,7 +253,7 @@ void curl_download_file(std::string url , std::string file){
 		}
         else {
             std::string result_string = "File saved to:";
-            result_string += "\nux0:data/Repo-Explorer/Downloads/";
+            result_string += "\nux0:data/RepoHub/Downloads/";
             draw_alert_message(result_string);
         }
 	}

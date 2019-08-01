@@ -79,7 +79,7 @@ void User::drawDetailsView() {
 
     float menuBarH = pow(500,2)/(list_size0*140);
 
-    std::string header_string = "Followed users/";
+    std::string header_string = "Following/";
     header_string += name;
 
     init_keys();
@@ -183,13 +183,13 @@ void User::drawDetailsView() {
 }
 
 void User::getPfp() {
-    curl_download_file_no_alert(avatar_url, "ux0:data/repo-browser/Downloads/pfp");
-    pfp = vita2d_load_JPEG_file("ux0:data/repo-browser/Downloads/pfp");
+    curl_download_file_no_alert(avatar_url, "ux0:data/RepoHub/Downloads/pfp");
+    pfp = vita2d_load_JPEG_file("ux0:data/RepoHub/Downloads/pfp");
     if(pfp == NULL)
-        pfp = vita2d_load_PNG_file("ux0:data/repo-browser/Downloads/pfp");
+        pfp = vita2d_load_PNG_file("ux0:data/RepoHub/Downloads/pfp");
     if(pfp == NULL)
-        pfp = vita2d_load_BMP_file("ux0:data/repo-browser/Downloads/pfp");
-    sceIoRemove("ux0:data/repo-browser/Downloads/pfp");
+        pfp = vita2d_load_BMP_file("ux0:data/RepoHub/Downloads/pfp");
+    sceIoRemove("ux0:data/RepoHub/Downloads/pfp");
 }
 
 void User::cleanUp() {
@@ -267,7 +267,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                     }
                     vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
 
-                    draw_header("Followed users");
+                    draw_header("Following");
 
                     vita2d_end_drawing();
                     vita2d_common_dialog_update();
@@ -316,7 +316,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
         }
         vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
 
-        draw_header("Followed users");
+        draw_header("Following");
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();

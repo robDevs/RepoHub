@@ -23,16 +23,16 @@ int main()
 
     std::vector<User> users;
 
-    if(!file_exists("ux0:data/repo-browser/user.txt")) {
-        sceIoMkdir("ux0:data/repo-browser", 0777);
-        sceIoMkdir("ux0:data/repo-browser/Downloads", 0777);
+    if(!file_exists("ux0:data/RepoHub/user.txt")) {
+        sceIoMkdir("ux0:data/RepoHub", 0777);
+        sceIoMkdir("ux0:data/RepoHub/Downloads", 0777);
     }
     else {
         get_user_name();
         set_user_list(&users);
     }
 
-    if(file_exists("ux0:data/repo-browser/token.txt")) {
+    if(file_exists("ux0:data/RepoHub/token.txt")) {
         get_token();
     }
 

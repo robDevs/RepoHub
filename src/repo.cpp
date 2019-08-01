@@ -151,7 +151,7 @@ void Repo::drawDetailsView(std::string header_start) {
         //vita2d_font_draw_textf(font20, 10, 240, RGBA8(0,0,0,255), 20.0f, "Open Issues: %d", open_issues_count);
 
         vita2d_draw_rectangle(960 - 260, 103, 260, 544 - 103, RGBA8(255,255,255,255));
-        vita2d_draw_line(960-260, 104, 960-260, 544, RGBA8(150,150,150,150));
+        vita2d_draw_line(960-260, 104, 960-260, 544, RGBA8(150,150,150,200));
         draw_button("View Releases", 960 - 230, 200, 200, 50, cursor_pos == 0);
         draw_button("Back", 960 - 230, 260, 200, 50, cursor_pos == 1);
 
@@ -159,7 +159,7 @@ void Repo::drawDetailsView(std::string header_start) {
 
         vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
         vita2d_font_draw_textf(font40, 40, 95, RGBA8(0,0,0,255), 40.0f, "%s/%s", owner.c_str(), name.c_str());
-        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,150));
+        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
 
         draw_header(header_string);
 
@@ -218,7 +218,7 @@ void Repo::drawReleases(std::string header_start) {
 
         vita2d_draw_rectangle(0, 44, 960, 80, RGBA8(255,255,255,255));
         vita2d_font_draw_textf(font40, 40, 95, RGBA8(0,0,0,255), 40.0f, "%s/%s", owner.c_str(), name.c_str());
-        vita2d_draw_line(0, 44+80, 960, 44+80, RGBA8(150,150,150,150));
+        vita2d_draw_line(0, 44+80, 960, 44+80, RGBA8(150,150,150,200));
 
         vita2d_draw_rectangle(960 - 15, 160 - y_offset*(menuBarH/(420)), 15, menuBarH, RGBA8(167,167,167,255));
 

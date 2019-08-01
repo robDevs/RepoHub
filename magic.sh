@@ -4,9 +4,9 @@ cd build
 cmake ../
 make
 mkdir temp
-cp repo-browser.vpk temp/
+cp RepoHub.vpk temp/
 cd temp/
-unzip repo-browser.vpk
+unzip RepoHub.vpk
 cp eboot.bin ../eboot.bin
 cd ../
 rm -r temp/

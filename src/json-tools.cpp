@@ -404,9 +404,9 @@ void jansson_get_readme(std::string readme_string, std::vector<std::string> *rea
     json_t *data = json_object_get(root, "download_url");
 
     if(json_is_string(data)) {
-        curl_download_file_no_alert(json_string_value(data), "ux0:data/repo-browser/Downloads/temp.txt");
+        curl_download_file_no_alert(json_string_value(data), "ux0:data/RepoHub/Downloads/temp.txt");
         json_decref(root);
-        read_file_lines("ux0:data/repo-browser/Downloads/temp.txt", readme_vec);
-        sceIoRemove("ux0:data/repo-browser/Downloads/temp.txt");
+        read_file_lines("ux0:data/RepoHub/Downloads/temp.txt", readme_vec);
+        sceIoRemove("ux0:data/RepoHub/Downloads/temp.txt");
     }
 }

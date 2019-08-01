@@ -39,9 +39,9 @@ void draw_button(std::string name, int x, int y, int w, int h, bool selected) {
         vita2d_font_draw_textf(font20, x+w/2 - (vita2d_font_text_width(font20, 20.0f, name.c_str()) / 2), y + h/2+vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4, RGBA8(0,0,0,255), 20.0f, "%s", name.c_str());
     }
     else {
-        vita2d_draw_rectangle(x-1, y-1, w + 2, h + 2, RGBA8(150,150,150,150));
+        vita2d_draw_rectangle(x-1, y-1, w + 2, h + 2, RGBA8(150,150,150,200));
         vita2d_draw_rectangle(x, y, w, h, RGBA8(255,255,255, 255));
-        vita2d_font_draw_textf(font20, x+w/2 - (vita2d_font_text_width(font20, 20.0f, name.c_str()) / 2), y + h/2+vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4, RGBA8(150,150,150,150), 20.0f, "%s", name.c_str());
+        vita2d_font_draw_textf(font20, x+w/2 - (vita2d_font_text_width(font20, 20.0f, name.c_str()) / 2), y + h/2+vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4, RGBA8(150,150,150,200), 20.0f, "%s", name.c_str());
     }
 }
 
@@ -57,8 +57,8 @@ void draw_list_item(std::string name, std::string body, std::string language, in
         vita2d_draw_line(0, y + 100 - 1, 960, y + 100 - 1, RGBA8(36,41,46,255));
     }
     else {
-        vita2d_draw_line(0, y, 960, y, RGBA8(150,150,150,150));
-        vita2d_draw_line(0, y + 100, 960, y + 100, RGBA8(150,150,150,150));
+        vita2d_draw_line(0, y, 960, y, RGBA8(150,150,150,200));
+        vita2d_draw_line(0, y + 100, 960, y + 100, RGBA8(150,150,150,200));
     }
 }
 
@@ -86,7 +86,7 @@ void draw_repo_list_item(std::string name, std::string body, std::string languag
     }
     else {
         vita2d_draw_rectangle(x, y + 3, 424, 144, RGBA8(255,255,255,255));
-        vita2d_draw_rectangle(x-2, y+40-2, 424, 104, RGBA8(150,150,150,150));
+        vita2d_draw_rectangle(x-2, y+40-2, 424, 104, RGBA8(150,150,150,200));
         vita2d_draw_rectangle(x, y+40, 420, 100, RGBA8(255,255,255,255));
     }
     if(y + 106 > 0 && y < 544) {
@@ -124,8 +124,8 @@ void draw_list_item_small(std::string name, int y, bool selected) {
         vita2d_draw_line(0, y + 100 - 1, 960, y + 100 - 1, RGBA8(36,41,46,255));
     }
     else {
-        vita2d_draw_line(0, y, 960, y, RGBA8(150,150,150,150));
-        vita2d_draw_line(0, y + 100, 960, y + 100, RGBA8(150,150,150,150));
+        vita2d_draw_line(0, y, 960, y, RGBA8(150,150,150,200));
+        vita2d_draw_line(0, y + 100, 960, y + 100, RGBA8(150,150,150,200));
     }
 }
 
@@ -145,8 +145,8 @@ void draw_release_list_item(std::string name, std::string tag_name, std::string 
         vita2d_draw_line(0, y + 100 - 1, 960, y + 100 - 1, RGBA8(36,41,46,255));
     }
     else {
-        vita2d_draw_line(0, y, 960, y, RGBA8(150,150,150,150));
-        vita2d_draw_line(0, y + 100, 960, y + 100, RGBA8(150,150,150,150));
+        vita2d_draw_line(0, y, 960, y, RGBA8(150,150,150,200));
+        vita2d_draw_line(0, y + 100, 960, y + 100, RGBA8(150,150,150,200));
     }
 }
 

@@ -34,7 +34,7 @@ void read_file_lines(std::string filePath, std::vector<std::string> *list) {
 
 
 void get_token() {
-    token = decrypt(read_file("ux0:data/repo-browser/token.txt"), SUPER_SECRET_KEY);
+    token = decrypt(read_file("ux0:data/RepoHub/token.txt"), SUPER_SECRET_KEY);
     if(!token.empty()) {
         have_token = true;
     }
@@ -46,7 +46,7 @@ void set_token() {
         std::string temp_token = vita_keyboard_get((char*)"Enter token", (const char*)"", 600, 0);
 
         if(!temp_token.empty()) {
-            write_to_file(encrypt(temp_token, SUPER_SECRET_KEY), "ux0:data/repo-browser/token.txt");
+            write_to_file(encrypt(temp_token, SUPER_SECRET_KEY), "ux0:data/RepoHub/token.txt");
             get_token();
         }
     }
@@ -56,12 +56,12 @@ void set_user_name() {
     if(draw_yes_no_message("A user name is required to get the list of\nusers you have followed.\nEnter user name now?"))
     {
         user_name = vita_keyboard_get((char*)"Enter username:", (const char*)"", 600, 0);
-        write_to_file(user_name, "ux0:data/repo-browser/user.txt");
+        write_to_file(user_name, "ux0:data/RepoHub/user.txt");
     }
 }
 
 void get_user_name() {
-    user_name = read_file("ux0:data/repo-browser/user.txt");
+    user_name = read_file("ux0:data/RepoHub/user.txt");
 }
 
 void write_to_file(std::string message, std::string path) {

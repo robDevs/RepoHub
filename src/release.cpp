@@ -31,9 +31,9 @@ void draw_release_details(Release release, std::string header_start) {
             if(release.assets[cursor_pos].size < get_space_avail()) {
                 std::string message_string = "Download ";
                 message_string += release.assets[cursor_pos].name;
-                message_string += "\nto 'ux0:data/Repo-Explorer?'";
+                message_string += "\nto 'ux0:data/RepoHub?'";
                 if(draw_yes_no_message(message_string)) {
-                    std::string filePath = "ux0:data/repo-browser/Downloads/";
+                    std::string filePath = "ux0:data/RepoHub/Downloads/";
                     filePath += release.assets[cursor_pos].name;
                     curl_download_file(release.assets[cursor_pos].url, filePath);
                 }
@@ -75,9 +75,9 @@ void draw_release_details(Release release, std::string header_start) {
 
             //sub-header bg.
             vita2d_draw_rectangle(0, 45, 960, 80, RGBA8(255,255,255,255));
-            vita2d_draw_line(0, 45+80, 960, 45+80, RGBA8(150,150,150,150));
+            vita2d_draw_line(0, 45+80, 960, 45+80, RGBA8(150,150,150,200));
             vita2d_font_draw_text(font40, 40, (45+40)+10, RGBA8(0,0,0,255), 40.0f, "Files");
-            vita2d_font_draw_text(font40, 960-560, (45+40)+10, RGBA8(150,150,150,150), 40.0f, "Notes");
+            vita2d_font_draw_text(font40, 960-560, (45+40)+10, RGBA8(150,150,150,200), 40.0f, "Notes");
         }
         else {
             //body and body bg
@@ -85,8 +85,8 @@ void draw_release_details(Release release, std::string header_start) {
 
             //sub-header bg.
             vita2d_draw_rectangle(0, 45, 960, 80, RGBA8(255,255,255,255));
-            vita2d_draw_line(0, 45+80, 960, 45+80, RGBA8(150,150,150,150));
-            vita2d_font_draw_text(font40, 40, (45+40)+10, RGBA8(150,150,150,150), 40.0f, "Files");
+            vita2d_draw_line(0, 45+80, 960, 45+80, RGBA8(150,150,150,200));
+            vita2d_font_draw_text(font40, 40, (45+40)+10, RGBA8(150,150,150,200), 40.0f, "Files");
             vita2d_font_draw_text(font40, 960-560, (45+40)+10, RGBA8(0,0,0,255), 40.0f, "Notes");
         }
 
