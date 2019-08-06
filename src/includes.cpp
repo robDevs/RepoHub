@@ -1,5 +1,9 @@
 #include "includes.h"
 
+std::string token = "";
+bool have_token = false;
+bool authed = false;
+
 int core_max = 0;
 int core_remain = 0;
 int search_max = 0;
@@ -98,3 +102,4 @@ std::string strip_html_tags(std::string msg) {
 }
 
 std::string user_name = "";
+int following_count = 0;

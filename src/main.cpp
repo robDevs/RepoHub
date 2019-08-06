@@ -23,18 +23,22 @@ int main()
 
     std::vector<User> users;
 
+    if(file_exists("ux0:data/RepoHub/token.txt")) {
+        get_token();
+        if(have_token)
+            jansson_get_authed_user(curl_get_string("https://api.github.com/user"), &user_name, &authed, &following_count);
+        if(!authed)
+            have_token = false;
+    }
+
     if(!file_exists("ux0:data/RepoHub/user.txt")) {
         sceIoMkdir("ux0:data/RepoHub", 0777);
         sceIoMkdir("ux0:data/RepoHub/Downloads", 0777);
     }
-    else {
+    else if(!authed)
         get_user_name();
-        set_user_list(&users);
-    }
 
-    if(file_exists("ux0:data/RepoHub/token.txt")) {
-        get_token();
-    }
+    set_user_list(&users);
 
     //clear the screen a few times?
     for(int i = 0; i < 4; i++) {

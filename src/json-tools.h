@@ -18,4 +18,6 @@ extern void jansson_parse_followers_list(std::string followers_list, std::vector
 
 extern void jansson_get_readme(std::string readme_string, std::vector<std::string> *readme_vec);
 
+extern void jansson_get_authed_user(std::string user_string, std::string *user_name, bool *authed, int *following_count);
+
 #endif

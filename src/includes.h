@@ -39,6 +39,11 @@
 #define RELEASE_VIEW        5//view a selected release from a repo
 #define QUIT_APP            6//quit the app
 
+extern std::string token;
+extern bool have_token;
+
+extern bool authed;
+
 extern int core_max;
 extern int core_remain;
 extern int search_max;
@@ -53,5 +58,6 @@ extern float byte_to_gb(uint64_t bytes);
 extern std::string strip_html_tags(std::string msg);
 
 extern std::string user_name;
+extern int following_count;
 
 #endif

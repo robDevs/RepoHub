@@ -410,3 +410,40 @@ void jansson_get_readme(std::string readme_string, std::vector<std::string> *rea
         sceIoRemove("ux0:data/RepoHub/Downloads/temp.txt");
     }
 }
+
+void jansson_get_authed_user(std::string user_string, std::string *user_name, bool *authed, int *following_count) {
+    json_t *root, *message, *json_user_name, *json_following_count;
+    json_error_t error;
+
+    root = json_loads(user_string.c_str(), 0, &error);
+
+    if(!root)
+    {
+        return;
+    }
+
+    if(!json_is_object(root)) {
+        json_decref(root);
+        *authed = false;
+        return;
+    }
+
+    message = json_object_get(root, "message");
+    if(json_is_string(message)) {
+        *authed = false;
+        json_decref(root);
+        return;
+    }
+
+    json_user_name = json_object_get(root, "login");
+    json_following_count = json_object_get(root, "following");
+
+    if(json_is_string(json_user_name))
+        *user_name = json_string_value(json_user_name);
+    if(json_is_integer(json_following_count))
+        *following_count = json_integer_value(json_following_count);
+
+    *authed = true;
+    json_decref(root);
+    return;
+}

@@ -8,10 +8,6 @@
 #include "draw.h"
 
 
-
-std::string token = "";
-bool have_token = false;
-
 bool file_exists(std::string filePath) {
     if (FILE *file = fopen(filePath.c_str(), "r")) {
         fclose(file);

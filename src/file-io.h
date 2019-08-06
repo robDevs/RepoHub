@@ -5,9 +5,6 @@
 #include <psp2/io/stat.h>
 #include <psp2/io/dirent.h>
 
-extern std::string token;
-extern bool have_token;
-
 extern bool file_exists(std::string filePath);
 extern void read_file_lines(std::string filePath, std::vector<std::string> *list);
 extern void get_token();
