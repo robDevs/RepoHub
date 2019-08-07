@@ -14,6 +14,8 @@ User::User(std::string name, std::string avatar_url) {
     }
     pfp = NULL;
     //getPfp();
+    numStarred = 0;
+    numRepos = 0;
 }
 
 void User::setName(std::string name) {
@@ -64,8 +66,6 @@ void User::drawListView(int y, bool selected) {
 }
 
 void User::drawDetailsView() {
-    //coming soon
-
     if(!complete) {
         setRepos();
     }
@@ -182,6 +182,127 @@ void User::drawDetailsView() {
     }
 }
 
+void User::drawStarred() {
+    if(!starred_complete) {
+        setStarred(1);
+    }
+
+    int cursor_pos = 0;
+    int cursor_row = 0;
+    int y_offset = 44;
+
+    int list_size0 = static_cast<int>(starred_row0.size());
+    int list_size1 = static_cast<int>(starred_row1.size());
+
+    float menuBarH = pow(500,2)/(list_size0*140);
+
+    std::string header_string = name;
+    header_string += "/Starred";
+
+    init_keys();
+
+    int page = 1;
+
+    while(1) {
+        update_keys();
+        if (down_released) {
+            if(cursor_pos < list_size0 - 1) cursor_pos += 1;
+            else if(list_size0 + list_size1 < numStarred + 1 && cursor_pos < list_size0) cursor_pos += 1;
+            else cursor_pos = 0;
+        }
+
+        if (up_released) {
+            if(cursor_pos > 0) cursor_pos -= 1;
+            else if(list_size0 + list_size1 < numStarred + 1) cursor_pos = list_size0;
+            else cursor_pos = list_size0 - 1;
+        }
+
+        if(cross_released) {
+            if(numStarred > 0) {
+                if(cursor_pos == list_size0) {
+                    page += 1;
+                    setStarred(page);
+                }
+                else {
+                    if(cursor_row == 0)
+                        starred_row0[cursor_pos].drawDetailsView(header_string);
+                    else if(cursor_row == 1)
+                        starred_row1[cursor_pos].drawDetailsView(header_string);
+                }
+                list_size0 = static_cast<int>(starred_row0.size());
+                list_size1 = static_cast<int>(starred_row1.size());
+                menuBarH = pow(500,2)/(list_size0*140);
+            }
+        }
+
+        if(left_released) {
+            cursor_row -= 1;
+        }
+
+        if(right_released) {
+            cursor_row += 1;
+        }
+
+        if(cursor_row < 0) {
+            cursor_row = 1;
+        }
+        if(cursor_row > 1 || list_size1 < 1 || cursor_pos > list_size1 - 1) {
+            cursor_row = 0;
+        }
+
+        if (circle_released){
+            break;
+        }
+
+        while(y_offset + (cursor_pos*140) > 544 - 140) {
+            y_offset -= 140;
+        }
+
+        while(y_offset + (cursor_pos*140) < 44) {
+            y_offset += 140;
+        }
+
+        vita2d_start_drawing();
+        vita2d_clear_screen();
+
+        for(int i = 0; i < list_size0; i++) {
+            starred_row0[i].drawListView(40, y_offset + i*140, cursor_pos == i && cursor_row == 0);
+        }
+
+        for(int i = 0; i < list_size1; i++) {
+            starred_row1[i].drawListView(500, y_offset + i*140, cursor_pos == i && cursor_row == 1);
+            //draw_button(std::to_string(list_size1) + std::to_string(i), 500, y_offset + i*140, 420, 140, true);
+        }
+
+        if(numStarred + 1 > list_size0 + list_size1) {
+            draw_button("Load more", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
+        }
+
+        vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
+
+        draw_header(header_string);
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+    }
+}
+
+void User::setStarred(int page) {
+    starred_complete = true;
+    std::string url = "https://api.github.com/users/";
+    url += name;
+    url += "/starred?page=";
+    url += std::to_string(page);
+    url += "&per_page=30";
+
+    numStarred += jansson_parse_repo_list(curl_get_string(url), &starred_row0, &starred_row1);
+
+    jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
+
+    check_core_rate_limit();
+}
+
 void User::getPfp() {
     curl_download_file_no_alert(avatar_url, "ux0:data/RepoHub/Downloads/pfp");
     pfp = vita2d_load_JPEG_file("ux0:data/RepoHub/Downloads/pfp");
@@ -217,12 +338,6 @@ void set_user_list(std::vector<User> *user_list, int page, bool clear) {
 
     for(size_t i = 0; i < userNames.size(); i++) {
         User newUser(userNames[i], avatar_urls[i]);
-        user_list->push_back(newUser);
-    }
-
-    //add self if clearing list
-    if(clear) {
-        User newUser(user_name, "");
         user_list->push_back(newUser);
     }
 }
@@ -285,15 +400,6 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
             }
         }
 
-        if (select_released) {
-            set_user_name();
-            set_token();
-        }
-
-        if (select_released) {
-            get_token();
-        }
-
         if (down_released) {
             if(cursor_pos < list_size - 1) cursor_pos += 1;
             else if(list_size < following_count && cursor_pos < list_size) cursor_pos += 1;
@@ -320,6 +426,13 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                 }
                 else
                     user_list->at(cursor_pos).drawDetailsView();
+            }
+        }
+
+        if(triangle_released) {
+            if(list_size > 0) {
+                if(cursor_pos != list_size)
+                    user_list->at(0).drawStarred();
             }
         }
 

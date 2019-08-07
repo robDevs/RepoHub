@@ -38,7 +38,10 @@ int main()
     else if(!authed)
         get_user_name();
 
-    set_user_list(&users, 1, true);
+    User self(user_name, "");
+    users.push_back(self);
+
+    set_user_list(&users, 1, false);
 
     //clear the screen a few times?
     for(int i = 0; i < 4; i++) {

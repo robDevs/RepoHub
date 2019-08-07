@@ -37,7 +37,8 @@
 #define RETURN_STATE        3//return state
 #define REPO_VIEW           4//view a selected repo
 #define RELEASE_VIEW        5//view a selected release from a repo
-#define QUIT_APP            6//quit the app
+#define STARRED_VIEW        6
+#define QUIT_APP            7//quit the app
 
 extern std::string token;
 extern bool have_token;

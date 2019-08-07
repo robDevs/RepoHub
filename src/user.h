@@ -14,9 +14,11 @@
 class User {
 private:
     std::string name;
-    int numRepos, repo_list0_size, repo_list1_size;
+    int numRepos, numStarred, repo_list0_size, repo_list1_size;
     std::vector<Repo> repos_row0, repos_row1;
+    std::vector<Repo> starred_row0, starred_row1;
     bool complete;
+    bool starred_complete;
     std::string avatar_url;
     vita2d_texture *pfp;
 public:
@@ -31,6 +33,9 @@ public:
     void drawReleases();
     void getPfp();
     void cleanUp();
+    void setStarred(int page);
+    void drawStarred();
+    void get_nums();
 };
 
 extern void set_user_list(std::vector<User> *user_list, int page, bool clear);

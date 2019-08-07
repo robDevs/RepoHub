@@ -62,7 +62,7 @@ void update_keys() {
     update_single_key(SCE_CTRL_UP, &up_pressed, &up_held, &up_released);
     update_single_key(SCE_CTRL_LEFT, &left_pressed, &left_held, &left_released);
     update_single_key(SCE_CTRL_LTRIGGER, &lt_pressed, &lt_held, &lt_released);
-    update_single_key(SCE_CTRL_RTRIGGER, &triangle_pressed, &rt_held, &rt_released);
+    update_single_key(SCE_CTRL_RTRIGGER, &rt_released, &rt_held, &rt_released);
     update_single_key(SCE_CTRL_START, &start_pressed, &start_held, &start_released);
     update_single_key(SCE_CTRL_SELECT, &select_pressed, &select_held, &select_released);
 }
