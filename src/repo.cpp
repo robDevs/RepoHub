@@ -61,7 +61,7 @@ void Repo::drawListView(int x, int y, bool selected) {
 void Repo::drawDetailsView(std::string header_start) {
     init_keys();
 
-    if(readme.empty())
+    if(readme_vec.empty())
         setReadme();
 
     //strip_new_line(readme);
