@@ -38,7 +38,7 @@ int main()
     else if(!authed)
         get_user_name();
 
-    set_user_list(&users);
+    set_user_list(&users, 1, true);
 
     //clear the screen a few times?
     for(int i = 0; i < 4; i++) {

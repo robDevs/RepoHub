@@ -39,7 +39,7 @@ void User::setRepos() {
     int count = jansson_get_repo_count(curl_get_string(url));
     setNumRepos(count);
 
-    url += "/repos?per_page=100";
+    url += "/repos?per_page=30";
 
     std::string json_repo_list_string = curl_get_string(url);
     jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
@@ -109,7 +109,7 @@ void User::drawDetailsView() {
                     url += name;
                     url += "/repos?page=";
                     url += std::to_string(page);
-                    url += "&per_page=100";
+                    url += "&per_page=30";
 
                     jansson_parse_repo_list(curl_get_string(url), &repos_row0, &repos_row1);
 
@@ -198,8 +198,8 @@ void User::cleanUp() {
 
 //end class functions
 
-void set_user_list(std::vector<User> *user_list) {
-    while(!user_list->empty()) {
+void set_user_list(std::vector<User> *user_list, int page, bool clear) {
+    while(!user_list->empty() && clear) {
         user_list->pop_back();
     }
 
@@ -208,7 +208,9 @@ void set_user_list(std::vector<User> *user_list) {
 
     std::string url = "https://api.github.com/users/";
     url += user_name;
-    url += "/following";
+    url += "/following?page=";
+    url += std::to_string(page);
+    url += "&per_page=30";
 
     jansson_parse_followers_list(curl_get_string(url), &userNames, &avatar_urls);
     jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
@@ -218,9 +220,11 @@ void set_user_list(std::vector<User> *user_list) {
         user_list->push_back(newUser);
     }
 
-    User newUser(user_name, "");
-
-    user_list->push_back(newUser);
+    //add self if clearing list
+    if(clear) {
+        User newUser(user_name, "");
+        user_list->push_back(newUser);
+    }
 }
 
 
@@ -228,8 +232,13 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
     int list_size = static_cast<int>(user_list->size());
     int cursor_pos = 0;
     int y_offset = 44;
-    float menuBarH = pow(500,2)/(list_size*95);
+    float menuBarH = 0;
+    if(list_size < following_count)
+        menuBarH = pow(500,2)/((list_size+1)*95);
+    else
+        menuBarH = pow(500,2)/(list_size*95);
     bool done = false;
+    int page = 1;
 
     //Rectangle posRect = {screenWidth - 10, 0 - listPos*(menuBarH/screenHeight), 5, menuBarH};
 
@@ -247,7 +256,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
 
                 if(state == UPDATE_USERNAME) {
                     set_user_name();
-                    set_user_list(user_list);
+                    set_user_list(user_list, 1, true);
                     list_size = static_cast<int>(user_list->size());
                 }
                 if(state == UPDATE_TOKEN)
@@ -287,17 +296,31 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
 
         if (down_released) {
             if(cursor_pos < list_size - 1) cursor_pos += 1;
+            else if(list_size < following_count && cursor_pos < list_size) cursor_pos += 1;
             else cursor_pos = 0;
         }
 
         if (up_released) {
             if(cursor_pos > 0) cursor_pos -= 1;
+            else if(list_size < following_count) cursor_pos = list_size;
             else cursor_pos = list_size - 1;
         }
 
         if(cross_released) {
-            if(list_size > 0)
-                user_list->at(cursor_pos).drawDetailsView();
+            if(list_size > 0) {
+                if(cursor_pos == list_size) {
+                    //if on "load more button get more users and adjust list size and menu bar size"
+                    page += 1;
+                    set_user_list(user_list, page, false);
+                    list_size = static_cast<int>(user_list->size());
+                    if(list_size <= following_count)
+                        menuBarH = pow(500,2)/((list_size+1)*95);
+                    else
+                        menuBarH = pow(500,2)/(list_size*95);
+                }
+                else
+                    user_list->at(cursor_pos).drawDetailsView();
+            }
         }
 
         while(y_offset + (cursor_pos*100) > 544 - 100) {
@@ -314,6 +337,11 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
         for(int i = 0; i < list_size; i++) {
             user_list->at(i).drawListView(y_offset + i*100, cursor_pos == i);
         }
+        //draw the load more button
+        if(list_size < following_count)
+            draw_button("Load more", 0, y_offset + list_size*100, 960, 100, cursor_pos == list_size);
+
+        //draw the menu bar
         vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
 
         draw_header("Following");
