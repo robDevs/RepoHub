@@ -8,7 +8,6 @@
 #include "draw.h"
 #include "controls.h"
 #include "vita-keyboard.h"
-#include <psp2/appmgr.h>
 
 
 class User {
