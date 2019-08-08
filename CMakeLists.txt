@@ -24,7 +24,7 @@ project(${SHORT_NAME})
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 set(VITA_APP_NAME "RepoHub")
-set(VITA_TITLEID  "rbdv00002")
+set(VITA_TITLEID  "REPOHUB01")
 set(VITA_VERSION  "02.50")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -std=gnu14 -Wall ")
@@ -96,4 +96,12 @@ vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
   FILE images/user-background-list.png images/user-background-list.png
   FILE images/star.png images/star.png
   FILE images/fork.png images/fork.png
+
+  FILE sce_sys/icon0.png sce_sys/icon0.png
+  FILE sce_sys/pic0.png sce_sys/pic0.png
+  FILE sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
+  FILE sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
+  FILE sce_sys/livearea/contents/logo1.png sce_sys/livearea/contents/logo1.png
+  FILE sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
+  FILE sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
 )
