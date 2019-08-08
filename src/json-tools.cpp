@@ -384,6 +384,38 @@ void jansson_parse_followers_list(std::string followers_list, std::vector<std::s
     json_decref(root);
 }
 
+int jannson_get_following_count(std::string json_user_string) {
+    json_t *root;
+    json_error_t error;
+
+    root = json_loads(json_user_string.c_str(), 0, &error);
+
+    if(!root)
+    {
+        return 0;
+    }
+
+    if(!json_is_object(root))
+    {
+        json_decref(root);
+        return 0;
+    }
+
+    json_t *data;
+
+    data = json_object_get(root, "following"); // we only care about public repos.
+
+    if(!json_is_integer(data))
+    {
+        json_decref(root);
+        return 0;
+    }
+
+    int returnVal = json_integer_value(data);
+    json_decref(root);
+    return returnVal;
+}
+
 void jansson_get_readme(std::string readme_string, std::vector<std::string> *readme_vec) {
     json_t *root;
     json_error_t error;

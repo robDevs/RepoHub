@@ -15,6 +15,7 @@ extern void jansson_parse_asset_list(json_t *json_array, std::vector<Asset> *ass
 extern void jannson_get_rate_limits(std::string limit_string, int *core_max, int *core_min, int *search_max, int *search_min);
 
 extern void jansson_parse_followers_list(std::string followers_list, std::vector<std::string> *list, std::vector<std::string> *list0);
+extern int jannson_get_following_count(std::string json_user_string);
 
 extern void jansson_get_readme(std::string readme_string, std::vector<std::string> *readme_vec);
 

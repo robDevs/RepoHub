@@ -35,8 +35,12 @@ int main()
         sceIoMkdir("ux0:data/RepoHub", 0777);
         sceIoMkdir("ux0:data/RepoHub/Downloads", 0777);
     }
-    else if(!authed)
+    else if(!authed) {
         get_user_name();
+        std::string url = "https://api.github.com/users/";
+        url += user_name;
+        following_count = jannson_get_following_count(curl_get_string(url));
+    }
 
     User self(user_name, "");
     users.push_back(self);
