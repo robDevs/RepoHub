@@ -6,6 +6,8 @@
 #include "key.h"
 #include "vita-keyboard.h"
 #include "draw.h"
+#include "json-tools.h"
+#include "curl-tools.h"
 
 
 bool file_exists(std::string filePath) {
@@ -54,10 +56,20 @@ void set_user_name() {
         user_name = vita_keyboard_get((char*)"Enter username:", (const char*)"", 600, 0);
         write_to_file(user_name, "ux0:data/RepoHub/user.txt");
     }
+    if(!user_name.empty()) {
+        std::string url = "https://api.github.com/users/";
+        url += user_name;
+        following_count = jannson_get_following_count(curl_get_string(url));
+    }
 }
 
 void get_user_name() {
     user_name = read_file("ux0:data/RepoHub/user.txt");
+    if(!user_name.empty()) {
+        std::string url = "https://api.github.com/users/";
+        url += user_name;
+        following_count = jannson_get_following_count(curl_get_string(url));
+    }
 }
 
 void write_to_file(std::string message, std::string path) {
