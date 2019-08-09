@@ -186,10 +186,96 @@ std::string curl_get_string(std::string url){
 
 		if(res != CURLE_OK){
 		}
-
+        curl_easy_cleanup(curl);
 		return response_string;
 	}
 	return "Error";
+}
+
+int curl_post_issue(std::string url, std::string title, std::string body) {
+    if(!authed) {
+        draw_alert_message("Authorization required!");
+        return 1;
+    }
+    CURL *curl;
+	CURLcode res;
+	curl = curl_easy_init();
+	if(curl) {
+		struct stringcurl header;
+		init_string(&header);
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_POST, 1);
+		// Set useragant string
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, \
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
+      (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+		// not sure how to use this when enabled
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+		// not sure how to use this when enabled
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+		// Set SSL VERSION to TLS 1.2
+		curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+		// Set timeout for the connection to build
+		curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
+		// Follow redirects (?)
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+		// The function that will be used to write the data
+		std::string response_string;
+        std::string header_string;
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
+		// Internal CURL progressmeter must be disabled if we provide our own callback
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
+		// Install the callback function
+		curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_func_string);
+		// write function of response headers
+		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, writefunc);
+		// the response header data where to write to
+		curl_easy_setopt(curl, CURLOPT_HEADERDATA, &header);
+		// Request Header :
+		struct curl_slist *headerchunk = NULL;
+		headerchunk = curl_slist_append(headerchunk, "Accept: */*");
+		headerchunk = curl_slist_append(headerchunk, "Content-Type: application/json");
+        if(have_token) {
+            std::string final_token_header = "Authorization: token ";
+            final_token_header += token;
+            headerchunk = curl_slist_append(headerchunk, final_token_header.c_str());
+        }
+        headerchunk = curl_slist_append(headerchunk, "User-Agent: Mozilla/5.0 \
+        (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) \
+        Chrome/58.0.3029.110 Safari/537.36");
+		//headerchunk = curl_slist_append(headerchunk, "Content-Length: 0");
+
+        std::string post_field = "{\n\"title\":\"";
+        post_field += title;
+        post_field += "\",\n";
+        post_field += "\"body\":\"";
+        escape_new_line(&body);
+        post_field += body;
+        post_field += "\\n\\n-Submited from RepoHub on PS Vita.";
+        post_field += "\"\n}";
+
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_field.c_str());
+
+        res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerchunk);
+		// Perform the request
+		res = curl_easy_perform(curl);
+		int httpresponsecode = 0;
+		curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &httpresponsecode);
+
+		if(res != CURLE_OK){
+            draw_alert_message(curl_easy_strerror(res));
+		}
+        else {
+            draw_alert_message("You can view the issue at:\nhttps://github.com/robDevs/RepoHub/issues");
+        }
+        curl_easy_cleanup(curl);
+
+		return 0;
+	}
+	return 1;
 }
 
 //straight from the samples. Downloads a file from  url to file--->see parameters.

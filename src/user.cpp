@@ -436,6 +436,13 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
             }
         }
 
+        if(select_released) {
+            std::string title = vita_keyboard_get((char*)"Enter title", (const char*)"", 600, 0);
+            std::string body = vita_keyboard_get((char*)"Enter body", (const char*)"", 600, 1);
+
+            curl_post_issue("https://api.github.com/repos/robDevs/RepoHub/issues", title, body);
+        }
+
         while(y_offset + (cursor_pos*100) > 544 - 100) {
             y_offset -= 100;
         }

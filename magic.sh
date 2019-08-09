@@ -14,6 +14,6 @@ rm -r temp/
 for i in $@
 do
     echo destroy | nc $i 1338
-    curl --ftp-method nocwd -T eboot.bin ftp://$i:1337/ux0:/app/rbdv00002/
-    echo launch rbdv00002 | nc $i 1338
+    curl --ftp-method nocwd -T eboot.bin ftp://$i:1337/ux0:/app/REPOHUB01/
+    echo launch REPOHUB01 | nc $i 1338
 done
