@@ -34,11 +34,12 @@
 #define MAIN_VIEW           0//view the main list of users
 #define UPDATE_USERNAME     1//update the username
 #define UPDATE_TOKEN        2//update the token
-#define RETURN_STATE        3//return state
-#define REPO_VIEW           4//view a selected repo
-#define RELEASE_VIEW        5//view a selected release from a repo
-#define STARRED_VIEW        6
-#define QUIT_APP            7//quit the app
+#define SUBMIT_ISSUE        3
+#define RETURN_STATE        4//return state
+#define REPO_VIEW           5//view a selected repo
+#define RELEASE_VIEW        6//view a selected release from a repo
+#define STARRED_VIEW        7
+#define QUIT_APP            8//quit the app
 
 extern std::string token;
 extern bool have_token;

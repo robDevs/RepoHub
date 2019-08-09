@@ -387,6 +387,15 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                     state = MAIN_VIEW;
                 }
 
+                if(state == SUBMIT_ISSUE && authed) {
+                    std::string title = vita_keyboard_get((char*)"Enter title", (const char*)"", 600, 0);
+                    std::string body = vita_keyboard_get((char*)"Enter body", (const char*)"", 600, 1);
+
+                    curl_post_issue("https://api.github.com/repos/robDevs/RepoHub/issues", title, body);
+                }
+                else if(state == SUBMIT_ISSUE && !authed)
+                    draw_alert_message("Requires authentication!");
+
                 for(int i = 0; i < 3; i++) {
                     vita2d_start_drawing();
                     vita2d_clear_screen();
@@ -439,13 +448,6 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                 if(cursor_pos != list_size)
                     user_list->at(0).drawStarred();
             }
-        }
-
-        if(select_released) {
-            std::string title = vita_keyboard_get((char*)"Enter title", (const char*)"", 600, 0);
-            std::string body = vita_keyboard_get((char*)"Enter body", (const char*)"", 600, 1);
-
-            curl_post_issue("https://api.github.com/repos/robDevs/RepoHub/issues", title, body);
         }
 
         while(y_offset + (cursor_pos*100) > 544 - 100) {
