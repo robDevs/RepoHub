@@ -220,7 +220,12 @@ void User::drawStarred() {
         if(cross_released) {
             if(numStarred > 0) {
                 if(cursor_pos == list_size0) {
-                    page += 1;
+                    while(!starred_row0.empty())
+                        starred_row0.pop_back();
+                    while(!starred_row1.empty())
+                        starred_row1.pop_back();
+                    if(list_size0 + list_size1 >= 30)
+                        page += 1;
                     setStarred(page);
                 }
                 else {
