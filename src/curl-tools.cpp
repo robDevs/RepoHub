@@ -254,7 +254,6 @@ int curl_post_issue(std::string url, std::string title, std::string body) {
         post_field += "\"body\":\"";
         escape_new_line(&body);
         post_field += body;
-        post_field += "\\n\\n-Submited from RepoHub on PS Vita.";
         post_field += "\"\n}";
 
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_field.c_str());

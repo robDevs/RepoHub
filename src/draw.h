@@ -19,4 +19,6 @@ extern void draw_alert_message(std::string message);
 
 extern int draw_star_menu();
 
+extern void draw_issue_menu();
+
 #endif

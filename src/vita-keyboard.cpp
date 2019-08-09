@@ -154,6 +154,8 @@ char *vita_keyboard_get(char *title, const char *initial_text, int max_len, int 
             name = (char *)get_ime_dialog_input_text_utf8();
         } else if (ime_result != IME_DIALOG_RESULT_CANCELED) {
             done = false;
+        } else if (ime_result == IME_DIALOG_RESULT_CANCELED) {
+            name = (char *)initial_text;
         }
 
         vita2d_end_drawing();

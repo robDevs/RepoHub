@@ -2,6 +2,9 @@
 #include <psp2/kernel/processmgr.h>
 #include <psp2/rtc.h>
 
+#include "vita-keyboard.h"
+#include "curl-tools.h"
+
 void draw_header(std::string header) {
     SceDateTime time;
     sceRtcGetCurrentClockLocalTime(&time);
@@ -274,7 +277,7 @@ int draw_star_menu() {
 
         if(up_released) cursor_pos -= 1;
         if(down_released) cursor_pos += 1;
-        if(cursor_pos < 0) cursor_pos = 3;
+        if(cursor_pos < 0) cursor_pos = 4;
         if(cursor_pos > 4) cursor_pos = 0;
 
         vita2d_start_drawing();
@@ -294,4 +297,80 @@ int draw_star_menu() {
 
     reset_keys();
     return return_val;
+}
+
+void draw_issue_menu() {
+    init_keys();
+
+    std::string title = "Title";
+    std::string body = "Body";
+
+    int cursor_pos = 0;
+
+    bool done = false;
+
+    while(!done) {
+        update_keys();
+
+        if(up_released)   cursor_pos -= 1;
+        if(down_released) cursor_pos += 1;
+
+        if(cursor_pos < 0) cursor_pos = 4;
+        if(cursor_pos > 4) cursor_pos = 0;
+
+        if(circle_released){
+            reset_keys();
+            break;
+        }
+
+        if(cross_released) {
+            switch (cursor_pos) {
+                case 0:
+                    title = vita_keyboard_get((char*)"Enter title", (const char*)title.c_str(), 600, 0);
+                    break;
+                case 1:
+                    body = vita_keyboard_get((char*)"Enter body", (const char*)body.c_str(), 600, 1);
+                    break;
+                case 2:
+                    body += "\n\n-Submitted from RepoHub on PS Vita.";
+                    break;
+                case 3:
+                    curl_post_issue("https://api.github.com/repos/robDevs/RepoHub/issues", title, body);
+                    done = true;
+                    break;
+                case 4:
+                    done = true;
+                    break;
+            }
+        }
+
+        read_joy_sticks();
+
+
+        vita2d_start_drawing();
+        vita2d_clear_screen();
+
+        vita2d_font_draw_text(font20, 40, 143, RGBA8(0,0,0,255), 20.0f, body.c_str());
+
+        //right hand menu bar
+        vita2d_draw_rectangle(960 - 260, 103, 260, 544 - 103, RGBA8(255,255,255,255));
+        vita2d_draw_line(960-260, 104, 960-260, 544, RGBA8(150,150,150,200));
+        draw_button("Edit Title", 960 - 230, 200, 200, 50, cursor_pos == 0);
+        draw_button("Edit Body", 960 - 230, 260, 200, 50, cursor_pos == 1);
+        draw_button("Add Footer", 960 - 230, 320, 200, 50, cursor_pos == 2);
+        draw_button("Submit Issue", 960 - 230, 380, 200, 50, cursor_pos == 3);
+        draw_button("Cancel", 960 - 230, 440, 200, 50, cursor_pos == 4);
+
+
+        //bg and line for title under header
+        vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
+        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
+        vita2d_font_draw_text(font40, 40, 103 - 9, RGBA8(0,0,0,255), 40.0f, title.c_str());
+
+        draw_header("Submit issue to RepoHub on Github");
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+    }
 }

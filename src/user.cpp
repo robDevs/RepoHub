@@ -388,10 +388,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                 }
 
                 if(state == SUBMIT_ISSUE && authed) {
-                    std::string title = vita_keyboard_get((char*)"Enter title", (const char*)"", 600, 0);
-                    std::string body = vita_keyboard_get((char*)"Enter body", (const char*)"", 600, 1);
-
-                    curl_post_issue("https://api.github.com/repos/robDevs/RepoHub/issues", title, body);
+                    draw_issue_menu();
                 }
                 else if(state == SUBMIT_ISSUE && !authed)
                     draw_alert_message("Requires authentication!");
