@@ -61,4 +61,6 @@ extern std::string strip_html_tags(std::string msg);
 extern std::string user_name;
 extern int following_count;
 
+extern void escape_new_line(std::string *string);
+
 #endif

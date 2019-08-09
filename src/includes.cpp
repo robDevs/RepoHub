@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "draw.h"
 
 std::string token = "";
 bool have_token = false;
@@ -103,3 +104,10 @@ std::string strip_html_tags(std::string msg) {
 
 std::string user_name = "";
 int following_count = 0;
+
+void escape_new_line(std::string *string) {
+    while(string->find("\n") != std::string::npos) {
+        int pos = string->find("\n");
+        string->replace(pos,1,"\\n");;
+    }
+}
