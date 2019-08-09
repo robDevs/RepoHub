@@ -26,7 +26,7 @@ extern size_t write_data_to_disk(void *ptr, size_t size, size_t nmemb, void *str
 extern std::string curl_get_string(std::string url);
 
 extern int curl_post_issue(std::string url, std::string title, std::string body);
-
+extern int curl_post_star(std::string url, bool delete_star);
 //straight from the samples. Downloads a file from  url to file--->see parameters.
 extern void curl_download_file(std::string url , std::string file);
 extern void curl_download_file_no_alert(std::string url , std::string file);

@@ -124,6 +124,21 @@ void Repo::drawDetailsView(std::string header_start) {
                 break;
         }
 
+        if(start_released) {
+            std::string url = "https://api.github.com/user/starred/";
+            url += owner;
+            url += "/";
+            url += name;
+            curl_post_star(url, false);
+        }
+        if(select_released) {
+            std::string url = "https://api.github.com/user/starred/";
+            url += owner;
+            url += "/";
+            url += name;
+            curl_post_star(url, true);
+        }
+
         read_joy_sticks();
 
         if(desc_y < 120 && ly > 147) desc_y += 5;
