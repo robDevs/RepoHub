@@ -59,6 +59,15 @@ void Repo::drawListView(int x, int y, bool selected) {
 }
 
 void Repo::drawDetailsView(std::string header_start) {
+    int starred = false;
+    if(authed) {
+        std::string url = "https://api.github.com/user/starred/";
+        url += owner;
+        url += "/";
+        url += name;
+        starred = curl_check_star(url);
+    }
+
     init_keys();
 
     if(readme_vec.empty())
@@ -84,6 +93,9 @@ void Repo::drawDetailsView(std::string header_start) {
     header_string += name;
 
     while(1) {
+        if(!authed) {
+            cursor_pos = 0;
+        }
         update_keys();
 
         if(up_released)   cursor_pos -= 1;
@@ -120,23 +132,20 @@ void Repo::drawDetailsView(std::string header_start) {
                     draw_alert_message("No releases available!");
                 }
             }
-            if(cursor_pos == 1)
-                break;
-        }
-
-        if(start_released) {
-            std::string url = "https://api.github.com/user/starred/";
-            url += owner;
-            url += "/";
-            url += name;
-            curl_post_star(url, false);
-        }
-        if(select_released) {
-            std::string url = "https://api.github.com/user/starred/";
-            url += owner;
-            url += "/";
-            url += name;
-            curl_post_star(url, true);
+            if(cursor_pos == 1) {
+                std::string url = "https://api.github.com/user/starred/";
+                url += owner;
+                url += "/";
+                url += name;
+                if(starred) {
+                    curl_post_star(url, true);
+                    starred = false;
+                }
+                else {
+                    curl_post_star(url, false);
+                    starred = true;
+                }
+            }
         }
 
         read_joy_sticks();
@@ -168,7 +177,12 @@ void Repo::drawDetailsView(std::string header_start) {
         vita2d_draw_rectangle(960 - 260, 103, 260, 544 - 103, RGBA8(255,255,255,255));
         vita2d_draw_line(960-260, 104, 960-260, 544, RGBA8(150,150,150,200));
         draw_button("View Releases", 960 - 230, 200, 200, 50, cursor_pos == 0);
-        draw_button("Back", 960 - 230, 260, 200, 50, cursor_pos == 1);
+        if(authed) {
+            if(starred)
+                draw_button("Unstar", 960 - 230, 260, 200, 50, cursor_pos == 1);
+            else
+                draw_button("Star", 960 - 230, 260, 200, 50, cursor_pos == 1);
+        }
 
         vita2d_font_draw_textf(font15, 960 - vita2d_font_text_width(font15, 15.0f, license.c_str()) - 5, 120, RGBA8(0,0,0,255), 15.0f, "%s", license.c_str());
 

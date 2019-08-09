@@ -280,7 +280,7 @@ void User::drawStarred() {
         }
 
         if(numStarred + 1 > list_size0 + list_size1) {
-            draw_button("Load more", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
+            draw_button("Refresh", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
         }
 
         vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
