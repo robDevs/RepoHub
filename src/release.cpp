@@ -50,6 +50,10 @@ void draw_release_details(Release release, std::string header_start) {
             }
             else {
                 std::string message_string = "Not enough Space!";
+                message_string += "\nFree space: ";
+                message_string += std::to_string(byte_to_mb(get_space_avail()));
+                message_string.resize(message_string.size() - 3);
+                message_string += " MB";
                 draw_alert_message(message_string);
             }
         }
