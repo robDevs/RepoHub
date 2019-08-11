@@ -20,13 +20,16 @@ void draw_header(std::string header) {
     else {
         am_pm = " AM";
     }
+    if(time_hour == 0)
+        time_hour = 12;
     int time_minute = sceRtcGetMinute(&time);
     time_string += std::to_string(time_hour);
     time_string += ":";
     if(time_minute < 10) time_string += "0";
     time_string += std::to_string(time_minute);
     time_string += am_pm;
-    time_string = std::to_string(core_remain);
+    time_string += " | API:";
+    time_string += std::to_string(core_remain);
     time_string += "/";
     time_string += std::to_string(core_max);
     vita2d_draw_rectangle(0, 0, 960, 44, RGBA8(36,41,46,255));
