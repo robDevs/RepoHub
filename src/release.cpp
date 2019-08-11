@@ -41,7 +41,7 @@ void draw_release_details(Release release, std::string header_start) {
             if(release.assets[cursor_pos].size < get_space_avail()) {
                 std::string message_string = "Download ";
                 message_string += release.assets[cursor_pos].name;
-                message_string += "\nto 'ux0:data/RepoHub?'";
+                message_string += "\nto 'ux0:data/RepoHub/Downloads/?'";
                 if(draw_yes_no_message(message_string)) {
                     std::string filePath = "ux0:data/RepoHub/Downloads/";
                     filePath += release.assets[cursor_pos].name;

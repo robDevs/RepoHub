@@ -47,7 +47,7 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
 
 		vita2d_start_drawing();
 
-		vita2d_draw_rectangle(960 / 2 - 200, 544 / 2 - 100, 400, 200, RGBA8(36,41,46,255));
+		vita2d_draw_rectangle(0, 544 / 2 - 100, 960, 200, RGBA8(36,41,46,255));
 		vita2d_draw_rectangle(960 / 2 - 160, 544 / 2 - 2, progress, 4, RGBA8(0,255,0,255));
 
         vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, label.c_str()) / 2), 544 / 2 - 40, RGBA8(255,255,255,255), 20.0f, label.c_str());
