@@ -64,4 +64,7 @@ extern int following_count;
 
 extern void escape_new_line(std::string *string);
 
+extern void draw_string_vector(std::vector<std::string> msg,int x, int y, int per_line);
+extern int get_string_vector_height(std::vector<std::string> msg, int per_line);
+
 #endif

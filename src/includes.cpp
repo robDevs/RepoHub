@@ -111,3 +111,24 @@ void escape_new_line(std::string *string) {
         string->replace(pos,1,"\\n");;
     }
 }
+
+void draw_string_vector(std::vector<std::string> msg, int x, int y, int per_line) {
+    int offset = 0;
+
+    for(size_t i = 0; i < msg.size(); i++) {
+        strip_carriage_return(msg[i]);
+        vita2d_font_draw_text(font20, x, y + offset, RGBA8(0,0,0,255), 20.0f, word_wrap(msg[i], per_line).c_str());
+
+        offset += vita2d_font_text_height(font20, 20.0f, word_wrap(msg[i], per_line).c_str()) + 3;
+    }
+}
+
+int get_string_vector_height(std::vector<std::string> msg, int per_line) {
+    int h = 0;
+
+    for(size_t i = 0; i < msg.size(); i++) {
+        h += vita2d_font_text_height(font20, 20.0f, word_wrap(msg[i], per_line).c_str()) + 3;
+    }
+
+    return h;
+}
