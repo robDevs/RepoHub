@@ -31,6 +31,8 @@
 
 #include <jansson.h>
 
+#define TAG                 0.00 // the current version. Used by updater.
+
 #define MAIN_VIEW           0//view the main list of users
 #define UPDATE_USERNAME     1//update the username
 #define UPDATE_TOKEN        2//update the token
@@ -66,5 +68,7 @@ extern void escape_new_line(std::string *string);
 
 extern void draw_string_vector(std::vector<std::string> msg,int x, int y, int per_line);
 extern int get_string_vector_height(std::vector<std::string> msg, int per_line);
+
+extern void check_update(); //updater
 
 #endif

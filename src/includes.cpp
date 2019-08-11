@@ -1,5 +1,7 @@
 #include "includes.h"
 #include "draw.h"
+#include "json-tools.h"
+#include "curl-tools.h"
 
 std::string token = "";
 bool have_token = false;
@@ -131,4 +133,26 @@ int get_string_vector_height(std::vector<std::string> msg, int per_line) {
     }
 
     return h;
+}
+
+void check_update() {
+    float latest_tag = 0.00;
+    std::string url;
+    jansson_get_tag_from_release(curl_get_string("https://api.github.com/repos/robDevs/RepoHub/releases/latest"), &latest_tag, &url);
+    std::string tag_string = std::to_string(latest_tag);
+    tag_string.resize(4);
+    if(latest_tag > TAG) {
+        std::string message = "New version available: v";
+        message += tag_string;
+        message += "\nWould you like to download the update?";
+
+        draw_alert_message(url);
+
+        if(draw_yes_no_message(message), "RepoHub.vpk") {
+            std::string file_name = "ux0:data/RepoHub/Downloads/RepoHub_";
+            file_name += tag_string;
+            file_name += ".vpk";
+            curl_download_file(url, file_name);
+        }
+    }
 }

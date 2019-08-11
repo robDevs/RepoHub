@@ -479,3 +479,52 @@ void jansson_get_authed_user(std::string user_string, std::string *user_name, bo
     json_decref(root);
     return;
 }
+
+void jansson_get_tag_from_release(std::string release_string, float *tag, std::string *url) {
+    json_t *root;
+    json_error_t error;
+
+    root = json_loads(release_string.c_str(), 0, &error);
+
+    if(!root)
+    {
+        *tag = 0.00;
+        return;
+    }
+
+    if(!json_is_object(root))
+    {
+        json_decref(root);
+        *tag = 0.00;
+        return;
+    }
+
+    json_t *json_tag, *json_url;
+
+    json_tag = json_object_get(root, "tag_name");
+    json_url = json_object_get(json_array_get(json_object_get(root, "assets"), 0), "browser_download_url");
+
+    if(!json_is_string(json_tag))
+    {
+        *tag = 0.00;
+    }
+    else
+    {
+        std::string string_all = json_string_value(json_tag);
+        string_all.erase(string_all.begin());
+        float ret_val = std::stof(string_all);
+
+        *tag = ret_val;
+    }
+
+    if(!json_is_string(json_url)) {
+        *url = "";
+    }
+    else
+    {
+        *url = json_string_value(json_url);
+    }
+
+    json_decref(root);
+    return;
+}

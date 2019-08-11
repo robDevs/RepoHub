@@ -21,4 +21,7 @@ extern void jansson_get_readme(std::string readme_string, std::vector<std::strin
 
 extern void jansson_get_authed_user(std::string user_string, std::string *user_name, bool *authed, int *following_count);
 
+//used only for getting the tag for RepoHub latest release. To be compared with #define VERSION  x.xx
+extern void jansson_get_tag_from_release(std::string release_string, float *tag, std::string *url);
+
 #endif

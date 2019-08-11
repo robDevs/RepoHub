@@ -53,6 +53,8 @@ int main()
         vita2d_swap_buffers();
     }
 
+    check_update();
+
 
 	while (status != QUIT_APP) {
 
