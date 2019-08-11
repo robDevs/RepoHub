@@ -189,12 +189,12 @@ void User::drawStarred() {
 
     int cursor_pos = 0;
     int cursor_row = 0;
-    int y_offset = 44;
+    int y_offset = 103;
 
     int list_size0 = static_cast<int>(starred_row0.size());
     int list_size1 = static_cast<int>(starred_row1.size());
 
-    float menuBarH = pow(500,2)/(list_size0*140);
+    float menuBarH = pow(441,2)/(list_size0*140);
 
     std::string header_string = name;
     header_string += "/Starred";
@@ -236,7 +236,7 @@ void User::drawStarred() {
                 }
                 list_size0 = static_cast<int>(starred_row0.size());
                 list_size1 = static_cast<int>(starred_row1.size());
-                menuBarH = pow(500,2)/(list_size0*140);
+                menuBarH = pow(441,2)/(list_size0*140);
             }
         }
 
@@ -255,7 +255,7 @@ void User::drawStarred() {
             cursor_row = 0;
         }
 
-        if (circle_released){
+        if (left_released || right_released || rt_released || lt_released){
             break;
         }
 
@@ -263,7 +263,7 @@ void User::drawStarred() {
             y_offset -= 140;
         }
 
-        while(y_offset + (cursor_pos*140) < 44) {
+        while(y_offset + (cursor_pos*140) < 103) {
             y_offset += 140;
         }
 
@@ -283,7 +283,13 @@ void User::drawStarred() {
             draw_button("Refresh", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
         }
 
-        vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
+        vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/441), 15, menuBarH, RGBA8(167,167,167,255));
+
+        vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
+        vita2d_font_draw_textf(font40, 960-960/4-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(0,0,0,255), 40.0f, "Starred");
+        vita2d_font_draw_textf(font40, 960/4-vita2d_font_text_width(font40, 40.0f, "Following")/2, 95, RGBA8(150,150,150,255), 40.0f, "Following");
+        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
+        vita2d_draw_line(960/2, 44, 960/2, 103, RGBA8(150,150,150,200));
 
         draw_header(header_string);
 
@@ -351,12 +357,12 @@ void set_user_list(std::vector<User> *user_list, int page, bool clear) {
 void draw_user_list(std::vector<User> *user_list, int *status) {
     int list_size = static_cast<int>(user_list->size());
     int cursor_pos = 0;
-    int y_offset = 44;
+    int y_offset = 103;
     float menuBarH = 0;
     if(list_size < following_count)
-        menuBarH = pow(500,2)/((list_size+1)*95);
+        menuBarH = pow(441,2)/((list_size+1)*95);
     else
-        menuBarH = pow(500,2)/(list_size*95);
+        menuBarH = pow(441,2)/(list_size*95);
     bool done = false;
     int page = 1;
 
@@ -431,16 +437,16 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                     set_user_list(user_list, page, false);
                     list_size = static_cast<int>(user_list->size());
                     if(list_size <= following_count)
-                        menuBarH = pow(500,2)/((list_size+1)*95);
+                        menuBarH = pow(441,2)/((list_size+1)*95);
                     else
-                        menuBarH = pow(500,2)/(list_size*95);
+                        menuBarH = pow(441,2)/(list_size*95);
                 }
                 else
                     user_list->at(cursor_pos).drawDetailsView();
             }
         }
 
-        if(triangle_released) {
+        if(left_released || right_released || rt_released || lt_released) {
             if(list_size > 0) {
                 if(cursor_pos != list_size)
                     user_list->at(0).drawStarred();
@@ -451,7 +457,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
             y_offset -= 100;
         }
 
-        while(y_offset + (cursor_pos*100) < 44) {
+        while(y_offset + (cursor_pos*100) < 103) {
             y_offset += 100;
         }
 
@@ -466,7 +472,13 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
             draw_button("Load more", 0, y_offset + list_size*100, 960, 100, cursor_pos == list_size);
 
         //draw the menu bar
-        vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
+        vita2d_draw_rectangle(960 - 15, 103-y_offset*(menuBarH/441), 15, menuBarH, RGBA8(167,167,167,255));
+
+        vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
+        vita2d_font_draw_textf(font40, 960-960/4-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Starred");
+        vita2d_font_draw_textf(font40, 960/4-vita2d_font_text_width(font40, 40.0f, "Following")/2, 95, RGBA8(0,0,0,255), 40.0f, "Following");
+        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
+        vita2d_draw_line(960/2, 44, 960/2, 103, RGBA8(150,150,150,200));
 
         draw_header("Following");
 
