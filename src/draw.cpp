@@ -327,6 +327,7 @@ void draw_issue_menu() {
         }
 
         if(cross_released) {
+            std::string message;
             switch (cursor_pos) {
                 case 0:
                     title = vita_keyboard_get((char*)"Enter title", (const char*)title.c_str(), 600, 0);
@@ -335,11 +336,17 @@ void draw_issue_menu() {
                     body = vita_keyboard_get((char*)"Enter body", (const char*)body.c_str(), 600, 1);
                     break;
                 case 2:
-                    body += "\n\n-Submitted from RepoHub on PS Vita.";
+                    if(body.find("-Submitted from RepoHub on PS Vita.") == std::string::npos)
+                        body += "\n\n-Submitted from RepoHub on PS Vita.";
                     break;
                 case 3:
-                    curl_post_issue("https://api.github.com/repos/robDevs/RepoHub/issues", title, body);
-                    done = true;
+                    message = "Issue will be submitted to RepoHub\nusing the name: ";
+                    message += user_name;
+                    message += "\nWould you like to continue?";
+                    if(draw_yes_no_message(message)) {
+                        curl_post_issue("https://api.github.com/repos/robDevs/RepoHub/issues", title, body);
+                        done = true;
+                    }
                     break;
                 case 4:
                     done = true;
