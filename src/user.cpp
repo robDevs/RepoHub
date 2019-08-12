@@ -392,8 +392,17 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                         list_size = static_cast<int>(user_list->size());
                     }
                 }
-                if(state == UPDATE_TOKEN)
+                if(state == UPDATE_TOKEN) {
                     set_token();
+                    if(have_token)
+                        jansson_get_authed_user(curl_get_string("https://api.github.com/user"), &user_name, &authed, &following_count);
+                    if(!authed)
+                        have_token = false;
+                    if(!user_name.empty()) {
+                        set_user_list(user_list, 1, true);
+                        list_size = static_cast<int>(user_list->size());
+                    }
+                }
                 if(state == QUIT_APP) {
                     *status = QUIT_APP;
                     done = true;
