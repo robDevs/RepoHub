@@ -255,7 +255,7 @@ void User::drawStarred() {
             cursor_row = 0;
         }
 
-        if (left_released || right_released || rt_released || lt_released){
+        if (rt_released || lt_released){
             break;
         }
 
@@ -468,7 +468,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
             }
         }
 
-        if(left_released || right_released || rt_released || lt_released) {
+        if(rt_released || lt_released) {
             if(list_size > 0) {
                 user_list->at(0).drawStarred();
             }
