@@ -151,8 +151,8 @@ void Repo::drawDetailsView(std::string header_start) {
 
         read_joy_sticks();
 
-        if(desc_y < 120 && ly > 147) desc_y += 5;
-        if(desc_y + desc_readme_height > 504 && ly < 107) desc_y -= 5;
+        if(desc_y + desc_readme_height > 504 && ly > 147) desc_y -= 5;
+        if(desc_y < 120 && ly < 107) desc_y += 5;
 
         readme_y = desc_y + vita2d_font_text_height(font20, 20.0f, final_desc.c_str()) + 20;
 
