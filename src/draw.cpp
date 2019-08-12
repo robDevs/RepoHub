@@ -74,6 +74,11 @@ void draw_repo_list_item(std::string name, std::string body, std::string languag
         body += "...";
     }
 
+    if(name.size() > 28) {
+        name.resize(28);
+        name += "...";
+    }
+
     if(updated_at.size() > 10)
         updated_at.resize(10);
 
@@ -338,6 +343,8 @@ void draw_issue_menu() {
                 case 2:
                     if(body.find("-Submitted from RepoHub on PS Vita.") == std::string::npos)
                         body += "\n\n-Submitted from RepoHub on PS Vita.";
+                    else
+                        (body.resize(body.find("\n\n-Submitted from RepoHub on PS Vita.")));
                     break;
                 case 3:
                     message = "Issue will be submitted to RepoHub\nusing the name: ";
@@ -360,14 +367,17 @@ void draw_issue_menu() {
         vita2d_start_drawing();
         vita2d_clear_screen();
 
-        vita2d_font_draw_text(font20, 40, 143, RGBA8(0,0,0,255), 20.0f, body.c_str());
+        vita2d_font_draw_text(font20, 40, 143, RGBA8(0,0,0,255), 20.0f, word_wrap(body, 40).c_str());
 
         //right hand menu bar
         vita2d_draw_rectangle(960 - 260, 103, 260, 544 - 103, RGBA8(255,255,255,255));
         vita2d_draw_line(960-260, 104, 960-260, 544, RGBA8(150,150,150,200));
         draw_button("Edit Title", 960 - 230, 200, 200, 50, cursor_pos == 0);
         draw_button("Edit Body", 960 - 230, 260, 200, 50, cursor_pos == 1);
-        draw_button("Add Footer", 960 - 230, 320, 200, 50, cursor_pos == 2);
+        if(body.find("-Submitted from RepoHub on PS Vita.") == std::string::npos)
+            draw_button("Add Footer", 960 - 230, 320, 200, 50, cursor_pos == 2);
+        else
+            draw_button("Remove Footer", 960 - 230, 320, 200, 50, cursor_pos == 2);
         draw_button("Submit Issue", 960 - 230, 380, 200, 50, cursor_pos == 3);
         draw_button("Cancel", 960 - 230, 440, 200, 50, cursor_pos == 4);
 
