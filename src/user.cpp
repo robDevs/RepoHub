@@ -283,7 +283,7 @@ void User::drawStarred() {
             draw_button("Refresh", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
         }
 
-        vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/441), 15, menuBarH, RGBA8(167,167,167,255));
+        vita2d_draw_rectangle(960 - 15, 103 - y_offset*(menuBarH/441), 15, menuBarH, RGBA8(167,167,167,255));
 
         vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
         vita2d_font_draw_textf(font40, 960-960/4-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(0,0,0,255), 40.0f, "Starred");
@@ -291,7 +291,7 @@ void User::drawStarred() {
         vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
         vita2d_draw_line(960/2, 44, 960/2, 103, RGBA8(150,150,150,200));
 
-        draw_header(header_string);
+        draw_header("Home");
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
@@ -335,6 +335,11 @@ void set_user_list(std::vector<User> *user_list, int page, bool clear) {
         user_list->pop_back();
     }
 
+    if(clear && !user_name.empty()) {
+        User self(user_name, "");
+        user_list->push_back(self);
+    }
+
     std::vector<std::string> userNames;
     std::vector<std::string> avatar_urls;
 
@@ -360,9 +365,9 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
     int y_offset = 103;
     float menuBarH = 0;
     if(list_size < following_count)
-        menuBarH = pow(441,2)/((list_size+1)*95);
+        menuBarH = pow(441,2)/((list_size+1)*100);
     else
-        menuBarH = pow(441,2)/(list_size*95);
+        menuBarH = pow(441,2)/(list_size*100);
     bool done = false;
     int page = 1;
 
@@ -382,8 +387,10 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
 
                 if(state == UPDATE_USERNAME) {
                     set_user_name();
-                    set_user_list(user_list, 1, true);
-                    list_size = static_cast<int>(user_list->size());
+                    if(!user_name.empty()) {
+                        set_user_list(user_list, 1, true);
+                        list_size = static_cast<int>(user_list->size());
+                    }
                 }
                 if(state == UPDATE_TOKEN)
                     set_token();
@@ -408,7 +415,13 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                     }
                     vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
 
-                    draw_header("Following");
+                    vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
+                    vita2d_font_draw_textf(font40, 960-960/4-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Starred");
+                    vita2d_font_draw_textf(font40, 960/4-vita2d_font_text_width(font40, 40.0f, "Following")/2, 95, RGBA8(0,0,0,255), 40.0f, "Following");
+                    vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
+                    vita2d_draw_line(960/2, 44, 960/2, 103, RGBA8(150,150,150,200));
+
+                    draw_header("Home");
 
                     vita2d_end_drawing();
                     vita2d_common_dialog_update();
@@ -448,8 +461,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
 
         if(left_released || right_released || rt_released || lt_released) {
             if(list_size > 0) {
-                if(cursor_pos != list_size)
-                    user_list->at(0).drawStarred();
+                user_list->at(0).drawStarred();
             }
         }
 
@@ -480,7 +492,10 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
         vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
         vita2d_draw_line(960/2, 44, 960/2, 103, RGBA8(150,150,150,200));
 
-        draw_header("Following");
+        draw_header("Home");
+
+        if(list_size == 0)
+            vita2d_font_draw_text(font40, 960/2-vita2d_font_text_width(font40, 40.0f, "Press start to get started!")/2, 544 / 2, RGBA8(150,150,150,255), 40.0f, "Press start to get started!");
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();

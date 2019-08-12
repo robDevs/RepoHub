@@ -39,8 +39,10 @@ int main()
         get_user_name();
     }
 
-    User self(user_name, "");
-    users.push_back(self);
+    if(!user_name.empty()) {
+        User self(user_name, "");
+        users.push_back(self);
+    }
 
     set_user_list(&users, 1, false);
 
