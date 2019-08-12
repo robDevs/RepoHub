@@ -93,9 +93,6 @@ void Repo::drawDetailsView(std::string header_start) {
     header_string += name;
 
     while(1) {
-        if(!authed) {
-            cursor_pos = 0;
-        }
         update_keys();
 
         if(up_released)   cursor_pos -= 1;
@@ -146,6 +143,10 @@ void Repo::drawDetailsView(std::string header_start) {
                     starred = true;
                 }
             }
+        }
+
+        if(!authed) {
+            cursor_pos = 0;
         }
 
         read_joy_sticks();
