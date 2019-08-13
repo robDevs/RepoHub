@@ -362,6 +362,8 @@ void set_user_list(std::vector<User> *user_list, int page, bool clear) {
     jansson_parse_followers_list(curl_get_string(url), &userNames, &avatar_urls);
     jannson_get_rate_limits(curl_get_string("https://api.github.com/rate_limit"), &core_max, &core_remain, &search_max, &search_remain);
 
+    check_core_rate_limit();
+
     for(size_t i = 0; i < userNames.size(); i++) {
         User newUser(userNames[i], avatar_urls[i]);
         user_list->push_back(newUser);
@@ -404,8 +406,10 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                 }
                 if(state == UPDATE_TOKEN) {
                     set_token();
-                    if(have_token)
+                    if(have_token){
                         jansson_get_authed_user(curl_get_string("https://api.github.com/user"), &user_name, &authed, &following_count);
+                        check_core_rate_limit();
+                    }
                     if(!authed)
                         have_token = false;
                     if(!user_name.empty()) {
