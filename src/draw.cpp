@@ -315,6 +315,9 @@ void draw_issue_menu() {
 
     int cursor_pos = 0;
 
+    bool show_footer = false;
+    std::string footer = "\n\n---\n_Submitted from RepoHub on PS Vita_";
+
     bool done = false;
 
     while(!done) {
@@ -341,16 +344,17 @@ void draw_issue_menu() {
                     body = vita_keyboard_get((char*)"Enter body", (const char*)body.c_str(), 600, 1);
                     break;
                 case 2:
-                    if(body.find("-Submitted from RepoHub on PS Vita.") == std::string::npos)
-                        body += "\n\n-Submitted from RepoHub on PS Vita.";
+                    if(show_footer)
+                        show_footer = false;
                     else
-                        (body.resize(body.find("\n\n-Submitted from RepoHub on PS Vita.")));
+                        show_footer = true;
                     break;
                 case 3:
                     message = "Issue will be submitted to RepoHub\nusing the name: ";
                     message += user_name;
                     message += "\nWould you like to continue?";
                     if(draw_yes_no_message(message)) {
+                        if(show_footer) body += footer;
                         curl_post_issue("https://api.github.com/repos/robDevs/RepoHub/issues", title, body);
                         done = true;
                     }
@@ -369,12 +373,18 @@ void draw_issue_menu() {
 
         vita2d_font_draw_text(font20, 40, 143, RGBA8(0,0,0,255), 20.0f, word_wrap(body, 40).c_str());
 
+        if(show_footer) {
+            vita2d_draw_rectangle(40, 143 + vita2d_font_text_height(font20, 20.0f, word_wrap(body, 40).c_str()), 960-260-80, 10, RGBA8(225,228,232,255));
+
+            vita2d_font_draw_text(font20, 40, 143 + vita2d_font_text_height(font20, 20.0f, word_wrap(body, 40).c_str()) + 40, RGBA8(0,0,0,255), 20.0f, "Submitted from RepoHub on PS Vita");
+        }
+
         //right hand menu bar
         vita2d_draw_rectangle(960 - 260, 103, 260, 544 - 103, RGBA8(255,255,255,255));
         vita2d_draw_line(960-260, 104, 960-260, 544, RGBA8(150,150,150,200));
         draw_button("Edit Title", 960 - 230, 200, 200, 50, cursor_pos == 0);
         draw_button("Edit Body", 960 - 230, 260, 200, 50, cursor_pos == 1);
-        if(body.find("-Submitted from RepoHub on PS Vita.") == std::string::npos)
+        if(!show_footer)
             draw_button("Add Footer", 960 - 230, 320, 200, 50, cursor_pos == 2);
         else
             draw_button("Remove Footer", 960 - 230, 320, 200, 50, cursor_pos == 2);
