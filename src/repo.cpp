@@ -250,7 +250,8 @@ void Repo::drawReleases(std::string header_start) {
         vita2d_font_draw_textf(font40, 40, 95, RGBA8(0,0,0,255), 40.0f, "%s/%s", owner.c_str(), name.c_str());
         vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
 
-        vita2d_draw_rectangle(960 - 15, 103 - (y_offset-100)*(menuBarH/(420)), 15, menuBarH, RGBA8(167,167,167,255));
+        if(menuBarH < 420)
+            vita2d_draw_rectangle(960 - 15, 103 - (y_offset-100)*(menuBarH/(420)), 15, menuBarH, RGBA8(167,167,167,255));
 
         draw_header(header_string);
 
