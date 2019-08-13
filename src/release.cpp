@@ -82,8 +82,8 @@ void draw_release_details(Release release, std::string header_start) {
         read_joy_sticks();
 
         if(status == 1) {
-            if(body_string_y < 145 && ly < 127 - 20) body_string_y += (127-ly)/10;
-            if(body_string_y + body_height > 544 - 44 && ly > 127 + 20) body_string_y -= (ly-127)/10;
+            if(body_string_y < 145 && ly < 117) body_string_y += (127-ly)/10;
+            if(body_string_y + body_height > 544 - 44 && ly > 137) body_string_y -= (ly-127)/10;
         }
 
         vita2d_start_drawing();
