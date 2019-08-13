@@ -146,8 +146,6 @@ void check_update() {
         message += tag_string;
         message += "\nWould you like to download the update?";
 
-        draw_alert_message(url);
-
         if(draw_yes_no_message(message), "RepoHub.vpk") {
             std::string file_name = "ux0:data/RepoHub/Downloads/RepoHub_";
             file_name += tag_string;
