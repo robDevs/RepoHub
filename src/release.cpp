@@ -20,7 +20,7 @@ void draw_release_details(Release release, std::string header_start) {
 
     int list_size = static_cast<int> (release.assets.size());
     int cursor_pos = 0;
-    int y_offset = 125;
+    int y_offset = 103;
 
     float menuBarH = pow(420,2)/(list_size*100);
 
@@ -65,7 +65,7 @@ void draw_release_details(Release release, std::string header_start) {
             y_offset -= 100;
         }
 
-        while(y_offset + (cursor_pos*100) < 44) {
+        while(y_offset + (cursor_pos*100) < 103) {
             y_offset += 100;
         }
 
@@ -82,8 +82,8 @@ void draw_release_details(Release release, std::string header_start) {
         read_joy_sticks();
 
         if(status == 1) {
-            if(body_string_y < 145 && ly < 127 - 20) body_string_y += 5;
-            if(body_string_y + body_height > 544 - 44 && ly > 127 + 20) body_string_y -= 5;
+            if(body_string_y < 145 && ly < 127 - 20) body_string_y += (127-ly)/10;
+            if(body_string_y + body_height > 544 - 44 && ly > 127 + 20) body_string_y -= (ly-127)/10;
         }
 
         vita2d_start_drawing();
@@ -96,12 +96,12 @@ void draw_release_details(Release release, std::string header_start) {
             }
 
             //sub-header bg.
-            vita2d_draw_rectangle(0, 44, 960, 80, RGBA8(255,255,255,255));
-            vita2d_draw_line(0, 44+80, 960, 45+80, RGBA8(150,150,150,200));
+            vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
+            vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
             vita2d_font_draw_text(font40, 40, (45+40)+10, RGBA8(0,0,0,255), 40.0f, "Files");
             vita2d_font_draw_text(font40, 960-560, (45+40)+10, RGBA8(150,150,150,200), 40.0f, "Notes");
 
-            vita2d_draw_rectangle(960 - 15, 182 - y_offset*(menuBarH/(420)), 15, menuBarH, RGBA8(167,167,167,255));
+            vita2d_draw_rectangle(960 - 15, 103 - (y_offset-100)*(menuBarH/(420)), 15, menuBarH, RGBA8(167,167,167,255));
         }
         else {
             //body and body bg

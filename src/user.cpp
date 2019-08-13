@@ -77,7 +77,12 @@ void User::drawDetailsView() {
     int list_size0 = static_cast<int>(repos_row0.size());
     int list_size1 = static_cast<int>(repos_row1.size());
 
-    float menuBarH = pow(500,2)/(list_size0*140);
+    float menuBarH;
+
+    if(list_size0 + list_size1 < numRepos)
+        menuBarH = pow(500,2)/((list_size0+1)*140);
+    else
+        menuBarH = pow(500,2)/(list_size0*140);
 
     std::string header_string = "Following/";
     header_string += name;
@@ -125,7 +130,10 @@ void User::drawDetailsView() {
                 }
                 list_size0 = static_cast<int>(repos_row0.size());
                 list_size1 = static_cast<int>(repos_row1.size());
-                menuBarH = pow(500,2)/(list_size0*140);
+                if(list_size0 + list_size1 < numRepos)
+                    menuBarH = pow(500,2)/((list_size0+1)*140);
+                else
+                    menuBarH = pow(500,2)/(list_size0*140);
             }
         }
 
@@ -172,7 +180,7 @@ void User::drawDetailsView() {
             draw_button("Load more", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
         }
 
-        vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
+        vita2d_draw_rectangle(960 - 15, 44 - (y_offset)*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
 
         draw_header(header_string);
 
@@ -194,7 +202,7 @@ void User::drawStarred() {
     int list_size0 = static_cast<int>(starred_row0.size());
     int list_size1 = static_cast<int>(starred_row1.size());
 
-    float menuBarH = pow(441,2)/(list_size0*140);
+    float menuBarH = pow(441,2)/((list_size0+1)*140);
 
     std::string header_string = name;
     header_string += "/Starred";
@@ -236,7 +244,7 @@ void User::drawStarred() {
                 }
                 list_size0 = static_cast<int>(starred_row0.size());
                 list_size1 = static_cast<int>(starred_row1.size());
-                menuBarH = pow(441,2)/(list_size0*140);
+                menuBarH = pow(441,2)/((list_size0+1)*140);
             }
         }
 
@@ -283,7 +291,7 @@ void User::drawStarred() {
             draw_button("Refresh", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
         }
 
-        vita2d_draw_rectangle(960 - 15, 103 - y_offset*(menuBarH/441), 15, menuBarH, RGBA8(167,167,167,255));
+        vita2d_draw_rectangle(960 - 15, 103 - (y_offset-140+40)*(menuBarH/441), 15, menuBarH, RGBA8(167,167,167,255));
 
         vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
         vita2d_font_draw_textf(font40, 960-960/4-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(0,0,0,255), 40.0f, "Starred");
@@ -422,7 +430,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                     for(int i = 0; i < list_size; i++) {
                         user_list->at(i).drawListView(y_offset + i*100, cursor_pos == i);
                     }
-                    vita2d_draw_rectangle(960 - 15, 44 - y_offset*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
+                    vita2d_draw_rectangle(960 - 15, 44 - (y_offset-100)*(menuBarH/500), 15, menuBarH, RGBA8(167,167,167,255));
 
                     vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
                     vita2d_font_draw_textf(font40, 960-960/4-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Starred");
@@ -433,6 +441,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                     draw_header("Home");
 
                     vita2d_end_drawing();
+                    vita2d_wait_rendering_done();
                     vita2d_common_dialog_update();
                     vita2d_swap_buffers();
                 }
@@ -458,10 +467,10 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                     page += 1;
                     set_user_list(user_list, page, false);
                     list_size = static_cast<int>(user_list->size());
-                    if(list_size <= following_count)
-                        menuBarH = pow(441,2)/((list_size+1)*95);
+                    if(list_size < following_count)
+                        menuBarH = pow(441,2)/((list_size+1)*100);
                     else
-                        menuBarH = pow(441,2)/(list_size*95);
+                        menuBarH = pow(441,2)/(list_size*100);
                 }
                 else
                     user_list->at(cursor_pos).drawDetailsView();
@@ -493,7 +502,7 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
             draw_button("Load more", 0, y_offset + list_size*100, 960, 100, cursor_pos == list_size);
 
         //draw the menu bar
-        vita2d_draw_rectangle(960 - 15, 103-y_offset*(menuBarH/441), 15, menuBarH, RGBA8(167,167,167,255));
+        vita2d_draw_rectangle(960 - 15, 103-(y_offset-100)*(menuBarH/441), 15, menuBarH, RGBA8(167,167,167,255));
 
         vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
         vita2d_font_draw_textf(font40, 960-960/4-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Starred");
