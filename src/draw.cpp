@@ -314,6 +314,7 @@ void draw_issue_menu() {
     std::string body = "Body";
 
     int cursor_pos = 0;
+    int body_pos = 143;
 
     bool show_footer = false;
     std::string footer = "\n\n---\n_Submitted from RepoHub on PS Vita_";
@@ -367,16 +368,18 @@ void draw_issue_menu() {
 
         read_joy_sticks();
 
+        if(body_pos < 143 && ly < 117) body_pos -= (ly-127)/10;
+        if(body_pos + vita2d_font_text_height(font20, 20.0f, word_wrap(body, 40).c_str()) + 60 > 544 && ly > 137) body_pos += (127-ly)/10;
 
         vita2d_start_drawing();
         vita2d_clear_screen();
 
-        vita2d_font_draw_text(font20, 40, 143, RGBA8(0,0,0,255), 20.0f, word_wrap(body, 40).c_str());
+        vita2d_font_draw_text(font20, 40, body_pos, RGBA8(0,0,0,255), 20.0f, word_wrap(body, 40).c_str());
 
         if(show_footer) {
-            vita2d_draw_rectangle(40, 143 + vita2d_font_text_height(font20, 20.0f, word_wrap(body, 40).c_str()), 960-260-80, 10, RGBA8(225,228,232,255));
+            vita2d_draw_rectangle(40, body_pos + vita2d_font_text_height(font20, 20.0f, word_wrap(body, 40).c_str()), 960-260-80, 10, RGBA8(225,228,232,255));
 
-            vita2d_font_draw_text(font20, 40, 143 + vita2d_font_text_height(font20, 20.0f, word_wrap(body, 40).c_str()) + 40, RGBA8(0,0,0,255), 20.0f, "Submitted from RepoHub on PS Vita");
+            vita2d_font_draw_text(font20, 40, body_pos + vita2d_font_text_height(font20, 20.0f, word_wrap(body, 40).c_str()) + 40, RGBA8(0,0,0,255), 20.0f, "Submitted from RepoHub on PS Vita");
         }
 
         //right hand menu bar
