@@ -75,7 +75,7 @@ int jansson_parse_repo_list(std::string json_repo_list_string, std::vector<Repo>
         created_at = json_object_get(data, "created_at");
         if(json_is_string(created_at)) created_atString = json_string_value(created_at);
 
-        updated_at = json_object_get(data, "updated_at");
+        updated_at = json_object_get(data, "pushed_at");
         if(json_is_string(updated_at)) updated_atString = json_string_value(updated_at);
 
         homePage = json_object_get(data, "homePage");

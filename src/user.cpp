@@ -313,7 +313,7 @@ void User::setStarred(int page) {
     starred_complete = true;
     std::string url = "https://api.github.com/users/";
     url += name;
-    url += "/starred?page=";
+    url += "/starred?sort=updated&direction=desc&page=";
     url += std::to_string(page);
     url += "&per_page=30";
 
