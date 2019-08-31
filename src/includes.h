@@ -31,7 +31,7 @@
 
 #include <jansson.h>
 
-#define TAG                 0.02 // the current version. Used by updater.
+#define TAG                 0.03 // the current version. Used by updater.
 
 #define MAIN_VIEW           0//view the main list of users
 #define UPDATE_USERNAME     1//update the username

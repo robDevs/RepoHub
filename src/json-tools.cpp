@@ -528,3 +528,166 @@ void jansson_get_tag_from_release(std::string release_string, float *tag, std::s
     json_decref(root);
     return;
 }
+
+void jansson_parse_user_search(std::string results, std::vector<std::string> *user_list) {
+    json_t *root;
+    json_error_t error;
+
+    root = json_loads(results.c_str(), 0, &error);
+
+    if(!root) {
+        return;
+    }
+
+    if(!json_is_object(root)) {
+        json_decref(root);
+        return;
+    }
+
+    json_t *items;
+
+    items = json_object_get(root, "items");
+
+    if(!json_is_array(items)) {
+        json_decref(root);
+        return;
+    }
+
+    for(size_t i = 0; i < json_array_size(items); i++) {
+        json_t *data, *login, *avatar_url;
+
+        data = json_array_get(items, i);
+
+        if(!json_is_object(data)) {
+            json_decref(root);
+            return;
+        }
+
+        login = json_object_get(data, "login");
+        avatar_url = json_object_get(data, "avatar_url");
+
+        if(json_is_string(login) && json_is_string(avatar_url)) {
+            //User newUser(json_string_value(login), json_string_value(avatar_url));
+            user_list->push_back(json_string_value(login));
+        }
+    }
+
+    json_decref(root);
+    return;
+}
+
+int jansson_parse_repo_search(std::string results, std::vector<Repo> *repoList0, std::vector<Repo> *repoList1) {
+    json_t *root;
+    json_error_t error;
+
+    int count = 0;
+    int alt = 0;
+
+    root = json_loads(results.c_str(), 0, &error);
+
+    if(!root) {
+        return 0;
+    }
+
+    if(!json_is_object(root)) {
+        json_decref(root);
+        return 0;
+    }
+
+    json_t *items;
+
+    items = json_object_get(root, "items");
+
+    if(!json_is_array(items)) {
+        json_decref(root);
+        return 0;
+    }
+
+    for(size_t i = 0; i < json_array_size(items); i++) {
+        json_t *data, *name, *priv, *description, *fork, *created_at, *updated_at, *homePage, *stargazers_count, *language, *license, *forks, *open_issues_count, *owner;
+
+        std::string nameString, descriptionString, created_atString, updated_atString, homePageString, languageString, licenseString, owner_string;
+        bool privBool, forkBool;
+        int stargazers_countInt, forksInt, open_issues_countInt;
+        data = json_array_get(items, i);
+        if(!json_is_object(data))
+        {
+            json_decref(root);
+            return count;
+        }
+        name = json_object_get(data, "name");
+        if(json_is_string(name)) nameString = json_string_value(name);
+
+        priv = json_object_get(data, "private");
+        if(json_is_boolean(priv)) privBool = json_boolean_value(priv);
+        //do owner info here
+        description = json_object_get(data, "description");
+        if(json_is_string(description)) descriptionString = json_string_value(description);
+
+        fork = json_object_get(data, "fork");
+        if(json_is_boolean(fork)) forkBool = json_boolean_value(fork);
+
+        created_at = json_object_get(data, "created_at");
+        if(json_is_string(created_at)) created_atString = json_string_value(created_at);
+
+        updated_at = json_object_get(data, "pushed_at");
+        if(json_is_string(updated_at)) updated_atString = json_string_value(updated_at);
+
+        homePage = json_object_get(data, "homePage");
+        if(json_is_string(homePage)) homePageString = json_string_value(homePage);
+
+        stargazers_count = json_object_get(data, "stargazers_count");
+        if(json_is_integer(stargazers_count)) stargazers_countInt = json_integer_value(stargazers_count);
+
+        language = json_object_get(data, "language");
+        if(json_is_string(language)) languageString = json_string_value(language);
+
+        license = json_object_get(data, "license");
+        if(json_is_object(license)) {
+            json_t *license_name = json_object_get(license, "name");
+            if(json_is_string(license_name)) licenseString = json_string_value(license_name);
+        }
+
+        forks = json_object_get(data, "forks");
+        if(json_is_integer(forks)) forksInt = json_integer_value(forks);
+
+        open_issues_count = json_object_get(data, "open_issues_count");
+        if(json_is_integer(open_issues_count)) open_issues_countInt = json_integer_value(open_issues_count);
+
+        owner = json_object_get(data, "owner");
+        if(json_is_object(owner)) {
+            json_t *owner_name = json_object_get(owner, "login");
+            if(json_is_string(owner_name))
+                owner_string = json_string_value(owner_name);
+            else owner_string = "";
+        }
+
+        Repo newRepo(nameString,
+                     descriptionString,
+                     licenseString,
+                     owner_string,
+                     created_atString,
+                     updated_atString,
+                     homePageString,
+                     languageString,
+                     forkBool,
+                     privBool,
+                     forksInt,
+                     stargazers_countInt,
+                     open_issues_countInt
+                 );
+        if(alt == 0)
+            repoList0->push_back(newRepo);
+        else if(alt == 1)
+            repoList1->push_back(newRepo);
+
+        alt += 1;
+        if(alt > 1)
+            alt = 0;
+
+        count += 1;
+    }
+
+    json_decref(root);
+    return count;
+}

@@ -37,12 +37,11 @@ public:
     bool getFork();
     void setForks(int forks);
     int getForks();
-    void drawListView(int x, int y, bool selected);
+    void drawListView(int x, int y, bool selected, bool showOwner=false);
     void drawDetailsView(std::string header_start);
     void drawReleases(std::string header_start);
     void setReadme();
     void draw_readme_vec(int y);
     int get_readme_vec_height();
 };
-
 #endif

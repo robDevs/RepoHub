@@ -1,5 +1,7 @@
 #include "user.h"
 
+#include "search.h"
+
 User::User(std::string name, std::string avatar_url) {
     setName(name);
     complete = false;
@@ -189,6 +191,7 @@ void User::drawDetailsView() {
         vita2d_common_dialog_update();
         vita2d_swap_buffers();
     }
+    reset_keys();
 }
 
 void User::drawStarred() {
@@ -280,11 +283,11 @@ void User::drawStarred() {
         vita2d_clear_screen();
 
         for(int i = 0; i < list_size0; i++) {
-            starred_row0[i].drawListView(40, y_offset + i*140, cursor_pos == i && cursor_row == 0);
+            starred_row0[i].drawListView(40, y_offset + i*140, cursor_pos == i && cursor_row == 0, true);
         }
 
         for(int i = 0; i < list_size1; i++) {
-            starred_row1[i].drawListView(500, y_offset + i*140, cursor_pos == i && cursor_row == 1);
+            starred_row1[i].drawListView(500, y_offset + i*140, cursor_pos == i && cursor_row == 1, true);
             //draw_button(std::to_string(list_size1) + std::to_string(i), 500, y_offset + i*140, 420, 140, true);
         }
 

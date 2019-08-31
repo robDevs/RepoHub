@@ -24,4 +24,7 @@ extern void jansson_get_authed_user(std::string user_string, std::string *user_n
 //used only for getting the tag for RepoHub latest release. To be compared with #define VERSION  x.xx
 extern void jansson_get_tag_from_release(std::string release_string, float *tag, std::string *url);
 
+extern void jansson_parse_user_search(std::string results, std::vector<std::string> *user_list);
+extern int jansson_parse_repo_search(std::string results, std::vector<Repo> *repoList0, std::vector<Repo> *repoList1);
+
 #endif

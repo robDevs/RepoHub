@@ -21,4 +21,6 @@ extern int draw_star_menu();
 
 extern void draw_issue_menu();
 
+extern void draw_empty_rectangle(int x, int y, int w, int h, unsigned int color);
+
 #endif

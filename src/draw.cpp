@@ -4,6 +4,7 @@
 
 #include "vita-keyboard.h"
 #include "curl-tools.h"
+#include "search.h"
 
 void draw_header(std::string header) {
     SceDateTime time;
@@ -264,14 +265,20 @@ int draw_star_menu() {
                     done = true;
                     break;
                 case 2:
+                    search();
+                    return_val = MAIN_VIEW;
+                    done = true;
+                    goto quickEnd;
+                    break;
+                case 3:
                     return_val = SUBMIT_ISSUE;
                     done = true;
                     break;
-                case 3:
+                case 4:
                     return_val = MAIN_VIEW;
                     done = true;
                     break;
-                case 4:
+                case 5:
                     return_val = QUIT_APP;
                     done = true;
                     break;
@@ -285,24 +292,26 @@ int draw_star_menu() {
 
         if(up_released) cursor_pos -= 1;
         if(down_released) cursor_pos += 1;
-        if(cursor_pos < 0) cursor_pos = 4;
-        if(cursor_pos > 4) cursor_pos = 0;
+        if(cursor_pos < 0) cursor_pos = 5;
+        if(cursor_pos > 5) cursor_pos = 0;
 
         vita2d_start_drawing();
 
-        vita2d_draw_rectangle(960 / 2 - 100, 544 / 2 - 130, 200, 260, RGBA8(36,41,46,255));
+        vita2d_draw_rectangle(960 / 2 - 100, 544 / 2 - 155, 200, 310, RGBA8(36,41,46,255));
 
-        draw_button("Enter UserName", 960 / 2 - 90, 544 / 2 - 120, 180, 40, cursor_pos == 0);
-        draw_button("Enter Token", 960 / 2 - 90, 544 / 2 - 70, 180, 40, cursor_pos == 1);
-        draw_button("Submit Issue", 960 / 2 - 90, 544 / 2 - 20, 180, 40, cursor_pos == 2);
-        draw_button("Return", 960 / 2 - 90, 544 / 2 + 30, 180, 40, cursor_pos == 3);
-        draw_button("Quit", 960 / 2 - 90, 544 / 2 + 80, 180, 40, cursor_pos == 4);
+        draw_button("Enter UserName", 960 / 2 - 90, 544 / 2 - 145, 180, 40, cursor_pos == 0);
+        draw_button("Enter Token", 960 / 2 - 90, 544 / 2 - 95, 180, 40, cursor_pos == 1);
+        draw_button("Search", 960 / 2 - 90, 544 / 2 - 45, 180, 40, cursor_pos == 2);
+        draw_button("Submit Issue", 960 / 2 - 90, 544 / 2 + 5, 180, 40, cursor_pos == 3);
+        draw_button("Return", 960 / 2 - 90, 544 / 2 + 55, 180, 40, cursor_pos == 4);
+        draw_button("Quit", 960 / 2 - 90, 544 / 2 + 105, 180, 40, cursor_pos == 5);
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
 		vita2d_swap_buffers();
     }
 
+quickEnd:
     reset_keys();
     return return_val;
 }
@@ -406,4 +415,11 @@ void draw_issue_menu() {
         vita2d_common_dialog_update();
         vita2d_swap_buffers();
     }
+}
+
+void draw_empty_rectangle(int x, int y, int w, int h, unsigned int color) {
+    vita2d_draw_line(x, y, x + w, y, color);
+    vita2d_draw_line(x, y, x, y + h, color);
+    vita2d_draw_line(x, y + h, x + w, y + h, color);
+    vita2d_draw_line(x + w, y, x + w, y + h, color);
 }

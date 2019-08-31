@@ -54,8 +54,14 @@ int Repo::getForks() {
     return 1;
 }
 
-void Repo::drawListView(int x, int y, bool selected) {
-    draw_repo_list_item(name, description, language, stargazers_count, forks, updated_at, fork, x, y, selected);
+void Repo::drawListView(int x, int y, bool selected, bool showOwner) {
+    std::string name_final = "";
+    if(showOwner){
+        name_final += owner;
+        name_final += "/";
+    }
+    name_final += name;
+    draw_repo_list_item(name_final, description, language, stargazers_count, forks, updated_at, fork, x, y, selected);
 }
 
 void Repo::drawDetailsView(std::string header_start) {
@@ -197,6 +203,8 @@ void Repo::drawDetailsView(std::string header_start) {
         vita2d_common_dialog_update();
         vita2d_swap_buffers();
     }
+
+    reset_keys();
 }
 
 void Repo::drawReleases(std::string header_start) {

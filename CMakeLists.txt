@@ -46,6 +46,7 @@ add_executable(${SHORT_NAME}.elf
     src/release.cpp
     src/repo.cpp
     src/user.cpp
+    src/search.cpp
 )
 
 target_link_libraries(${SHORT_NAME}.elf
