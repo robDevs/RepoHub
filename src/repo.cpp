@@ -293,7 +293,8 @@ void Repo::draw_readme_vec(int y) {
     offset += vita2d_font_text_height(font20, 20.0f, "Readme:\n") + 3;
 
     for(size_t i = 0; i < readme_vec.size(); i++) {
-        vita2d_font_draw_text(font20, 40, y + offset, RGBA8(0,0,0,255), 20.0f, word_wrap(readme_vec[i], 50).c_str());
+        if(y+offset < 544 && y+offset > 0)
+            vita2d_font_draw_text(font20, 40, y + offset, RGBA8(0,0,0,255), 20.0f, word_wrap(readme_vec[i], 50).c_str());
 
         offset += vita2d_font_text_height(font20, 20.0f, word_wrap(readme_vec[i], 50).c_str()) + 3;
     }
