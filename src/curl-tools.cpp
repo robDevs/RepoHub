@@ -8,11 +8,12 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
     // ensure that the file to be downloaded is not empty
     // because that would cause a division by zero error later on
     if (TotalToDownload <= 0.0) {
-        return 0;
+        //draw_alert_message(std::to_string(TotalToDownload));
+        //return 0;
     }
 
     if (TotalToDownload > get_space_avail())
-        return 0;
+        draw_alert_message("not enough space");
 
     update_keys();
 
@@ -25,6 +26,9 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
 
     std::string TotalToDownload_string = std::to_string(byte_to_mb((int)round(TotalToDownload)));
     TotalToDownload_string.resize(TotalToDownload_string.find(".") + 3);
+
+    if(TotalToDownload <= 0.0)
+        TotalToDownload_string = "?";
 
     uint64_t space_avail = get_space_avail();
 
@@ -44,14 +48,19 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
 
 		// how wide you want the progress meter to be
     int total=320;
-    double fractiondownloaded = NowDownloaded / TotalToDownload;
-    // part of the progressmeter that's already "full"
-    int progress = round(fractiondownloaded * total);
+
+    double fractiondownloaded = 0;
+    int progress = 0;
+    if(TotalToDownload > 0.0) {
+        fractiondownloaded = NowDownloaded / TotalToDownload;
+        progress = round(fractiondownloaded * total);
+    }
 
 		vita2d_start_drawing();
 
 		vita2d_draw_rectangle(0, 544 / 2 - 100, 960, 200, RGBA8(36,41,46,255));
-		vita2d_draw_rectangle(960 / 2 - 160, 544 / 2 - 2, progress, 4, RGBA8(0,255,0,255));
+        if(TotalToDownload > 0.0)
+            vita2d_draw_rectangle(960 / 2 - 160, 544 / 2 - 2, progress, 4, RGBA8(0,255,0,255));
 
         vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, label.c_str()) / 2), 544 / 2 - 40, RGBA8(255,255,255,255), 20.0f, label.c_str());
         vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, label1.c_str()) / 2), 544 / 2 - 20, RGBA8(255,255,255,255), 20.0f, label1.c_str());
