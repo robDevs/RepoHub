@@ -11,6 +11,9 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
         return 0;
     }
 
+    if (TotalToDownload > get_space_avail())
+        return 0;
+
     update_keys();
 
     if(circle_released) {
