@@ -13,7 +13,7 @@ Using a token will also unlock these additional features:
 
 ## Creating Personal Access Tokens
 - visit https://github.com/settings/tokens to create your token
-- Select `public_repo` for the scope of the token. 
+- Select `public_repo` and `user:follow` for the scope of the token. 
 - Launch RepoHub and press Start on the home screen
 - Select Enter Token
 - Your token will be encrypted and saved using a key only provided at compile time. 
