@@ -14,6 +14,6 @@ extern void drawTemplate(int type, std::string header, std::vector<Button> butto
 
 extern void subHeaderButtons(std::string header, std::vector<Button> buttons, int cursor_pos);
 
-extern void buttonsOnly(std::string header, std::vector<button> buttons, int cursor_pos);
+extern void buttonsOnly(std::string header, std::vector<Button> buttons, int cursor_pos);
 
 #endif

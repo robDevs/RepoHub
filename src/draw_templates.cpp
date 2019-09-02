@@ -31,7 +31,7 @@ extern void subHeaderButtons(std::string header, std::vector<Button> buttons, in
     draw_header(header);
 }
 
-void buttonsOnly(std::string header, std::vector<button> buttons, int cursor_pos) {
+void buttonsOnly(std::string header, std::vector<Button> buttons, int cursor_pos) {
     //right hand menu bar
     vita2d_draw_rectangle(960 - 260, 103, 260, 544 - 103, RGBA8(255,255,255,255));
     vita2d_draw_line(960-260, 45, 960-260, 544, RGBA8(150,150,150,200));

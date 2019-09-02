@@ -1,32 +1,41 @@
 #include "images.h"
 #include <algorithm>
 
-vita2d_texture *userBg = NULL;
+vita2d_texture *defaultPic = NULL;
 vita2d_texture *star = NULL;
 vita2d_texture *fork_tex = NULL;
 
 vita2d_font *font10;
 vita2d_font *font15;
+vita2d_font *font19;
 vita2d_font *font20;
+vita2d_font *font23;
+vita2d_font *font29;
 vita2d_font *font40;
 
 void loadTextures() {
-    userBg = vita2d_load_PNG_file("app0:/images/user-background-list.png");
+    defaultPic = vita2d_load_PNG_file("app0:/images/defaultPic.png");
     star = vita2d_load_PNG_file("app0:/images/star.png");
     fork_tex = vita2d_load_PNG_file("app0:/images/fork.png");
     font10 = vita2d_load_font_file("app0:/font.ttf");
     font15 = vita2d_load_font_file("app0:/font.ttf");
+    font19 = vita2d_load_font_file("app0:/font.ttf");
     font20 = vita2d_load_font_file("app0:/font.ttf");
+    font23 = vita2d_load_font_file("app0:/font.ttf");
+    font29 = vita2d_load_font_file("app0:/font.ttf");
     font40 = vita2d_load_font_file("app0:/font.ttf");
 }
 
 void deleteTextures() {
-    vita2d_free_texture(userBg);
+    vita2d_free_texture(defaultPic);
     vita2d_free_texture(star);
     vita2d_free_texture(fork_tex);
     vita2d_free_font(font10);
     vita2d_free_font(font15);
+    vita2d_free_font(font19);
     vita2d_free_font(font20);
+    vita2d_free_font(font23);
+    vita2d_free_font(font29);
     vita2d_free_font(font40);
 }
 

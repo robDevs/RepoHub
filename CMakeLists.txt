@@ -95,7 +95,7 @@ vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
   NAME ${VITA_APP_NAME}
 
   FILE font.ttf font.ttf
-  FILE images/user-background-list.png images/user-background-list.png
+  FILE images/defaultPic.png images/defaultPic.png
   FILE images/star.png images/star.png
   FILE images/fork.png images/fork.png
 

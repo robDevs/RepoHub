@@ -3,13 +3,16 @@
 
 #include "includes.h"
 
-extern vita2d_texture *userBg;
+extern vita2d_texture *defaultPic;
 extern vita2d_texture *star;
 extern vita2d_texture *fork_tex;
 
 extern vita2d_font *font10;
 extern vita2d_font *font15;
+extern vita2d_font *font19;
 extern vita2d_font *font20;
+extern vita2d_font *font23;
+extern vita2d_font *font29;
 extern vita2d_font *font40;
 
 extern void loadTextures();

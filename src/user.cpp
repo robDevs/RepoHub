@@ -8,17 +8,6 @@ User::User(std::string name, std::string avatar_url) {
     setName(name);
     haveInfo = false;
     complete = false;
-    if(!avatar_url.empty()) {
-        this->avatar_url = avatar_url;
-        this->avatar_url += "&s=100";
-    }
-    else {
-        this->avatar_url = "https://github.com/";
-        this->avatar_url += name;
-        this->avatar_url += ".png";
-    }
-    pfp = NULL;
-    //getPfp();
     numStarred = 0;
     numRepos = 0;
 }
@@ -78,15 +67,7 @@ void User::setRepos() {
 }
 
 void User::drawListView(int y, bool selected) {
-    int name_x = 40;
-    if(pfp != NULL) {
-        int width = vita2d_texture_get_width(pfp);
-        float scale = 64.00/(float)width;
-        name_x += width*scale + 10;
-        draw_list_item(name, "", "", name_x, y, selected);
-        vita2d_draw_texture_scale(pfp, 10, y + 50 - 32, scale, scale);
-    }
-    else draw_list_item(name, "", "", name_x, y, selected);
+    draw_list_item(name, "", "", 40, y, selected);
 }
 
 void User::drawDetailsView() {
@@ -96,6 +77,17 @@ void User::drawDetailsView() {
 
         jansson_parse_user_info(curl_get_string(url), this);
         haveInfo = true;
+
+        if(!avatar_url.empty()) {
+            this->avatar_url = avatar_url;
+            this->avatar_url += "&s=150";
+        }
+        else {
+            this->avatar_url = "https://github.com/";
+            this->avatar_url += name;
+            this->avatar_url += ".png";
+        }
+        getPfp();
     }
 
     std::string check_follow_url = "https://api.github.com/user/following/";
@@ -113,7 +105,7 @@ void User::drawDetailsView() {
     Button tempButton;
     std::vector<Button> buttons; // the container for the buttons.
     //User a temp button and push it into the container.
-    tempButton.name = "View repos";
+    tempButton.name = "Repositories";
     tempButton.x = 960 - 230;
     tempButton.y = 200;
     tempButton.w = 200;
@@ -184,48 +176,46 @@ void User::drawDetailsView() {
         vita2d_clear_screen();
 
         //draw the template containing a sub header area and buttons area.
-        drawTemplate(SUB_HEADER_BUTTONS, header_string, buttons, cursor_pos);
+        drawTemplate(BUTTONS_ONLY, header_string, buttons, cursor_pos);
 
-        //sub header goes over template. may add to template.
-        vita2d_font_draw_text(font40, 40, 103 - 9, RGBA8(0,0,0,255), 40.0f, name.c_str());
+        //scale and draw the pfp if possible.
+        if(pfp != NULL) {
+            int width = vita2d_texture_get_width(pfp);
+            float scale = 150/(float)width;
+            vita2d_draw_texture_scale(pfp, 30, 44 + 30, scale, scale);
+        } //if not possible draw a default pic
+        else {
+            vita2d_font_draw_text(font15, 40, 44+30, RGBA8(0,0,0,255), 15.0f, "Unable to load avatar!");
+            vita2d_draw_texture(defaultPic, 30, 44 + 30);
+        }
 
         int rname_y, type_y, company_y, email_y, bio_y;
 
-        rname_y = type_y = company_y = email_y = bio_y = 103 + 40;
+        rname_y = type_y = company_y = email_y = bio_y = 228 + 40;
 
-        if(!Rname.empty()) {
-            vita2d_font_draw_text(font20, 40, rname_y, RGBA8(0,0,0,255), 20.0f, "Name");
-            vita2d_font_draw_textf(font20, 40, rname_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", Rname.c_str());
+        if(!Rname.empty() || !name.empty()) {
+            vita2d_font_draw_text(font29, 40, rname_y, RGBA8(0,0,0,255), 29.0f, Rname.c_str());
+            vita2d_font_draw_text(font23, 40, rname_y + 20, RGBA8(0,0,0,255), 23.0f, name.c_str());
         }
-        else rname_y = 103;
-
-        if(!type.empty()) {
-            type_y = rname_y + 40;
-            vita2d_font_draw_text(font20, 40, type_y, RGBA8(0,0,0,255), 20.0f, "Type");
-            vita2d_font_draw_textf(font20, 40, type_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", type.c_str());
-        }
-        else type_y = rname_y;
+        else rname_y = 228;
 
         if(!company.empty()) {
-            company_y = type_y + 40;
-            vita2d_font_draw_text(font20, 40, company_y, RGBA8(0,0,0,255), 20.0f, "Company");
-            vita2d_font_draw_textf(font20, 40, company_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", company.c_str());
+            company_y = rname_y + 63;
+            vita2d_font_draw_text(font23, 40, company_y, RGBA8(0,0,0,255), 23.0f, company.c_str());
         }
-        else company_y = type_y;
-
-        if(!email.empty()) {
-            email_y = company_y + 40;
-            vita2d_font_draw_text(font20, 40, email_y, RGBA8(0,0,0,255), 20.0f, "Email");
-            vita2d_font_draw_textf(font20, 40, email_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", email.c_str());
-        }
-        else email_y = company_y;
+        else company_y = rname_y + 23;
 
         if(!bio.empty()) {
-            bio_y = email_y + 40;
-            vita2d_font_draw_text(font20, 40, bio_y, RGBA8(0,0,0,255), 20.0f, "Bio");
-            vita2d_font_draw_textf(font20, 40, bio_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", word_wrap(bio, 50).c_str());
+            bio_y = company_y + 40;
+            vita2d_font_draw_text(font23, 40, bio_y, RGBA8(0,0,0,255), 23.0f, word_wrap(bio, 37).c_str());
         }
-        else bio_y = email_y;
+        else bio_y = company_y;
+
+        if(!email.empty()) {
+            email_y = bio_y + 23 + vita2d_font_text_height(font23, 23.0f, word_wrap(bio, 37).c_str());
+            vita2d_font_draw_text(font23, 40, email_y, RGBA8(0,0,0,255), 23.0f, email.c_str());
+        }
+        else email_y = bio_y;
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
