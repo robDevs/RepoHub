@@ -1,5 +1,6 @@
 #include "search.h"
 #include "curl-tools.h"
+#include "json-tools.h"
 #include "user.h"
 
 void search() {

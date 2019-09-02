@@ -1,0 +1,23 @@
+# SPECIFICATIONS FOR THE USER INFO VIEW
+
+## OVERVIEW
+
+- Follow visual design of the search view.
+- Buttons to view repositories, follow/un follow the user, possibly view the users following/followers lists.
+- Sub header should display the profile picture as well as the name.
+- The content area should show information about the users
+    -- login, type, name, company, location, email, bio
+
+## CODING OVERVIEW
+
+- Viewing a users list of repositories needs moved to a more specific functions: `view_user_repos()` for example.
+- User_details view will need to be changed to show the appropriate info and then direct to view_user_repos or other functions.
+- maybe make this style of view a template. At least the basics of the visual aspect, draw sections, header, sub header.
+
+
+## CODING DESIGN
+
+- void User::drawReposView() // View and interact with a users repositories here.
+- void User::drawDetailsView() //This currently views a users repositores. Move code to drawReposView();
+- void drawTemplate(int type) // draw a template based on the given type.
+- void jansson_parse_user_info(User *user) //get all the info about a user. Can remove get_repo_count, get_avatar_url, and get_following_count. 

@@ -142,10 +142,12 @@ void Repo::drawDetailsView(std::string header_start) {
                 url += name;
                 if(starred) {
                     curl_post_star(url, true);
+                    draw_alert_message("You have Unstarred this repository");
                     starred = false;
                 }
                 else {
                     curl_post_star(url, false);
+                    draw_alert_message("You have starred this repository.");
                     starred = true;
                 }
             }

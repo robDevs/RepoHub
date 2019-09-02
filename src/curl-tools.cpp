@@ -359,12 +359,7 @@ int curl_post_star(std::string url, bool delete_star) {
 		if(res != CURLE_OK){
             draw_alert_message(curl_easy_strerror(res));
 		}
-        else {
-            if(!delete_star)
-                draw_alert_message("You have starred this repository.");
-            if(delete_star)
-                draw_alert_message("You have Unstarred this repository");
-        }
+        
         curl_easy_cleanup(curl);
 
 		return 0;
@@ -372,10 +367,10 @@ int curl_post_star(std::string url, bool delete_star) {
 	return 1;
 }
 
+//should also work for checking if you are following a user.
 bool curl_check_star(std::string url) {
     if(!authed) {
-        draw_alert_message("Authorization required!");
-        return 1;
+        return false;
     }
     CURL *curl;
 	CURLcode res;

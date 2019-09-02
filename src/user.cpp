@@ -1,9 +1,12 @@
 #include "user.h"
 
 #include "search.h"
+#include "json-tools.h"
+#include "draw_templates.h"
 
 User::User(std::string name, std::string avatar_url) {
     setName(name);
+    haveInfo = false;
     complete = false;
     if(!avatar_url.empty()) {
         this->avatar_url = avatar_url;
@@ -32,6 +35,29 @@ void User::setNumRepos(int numRepos) {
     this->numRepos = numRepos;
 }
 
+void User::setRname(std::string Rname) {
+    this->Rname = Rname;
+}
+void User::setType(std::string type) {
+    this->type = type;
+}
+void User::setCompany(std::string company) {
+    this->company = company;
+}
+void User::setLocation(std::string location) {
+    this->location = location;
+}
+void User::setEmail(std::string email) {
+    this->email = email;
+}
+void User::setBio(std::string bio) {
+    this->bio = bio;
+}
+
+void User::setAvatarUrl(std::string url) {
+    this->avatar_url = url;
+}
+
 int User::getNumRepos() {
     return this->numRepos;
 }
@@ -39,10 +65,6 @@ int User::getNumRepos() {
 void User::setRepos() {
     std::string url = "https://api.github.com/users/";
     url += name;
-
-    int count = jansson_get_repo_count(curl_get_string(url));
-    setNumRepos(count);
-
     url += "/repos?per_page=30";
 
     std::string json_repo_list_string = curl_get_string(url);
@@ -68,6 +90,150 @@ void User::drawListView(int y, bool selected) {
 }
 
 void User::drawDetailsView() {
+    if(!haveInfo) {
+        std::string url = "https://api.github.com/users/";
+        url += name;
+
+        jansson_parse_user_info(curl_get_string(url), this);
+        haveInfo = true;
+    }
+
+    std::string check_follow_url = "https://api.github.com/user/following/";
+    check_follow_url += name;
+
+    bool following = false;
+
+    if(authed)
+        following = curl_check_star(check_follow_url);
+
+    strip_carriage_return(bio);
+
+    int cursor_pos = 0;
+
+    Button tempButton;
+    std::vector<Button> buttons; // the container for the buttons.
+    //User a temp button and push it into the container.
+    tempButton.name = "View repos";
+    tempButton.x = 960 - 230;
+    tempButton.y = 200;
+    tempButton.w = 200;
+    tempButton.h = 50;
+    buttons.push_back(tempButton);
+
+    if(authed) {
+        tempButton.name = "Follow";
+        tempButton.y = 260;
+        buttons.push_back(tempButton);
+    }
+
+    std::string header_string = "Following/";
+    header_string += name;
+
+    bool done = false;
+
+    init_keys();
+
+    while(!done) {
+        update_keys();
+
+        if(up_released)
+            cursor_pos -= 1;
+        if(down_released)
+            cursor_pos += 1;
+        if(cursor_pos < 0)
+            cursor_pos = 1;
+        if(cursor_pos > 1)
+            cursor_pos = 0;
+
+        if(cross_released) {
+            switch (cursor_pos) {
+                case 0:
+                    drawReposView();
+                    break;
+                case 1:
+                    if(authed) {
+                        if(following) {
+                            curl_post_star(check_follow_url, true);
+                            following = false;
+                            draw_alert_message("You are no longer following this user. \nThis change will take effect next time you launch the app");
+                        }
+                        else {
+                            curl_post_star(check_follow_url, false);
+                            following = true;
+                            draw_alert_message("You are now following this user. \nThis change will take effect next time you launch the app");
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if(circle_released)
+            done = true;
+
+        if(authed) {
+            if(following)
+                buttons[1].name = "Unfollow";
+            else
+                buttons[1].name = "Follow";
+        }
+        else cursor_pos = 0;
+
+        vita2d_start_drawing();
+        vita2d_clear_screen();
+
+        //draw the template containing a sub header area and buttons area.
+        drawTemplate(SUB_HEADER_BUTTONS, header_string, buttons, cursor_pos);
+
+        //sub header goes over template. may add to template.
+        vita2d_font_draw_text(font40, 40, 103 - 9, RGBA8(0,0,0,255), 40.0f, name.c_str());
+
+        int rname_y, type_y, company_y, email_y, bio_y;
+
+        rname_y = type_y = company_y = email_y = bio_y = 103 + 40;
+
+        if(!Rname.empty()) {
+            vita2d_font_draw_text(font20, 40, rname_y, RGBA8(0,0,0,255), 20.0f, "Name");
+            vita2d_font_draw_textf(font20, 40, rname_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", Rname.c_str());
+        }
+        else rname_y = 103;
+
+        if(!type.empty()) {
+            type_y = rname_y + 40;
+            vita2d_font_draw_text(font20, 40, type_y, RGBA8(0,0,0,255), 20.0f, "Type");
+            vita2d_font_draw_textf(font20, 40, type_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", type.c_str());
+        }
+        else type_y = rname_y;
+
+        if(!company.empty()) {
+            company_y = type_y + 40;
+            vita2d_font_draw_text(font20, 40, company_y, RGBA8(0,0,0,255), 20.0f, "Company");
+            vita2d_font_draw_textf(font20, 40, company_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", company.c_str());
+        }
+        else company_y = type_y;
+
+        if(!email.empty()) {
+            email_y = company_y + 40;
+            vita2d_font_draw_text(font20, 40, email_y, RGBA8(0,0,0,255), 20.0f, "Email");
+            vita2d_font_draw_textf(font20, 40, email_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", email.c_str());
+        }
+        else email_y = company_y;
+
+        if(!bio.empty()) {
+            bio_y = email_y + 40;
+            vita2d_font_draw_text(font20, 40, bio_y, RGBA8(0,0,0,255), 20.0f, "Bio");
+            vita2d_font_draw_textf(font20, 40, bio_y + 20, RGBA8(0,0,0,255), 20.0f, "- %s", word_wrap(bio, 50).c_str());
+        }
+        else bio_y = email_y;
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+    }
+}
+
+void User::drawReposView() {
     if(!complete) {
         setRepos();
     }
@@ -88,6 +254,7 @@ void User::drawDetailsView() {
 
     std::string header_string = "Following/";
     header_string += name;
+    header_string += "/repositories";
 
     init_keys();
 

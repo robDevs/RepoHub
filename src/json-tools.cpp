@@ -1,5 +1,51 @@
 #include "json-tools.h"
 
+void jansson_parse_user_info(std::string json_user_string, User *user) {
+    json_t *root;
+    json_error_t error;
+
+    root = json_loads(json_user_string.c_str(), 0, &error);
+
+    if(!root)
+    {
+        return;
+    }
+
+    if(!json_is_object(root))
+    {
+        json_decref(root);
+        return;
+    }
+
+    json_t *type, *name, *company, *location, *email, *bio;
+
+    type = json_object_get(root, "type");
+    name = json_object_get(root, "name");
+    company = json_object_get(root, "company");
+    location = json_object_get(root, "location");
+    email = json_object_get(root, "email");
+    bio = json_object_get(root, "bio");
+
+    if(json_is_string(type))
+        user->setType(json_string_value(type));
+    if(json_is_string(name))
+        user->setRname(json_string_value(name));
+    if(json_is_string(company))
+        user->setCompany(json_string_value(company));
+    if(json_is_string(location))
+        user->setLocation(json_string_value(location));
+    if(json_is_string(email))
+        user->setEmail(json_string_value(email));
+    if(json_is_string(bio))
+        user->setBio(json_string_value(bio));
+
+    user->setNumRepos(jansson_get_repo_count(json_user_string));
+    user->setAvatarUrl(jansson_get_avatar_url(json_user_string));
+
+    json_decref(root);
+    return;
+}
+
 int jansson_get_repo_count(std::string json_user_string) {
     json_t *root;
     json_error_t error;

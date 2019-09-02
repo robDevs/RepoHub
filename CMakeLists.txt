@@ -43,6 +43,7 @@ add_executable(${SHORT_NAME}.elf
     src/json-tools.cpp
     src/file-io.cpp
     src/draw.cpp
+    src/draw_templates.cpp
     src/release.cpp
     src/repo.cpp
     src/user.cpp

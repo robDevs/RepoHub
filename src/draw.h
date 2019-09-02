@@ -4,9 +4,18 @@
 #include "images.h"
 #include "controls.h"
 
+struct Button{
+    std::string name;
+    int x;
+    int y;
+    int w;
+    int h;
+};
+
 extern void draw_header(std::string header);
 
 extern void draw_button(std::string name, int x, int y, int w, int h, bool selected);
+extern void draw_button(Button button, bool selected);
 
 extern void draw_list_item(std::string name, std::string body, std::string language, int x, int y, bool selected);
 extern void draw_repo_list_item(std::string name, std::string body, std::string language, int stars, int forks, std::string update_at, bool fork, int x, int y, bool selected);

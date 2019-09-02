@@ -5,6 +5,7 @@
 #include "vita-keyboard.h"
 #include "curl-tools.h"
 #include "search.h"
+#include "draw_templates.h"
 
 void draw_header(std::string header) {
     SceDateTime time;
@@ -50,6 +51,10 @@ void draw_button(std::string name, int x, int y, int w, int h, bool selected) {
         vita2d_draw_rectangle(x, y, w, h, RGBA8(255,255,255, 255));
         vita2d_font_draw_textf(font20, x+w/2 - (vita2d_font_text_width(font20, 20.0f, name.c_str()) / 2), y + h/2+vita2d_font_text_height(font20, 20.0f, name.c_str()) / 4, RGBA8(150,150,150,200), 20.0f, "%s", name.c_str());
     }
+}
+
+void draw_button(Button button, bool selected) {
+    draw_button(button.name, button.x, button.y, button.w, button.h, selected);
 }
 
 void draw_list_item(std::string name, std::string body, std::string language, int x, int y, bool selected) {
@@ -330,6 +335,34 @@ void draw_issue_menu() {
 
     bool done = false;
 
+    //create some buttons.
+    Button tempButton;
+    std::vector<Button> buttons; // the container for the buttons.
+    //User a temp button and push it into the container.
+    tempButton.name = "Edit Title";
+    tempButton.x = 960 - 230;
+    tempButton.y = 200;
+    tempButton.w = 200;
+    tempButton.h = 50;
+    buttons.push_back(tempButton);
+
+    tempButton.name = "Edit Body";
+    tempButton.y = 260;
+    buttons.push_back(tempButton);
+
+    tempButton.name = "Add Footer";
+    tempButton.y = 320;
+    buttons.push_back(tempButton);
+
+    tempButton.name = "Submit Issue";
+    tempButton.y = 380;
+    buttons.push_back(tempButton);
+
+    tempButton.name = "Cancel";
+    tempButton.y = 440;
+    buttons.push_back(tempButton);
+
+
     while(!done) {
         update_keys();
 
@@ -375,6 +408,11 @@ void draw_issue_menu() {
             }
         }
 
+        if(show_footer)
+            buttons[2].name = "Add Footer";
+        else
+            buttons[2].name = "Remove Footer";
+
         read_joy_sticks();
 
         if(body_pos < 143 && ly < 117) body_pos -= (ly-127)/10;
@@ -382,6 +420,8 @@ void draw_issue_menu() {
 
         vita2d_start_drawing();
         vita2d_clear_screen();
+
+        //draw the content and the foooter.
 
         vita2d_font_draw_text(font20, 40, body_pos, RGBA8(0,0,0,255), 20.0f, word_wrap(body, 40).c_str());
 
@@ -391,25 +431,12 @@ void draw_issue_menu() {
             vita2d_font_draw_text(font20, 40, body_pos + vita2d_font_text_height(font20, 20.0f, word_wrap(body, 40).c_str()) + 40, RGBA8(0,0,0,255), 20.0f, "Submitted from RepoHub on PS Vita");
         }
 
-        //right hand menu bar
-        vita2d_draw_rectangle(960 - 260, 103, 260, 544 - 103, RGBA8(255,255,255,255));
-        vita2d_draw_line(960-260, 104, 960-260, 544, RGBA8(150,150,150,200));
-        draw_button("Edit Title", 960 - 230, 200, 200, 50, cursor_pos == 0);
-        draw_button("Edit Body", 960 - 230, 260, 200, 50, cursor_pos == 1);
-        if(!show_footer)
-            draw_button("Add Footer", 960 - 230, 320, 200, 50, cursor_pos == 2);
-        else
-            draw_button("Remove Footer", 960 - 230, 320, 200, 50, cursor_pos == 2);
-        draw_button("Submit Issue", 960 - 230, 380, 200, 50, cursor_pos == 3);
-        draw_button("Cancel", 960 - 230, 440, 200, 50, cursor_pos == 4);
+        //draw the template containing a sub header area and buttons area.
 
+        drawTemplate(SUB_HEADER_BUTTONS, "Submit issue to RepoHub on Github", buttons, cursor_pos);
 
-        //bg and line for title under header
-        vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
-        vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
+        //sub header goes over template. may add to template.
         vita2d_font_draw_text(font40, 40, 103 - 9, RGBA8(0,0,0,255), 40.0f, title.c_str());
-
-        draw_header("Submit issue to RepoHub on Github");
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();

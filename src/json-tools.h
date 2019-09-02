@@ -4,7 +4,9 @@
 #include "includes.h"
 #include "repo.h"
 #include "release.h"
+#include "user.h"
 
+extern void jansson_parse_user_info(std::string json_user_string, User *user);
 extern int jansson_get_repo_count(std::string json_user_string);
 extern int jansson_parse_repo_list(std::string json_repo_list_string, std::vector<Repo> *repoList0, std::vector<Repo> *repoList1);
 extern std::string jansson_get_avatar_url(std::string json_user_string);
