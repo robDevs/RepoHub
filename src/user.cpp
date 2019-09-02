@@ -100,6 +100,12 @@ void User::drawDetailsView() {
 
     strip_carriage_return(bio);
 
+    //remove invalid chars from bio
+    for(size_t i = 0; i < bio.size(); i++) {
+        if(invalidChar(bio[i]))
+            bio[i] = ' ';
+    }
+
     int cursor_pos = 0;
 
     Button tempButton;
@@ -107,14 +113,14 @@ void User::drawDetailsView() {
     //User a temp button and push it into the container.
     tempButton.name = "Repositories";
     tempButton.x = 960 - 230;
-    tempButton.y = 200;
+    tempButton.y = 544/2-60;
     tempButton.w = 200;
     tempButton.h = 50;
     buttons.push_back(tempButton);
 
     if(authed) {
         tempButton.name = "Follow";
-        tempButton.y = 260;
+        tempButton.y = 544/2+10;
         buttons.push_back(tempButton);
     }
 
@@ -195,25 +201,25 @@ void User::drawDetailsView() {
 
         if(!Rname.empty() || !name.empty()) {
             vita2d_font_draw_text(font29, 40, rname_y, RGBA8(0,0,0,255), 29.0f, Rname.c_str());
-            vita2d_font_draw_text(font23, 40, rname_y + 20, RGBA8(0,0,0,255), 23.0f, name.c_str());
+            vita2d_font_draw_text(font23, 40, rname_y + 20, RGBA8(97,97,97,255), 23.0f, name.c_str());
         }
         else rname_y = 228;
 
         if(!company.empty()) {
             company_y = rname_y + 63;
-            vita2d_font_draw_text(font23, 40, company_y, RGBA8(0,0,0,255), 23.0f, company.c_str());
+            vita2d_font_draw_text(font19, 40, company_y, RGBA8(0,0,0,255), 19.0f, company.c_str());
         }
-        else company_y = rname_y + 23;
+        else company_y = rname_y + 19;
 
         if(!bio.empty()) {
             bio_y = company_y + 40;
-            vita2d_font_draw_text(font23, 40, bio_y, RGBA8(0,0,0,255), 23.0f, word_wrap(bio, 37).c_str());
+            vita2d_font_draw_text(font19, 40, bio_y, RGBA8(0,0,0,255), 19.0f, word_wrap(bio, 37).c_str());
         }
         else bio_y = company_y;
 
         if(!email.empty()) {
-            email_y = bio_y + 23 + vita2d_font_text_height(font23, 23.0f, word_wrap(bio, 37).c_str());
-            vita2d_font_draw_text(font23, 40, email_y, RGBA8(0,0,0,255), 23.0f, email.c_str());
+            email_y = bio_y + 19 + vita2d_font_text_height(font19, 19.0f, word_wrap(bio, 37).c_str());
+            vita2d_font_draw_text(font19, 40, email_y, RGBA8(0,0,0,255), 19.0f, email.c_str());
         }
         else email_y = bio_y;
 
