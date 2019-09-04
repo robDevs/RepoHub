@@ -497,11 +497,13 @@ void User::getPfp() {
         pfp = vita2d_load_PNG_file("ux0:data/RepoHub/Downloads/pfp");
     if(pfp == NULL)
         pfp = vita2d_load_BMP_file("ux0:data/RepoHub/Downloads/pfp");
+    
     sceIoRemove("ux0:data/RepoHub/Downloads/pfp");
 }
 
 void User::cleanUp() {
-    vita2d_free_texture(pfp);
+    if(pfp != NULL)
+        vita2d_free_texture(pfp);
 }
 
 //end class functions
