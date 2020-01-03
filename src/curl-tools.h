@@ -5,6 +5,7 @@
 #include "file-io.h"
 #include "images.h"
 #include "draw.h"
+#include "installAPP.h"
 
 struct stringcurl {
   char *ptr;

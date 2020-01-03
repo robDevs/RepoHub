@@ -1,5 +1,6 @@
 #include "curl-tools.h"
 #include "controls.h"
+#include "installAPP.h"
 
 std::string progress_string;
 
@@ -359,7 +360,7 @@ int curl_post_star(std::string url, bool delete_star) {
 		if(res != CURLE_OK){
             draw_alert_message(curl_easy_strerror(res));
 		}
-        
+
         curl_easy_cleanup(curl);
 
 		return 0;
@@ -503,6 +504,14 @@ void curl_download_file(std::string url , std::string file){
             std::string result_string = "File saved to:";
             result_string += "\nux0:data/RepoHub/Downloads/";
             draw_alert_message(result_string);
+
+            if(file.find(".vpk") != std::string::npos) {
+                std::string installAlert = "Would you like to install the app?";
+                if(draw_yes_no_message(installAlert)) {
+                    draw_alert_message_time("Now installing, please wait...", 10);
+                    installVPK(file.c_str());
+                }
+            }
         }
 	}
     else {

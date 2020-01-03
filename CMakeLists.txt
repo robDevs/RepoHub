@@ -18,7 +18,6 @@ IF(DEFINE_DEBUG)
   MESSAGE("Build type is " ${CMAKE_BUILD_TYPE})
 ENDIF(DEFINE_DEBUG)
 
-
 set(SHORT_NAME RepoHub)
 project(${SHORT_NAME})
 include("${VITASDK}/share/vita.cmake" REQUIRED)
@@ -27,13 +26,44 @@ set(VITA_APP_NAME "RepoHub")
 set(VITA_TITLEID  "REPOHUB01")
 set(VITA_VERSION  "02.50")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -std=gnu14 -Wall ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++14 -Wall -Wno-psabi ")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -std=gnu11 -Wno-narrowing ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -Wall -Wno-narrowing -fpermissive ")
 
 find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_package(BZip2 REQUIRED)
 
-add_executable(${SHORT_NAME}.elf
+FUNCTION(ADD_RESOURCES out_var)
+  SET(result)
+  FOREACH(in_f ${ARGN})
+  SET(out_f "${CMAKE_CURRENT_BINARY_DIR}/${in_f}.o")
+  GET_FILENAME_COMPONENT(out_dir ${out_f} DIRECTORY)
+  ADD_CUSTOM_COMMAND(OUTPUT ${out_f}
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${out_dir}
+    COMMAND ${CMAKE_LINKER} -r -b binary -o ${out_f} ${in_f}
+    DEPENDS ${in_f}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Building resource ${out_f}"
+    VERBATIM
+    )
+  LIST(APPEND result ${out_f})
+  ENDFOREACH()
+  SET(${out_var} "${result}" PARENT_SCOPE)
+ENDFUNCTION()
+
+file(GLOB res_files RELATIVE
+  ${CMAKE_SOURCE_DIR}
+  resources/head.bin
+)
+
+add_resources(vitashell_res ${res_files})
+
+add_executable(${SHORT_NAME}
+    ${vitashell_res}
+    src/installAPP.cpp
+    src/file.cpp
+    src/headgen.cpp
+    src/sfo.cpp
     src/main.cpp
     src/includes.cpp
     src/images.cpp
@@ -50,7 +80,7 @@ add_executable(${SHORT_NAME}.elf
     src/search.cpp
 )
 
-target_link_libraries(${SHORT_NAME}.elf
+target_link_libraries(${SHORT_NAME}
 vita2d
 ScePgf_stub
 SceGxm_stub
@@ -81,14 +111,21 @@ jansson
 ${CURL_LIBRARIES}
 ${CURL_LIBRARIES}
 ${OPENSSL_LIBRARIES}
-c
-m
+zip
+ScePromoterUtil_stub
+ScePvf_stub
+SceIme_stub
+ssl
+crypto
 z
+m
+c
+${BZIP2_LIBRARIES}
 
 )
 
 
-vita_create_self(${SHORT_NAME}.self ${SHORT_NAME}.elf)
+vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE)
 
 vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
   VERSION ${VITA_VERSION}

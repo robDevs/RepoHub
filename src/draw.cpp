@@ -250,6 +250,22 @@ void draw_alert_message(std::string message) {
     reset_keys();
 }
 
+void draw_alert_message_time(std::string message, int time) {
+    bool done = false;
+
+    for(int i = 0; i < time; i++) {
+        vita2d_start_drawing();
+
+        vita2d_draw_rectangle(0, 544 / 2 - 100, 960, 200, RGBA8(36,41,46,255));
+
+        vita2d_font_draw_text(font20, 960/2 - vita2d_font_text_width(font20, 20.0f, message.c_str()) / 2, 544 / 2 - 40, RGBA8(255,255,255,255), 20.0f, message.c_str());
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+		vita2d_swap_buffers();
+    }
+}
+
 int draw_star_menu() {
     bool done = false;
     int return_val = MAIN_VIEW;
