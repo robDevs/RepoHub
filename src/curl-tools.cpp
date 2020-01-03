@@ -509,7 +509,10 @@ void curl_download_file(std::string url , std::string file){
                 std::string installAlert = "Would you like to install the app?";
                 if(draw_yes_no_message(installAlert)) {
                     draw_alert_message_time("Now installing, please wait...", 10);
-                    installVPK(file.c_str());
+                    if(file.find("RepoHub.vpk") != std::string::npos || file.find("RepoHub_") != std::string::npos) {
+                      draw_alert_message("Please install RepoHub with VitaShell");
+                    }
+                    else installVPK(file.c_str());
                 }
             }
         }

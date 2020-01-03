@@ -27,6 +27,8 @@ extern bool draw_yes_no_message(std::string message);
 extern void draw_alert_message(std::string message);
 extern void draw_alert_message_time(std::string message, int time);
 
+extern void draw_extract_progress(std::string path, std::string fileName, double fileProgress, double fileTotal, double zipProgress, double zipTotal);
+
 extern int draw_star_menu();
 
 extern void draw_issue_menu();

@@ -117,20 +117,26 @@ static int extract(const char* path) {
                     if(skip > 20) skip = 0;
 
                     if(skip == 0) {
-                        std::string progressString = "extracting: ";
-                        progressString += sb.name;
-                        progressString += "\nFile progres: ";
-                        progressString += std::to_string(byte_to_mb(sum));
-                        progressString += " MB / ";
-                        progressString += std::to_string(byte_to_mb(sb.size));
-                        progressString += " MB";
-                        progressString += "\nTotal progress: ";
-                        progressString += std::to_string(byte_to_mb(sizeDone));
-                        progressString += " MB / ";
-                        progressString += std::to_string(byte_to_mb(sizeTotal));
-                        progressString += " MB";
+                        std::string nameString;
+                        std::string fileString ;
+                        std::string totalString;
 
-                        draw_alert_message_time(progressString, 1);
+                        nameString = "extracting: ";
+                        nameString += sb.name;
+
+                        fileString += "File progres: ";
+                        fileString += std::to_string(byte_to_mb(sum));
+                        fileString += " MB / ";
+                        fileString += std::to_string(byte_to_mb(sb.size));
+                        fileString += " MB";
+
+                        totalString = "Total progress: ";
+                        totalString += std::to_string(byte_to_mb(sizeDone));
+                        totalString += " MB / ";
+                        totalString += std::to_string(byte_to_mb(sizeTotal));
+                        totalString += " MB";
+
+                        draw_extract_progress(path, sb.name, sum, sb.size, sizeDone, sizeTotal);
                     }
                 }
                 sceIoClose(fd);

@@ -251,14 +251,73 @@ void draw_alert_message(std::string message) {
 }
 
 void draw_alert_message_time(std::string message, int time) {
-    bool done = false;
-
     for(int i = 0; i < time; i++) {
         vita2d_start_drawing();
 
         vita2d_draw_rectangle(0, 544 / 2 - 100, 960, 200, RGBA8(36,41,46,255));
 
         vita2d_font_draw_text(font20, 960/2 - vita2d_font_text_width(font20, 20.0f, message.c_str()) / 2, 544 / 2 - 40, RGBA8(255,255,255,255), 20.0f, message.c_str());
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+		vita2d_swap_buffers();
+    }
+}
+
+void draw_extract_progress(std::string path, std::string fileName, double fileProgress, double fileTotal, double zipProgress, double zipTotal) {
+
+    std::string pathString = "Extracting from: ";
+    pathString += path;
+
+    std::string nameString;
+    std::string fileString ;
+    std::string totalString;
+
+    nameString = "extracting: ";
+    nameString += fileName;
+
+    fileString += "File: ";
+    fileString += std::to_string(byte_to_mb(fileProgress));
+    fileString += " MB / ";
+    fileString += std::to_string(byte_to_mb(fileTotal));
+    fileString += " MB";
+
+    totalString = "Total: ";
+    totalString += std::to_string(byte_to_mb(zipProgress));
+    totalString += " MB / ";
+    totalString += std::to_string(byte_to_mb(zipTotal));
+    totalString += " MB";
+
+    for(int i = 0; i < 1; i++) {
+        vita2d_start_drawing();
+
+        vita2d_draw_rectangle(0, 544 / 2 - 100, 960, 200, RGBA8(36,41,46,255));
+
+        vita2d_font_draw_text(font20, 960/2 - vita2d_font_text_width(font20, 20.0f, pathString.c_str()) / 2, 544 / 2 - 60, RGBA8(255,255,255,255), 20.0f, pathString.c_str());
+
+        vita2d_font_draw_text(font20, 960/2 - vita2d_font_text_width(font20, 20.0f, nameString.c_str()) / 2, 544 / 2 - 30, RGBA8(255,255,255,255), 20.0f, nameString.c_str());
+
+        vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, fileString.c_str()) / 2), 544 / 2 - 10, RGBA8(255,255,255,255), 20.0f, fileString.c_str());
+        vita2d_font_draw_text(font20, (960/2)-(vita2d_font_text_width(font20, 20.0f, totalString.c_str()) / 2), 544 / 2 + 10, RGBA8(255,255,255,255), 20.0f, totalString.c_str());
+
+        // how wide you want the progress meter to be
+        int total=320;
+
+        double fraction = 0;
+        int progress = 0;
+        if(fileTotal > 0.0) {
+            fraction = fileProgress / fileTotal;
+            progress = round(fraction * total);
+            vita2d_draw_rectangle(960 / 2 - 160, 544 / 2 + 22, progress, 4, RGBA8(0,255,0,255));
+        }
+
+        fraction = 0;
+        progress = 0;
+        if(zipTotal > 0.0) {
+          fraction = zipProgress / zipTotal;
+          progress = round(fraction * total);
+          vita2d_draw_rectangle(960 / 2 - 160, 544 / 2 + 28, progress, 4, RGBA8(0,255,0,255));
+        }
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
