@@ -1,6 +1,6 @@
 /*
   MODIFIED FILE!
-  This file was modified by coderx3, this is not the original file!
+  This file was modified by robDevs, this is not the original file!
 
   VitaShell
   Copyright (C) 2015-2018, TheFloW
