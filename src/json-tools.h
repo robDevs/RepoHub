@@ -5,6 +5,7 @@
 #include "repo.h"
 #include "release.h"
 #include "user.h"
+#include "json-tools.h"
 
 extern void jansson_parse_user_info(std::string json_user_string, User *user);
 extern int jansson_get_repo_count(std::string json_user_string);

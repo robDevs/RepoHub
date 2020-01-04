@@ -31,7 +31,7 @@
 
 #include <jansson.h>
 
-#define TAG                 0.05 // the current version. Used by updater.
+#define TAG                 0.10 // the current version. Used by updater.
 
 #define MAIN_VIEW           0//view the main list of users
 #define UPDATE_USERNAME     1//update the username
@@ -41,7 +41,8 @@
 #define REPO_VIEW           5//view a selected repo
 #define RELEASE_VIEW        6//view a selected release from a repo
 #define STARRED_VIEW        7
-#define QUIT_APP            8//quit the app
+#define FEATURED_VIEW       8
+#define QUIT_APP            9//quit the app
 
 extern std::string token;
 extern bool have_token;

@@ -40,7 +40,7 @@ public:
     void getPfp();
     void cleanUp();
     void setStarred(int page);
-    void drawStarred();
+    void drawStarred(int* state);
     void get_nums();
 };
 

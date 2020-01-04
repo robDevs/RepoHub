@@ -1,4 +1,5 @@
 #include "json-tools.h"
+#include "draw.h"
 
 void jansson_parse_user_info(std::string json_user_string, User *user) {
     json_t *root;
@@ -748,3 +749,4 @@ int jansson_parse_repo_search(std::string results, std::vector<Repo> *repoList0,
     json_decref(root);
     return count;
 }
+
