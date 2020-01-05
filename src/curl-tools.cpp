@@ -321,7 +321,7 @@ int curl_post_star(std::string url, bool delete_star) {
 		// Set timeout for the connection to build
 		curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
 		// Follow redirects (?)
-		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0L);
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 		// The function that will be used to write the data

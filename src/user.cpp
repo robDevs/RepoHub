@@ -469,7 +469,10 @@ void User::drawStarred(int* state) {
         }
 
         if(numStarred + 1 > list_size0 + list_size1) {
-            draw_button("Refresh", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
+            if(name.compare("repoHub-Featured-Repos") == 0) 
+                draw_button("Load More", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
+            else
+                draw_button("Refresh", 40, y_offset + list_size0*140 + 40, 880, 50, cursor_pos == list_size0);
         }
 
         if(menuBarH < 441)
@@ -478,15 +481,15 @@ void User::drawStarred(int* state) {
         vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
 
         if(name.compare("repoHub-Featured-Repos") == 0) {
-            vita2d_font_draw_textf(font40, 960-960/8-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(0,0,0,255), 40.0f, "Featured");
+            vita2d_font_draw_textf(font40, 960-960/6-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(0,0,0,255), 40.0f, "Featured");
             vita2d_font_draw_textf(font40, 960-960/2-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Starred");
         }
         else {
-            vita2d_font_draw_textf(font40, 960-960/8-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Featured");
+            vita2d_font_draw_textf(font40, 960-960/6-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Featured");
             vita2d_font_draw_textf(font40, 960-960/2-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(0,0,0,255), 40.0f, "Starred");
         }
 
-        vita2d_font_draw_textf(font40, 960/8-vita2d_font_text_width(font40, 40.0f, "Following")/2, 95, RGBA8(150,150,150,255), 40.0f, "Following");
+        vita2d_font_draw_textf(font40, 960/6-vita2d_font_text_width(font40, 40.0f, "Following")/2, 95, RGBA8(150,150,150,255), 40.0f, "Following");
 
 
         vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
@@ -638,8 +641,8 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
                         vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
         
                         vita2d_font_draw_textf(font40, 960-960/2-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Starred");
-                        vita2d_font_draw_textf(font40, 960-960/8-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Featured");
-                        vita2d_font_draw_textf(font40, 960/8-vita2d_font_text_width(font40, 40.0f, "Following")/2, 95, RGBA8(0,0,0,255), 40.0f, "Following");
+                        vita2d_font_draw_textf(font40, 960-960/6-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Featured");
+                        vita2d_font_draw_textf(font40, 960/6-vita2d_font_text_width(font40, 40.0f, "Following")/2, 95, RGBA8(0,0,0,255), 40.0f, "Following");
 
 
                         vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
@@ -698,16 +701,6 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
             }
         }
 
-        if(triangle_released) {
-            std::string json = curl_get_string("http://rinnegatamante.it/vitadb/list_hbs_json.php");
-            jansson_start_vdb_github_sources(json);
-
-            //if(jansson_check_releases("https://api.github.com/repos/robDevs/Finding-Unknown/releases/latest") == false) {
-                //draw_alert_message("no releases");
-           // }
-            //else draw_alert_message("releases available");
-        }
-
         while(y_offset + (cursor_pos*100) > 544 - 100) {
             y_offset -= 100;
         }
@@ -733,8 +726,8 @@ void draw_user_list(std::vector<User> *user_list, int *status) {
         vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
         
         vita2d_font_draw_textf(font40, 960-960/2-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Starred");
-        vita2d_font_draw_textf(font40, 960-960/8-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Featured");
-        vita2d_font_draw_textf(font40, 960/8-vita2d_font_text_width(font40, 40.0f, "Following")/2, 95, RGBA8(0,0,0,255), 40.0f, "Following");
+        vita2d_font_draw_textf(font40, 960-960/6-vita2d_font_text_width(font40, 40.0f, "Starred")/2, 95, RGBA8(150,150,150,255), 40.0f, "Featured");
+        vita2d_font_draw_textf(font40, 960/6-vita2d_font_text_width(font40, 40.0f, "Following")/2, 95, RGBA8(0,0,0,255), 40.0f, "Following");
 
 
         vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
