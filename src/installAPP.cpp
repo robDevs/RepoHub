@@ -242,6 +242,10 @@ void removeFolder(const char* path) {
 }
 
 int installVPK(const char* path) {
+    //make sure direcotries are empty first. 
+    removeFolder("ux0:data/repoHubExtract");
+    removeFolder("ux0:data/repoHubInstall");
+    
     sceIoMkdir( "ux0:data/repoHubExtract/" , 0777);
     sceIoMkdir( "ux0:data/repoHubInstall/" , 0777);
 
