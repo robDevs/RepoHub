@@ -69,8 +69,8 @@ void draw_release_details(Release release, std::string header_start) {
             y_offset += 100;
         }
 
-        if(left_released) status -= 1;
-        if(right_released) status += 1;
+        if(lt_released || left_released) status -= 1;
+        if(rt_released || rt_released) status += 1;
         if(status < 0) status = 1;
         if(status > 1) status = 0;
 
@@ -98,8 +98,8 @@ void draw_release_details(Release release, std::string header_start) {
             //sub-header bg.
             vita2d_draw_rectangle(0, 44, 960, 103-44, RGBA8(255,255,255,255));
             vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
-            vita2d_font_draw_text(font40, 40, (45+40)+10, RGBA8(0,0,0,255), 40.0f, "Files");
-            vita2d_font_draw_text(font40, 960-560, (45+40)+10, RGBA8(150,150,150,200), 40.0f, "Notes");
+            vita2d_font_draw_text(font40, 960/4 - vita2d_font_text_width(font40, 40.0f, "Files")/2, (45+40)+10, RGBA8(0,0,0,255), 40.0f, "Files");
+            vita2d_font_draw_text(font40, 960-960/4 - vita2d_font_text_width(font40, 40.0f, "Notes")/2, (45+40)+10, RGBA8(150,150,150,200), 40.0f, "Notes");
 
             if(menuBarH < 420)
                 vita2d_draw_rectangle(960 - 15, 103 - (y_offset-100)*(menuBarH/(420)), 15, menuBarH, RGBA8(167,167,167,255));
@@ -112,10 +112,12 @@ void draw_release_details(Release release, std::string header_start) {
 
             //sub-header bg.
             vita2d_draw_rectangle(0, 44, 960, 80, RGBA8(255,255,255,255));
-            vita2d_draw_line(0, 44+80, 960, 45+80, RGBA8(150,150,150,200));
-            vita2d_font_draw_text(font40, 40, (45+40)+10, RGBA8(150,150,150,200), 40.0f, "Files");
-            vita2d_font_draw_text(font40, 960-560, (45+40)+10, RGBA8(0,0,0,255), 40.0f, "Notes");
+            vita2d_draw_line(0, 103, 960, 103, RGBA8(150,150,150,200));
+            vita2d_font_draw_text(font40, 960/4 - vita2d_font_text_width(font40, 40.0f, "Files")/2, (45+40)+10, RGBA8(150,150,150,200), 40.0f, "Files");
+            vita2d_font_draw_text(font40, 960-960/4 - vita2d_font_text_width(font40, 40.0f, "Notes")/2, (45+40)+10, RGBA8(0,0,0,255), 40.0f, "Notes");
         }
+
+        vita2d_draw_line(960/2, 44, 960/2, 103, RGBA8(150,150,150,200));
 
         draw_header(header_string);
 
